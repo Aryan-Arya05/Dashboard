@@ -1,177 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>CEO Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-tap-highlight-color: transparent; }
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#1c1c1c;--border2:#252525;
-  --text:#e2e2e2;--text2:#888;--text3:#3a3a3a;--text4:#1a1a1a;
-  --up-bg:#1a2e14;--dn-bg:#2e1414;--bar:#1a1a1a;--sep:#181818;--shadow:none;
-  background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;padding:20px 24px;min-height:100vh;transition:background .3s,color .3s
-}
-body.light{
-  --bg:#f4f4f0;--bg2:#fff;--bg3:#eeeee a;--border:#e0e0da;--border2:#d0d0ca;
-  --text:#111;--text2:#555;--text3:#aaa;--text4:#ccc;
-  --up-bg:#e8f5d0;--dn-bg:#fde8e8;--bar:#e8e8e4;--sep:#eee;--shadow:0 1px 4px #0000000a
-}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow);transition:border-color .2s}
-.card:hover{border-color:var(--border2)}
-.lbl{font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
-.mono{font-family:'DM Mono',monospace}
-.up{background:var(--up-bg);color:#4a7a14;font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;white-space:nowrap}
-.dn{background:var(--dn-bg);color:#c0392b;font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;white-space:nowrap}
-body.dark .up{color:#C8F04A}body.dark .dn{color:#f87171}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
-.tabs{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:3px}
-.tab{padding:5px 13px;border-radius:20px;font-size:11.5px;cursor:pointer;border:none;background:transparent;color:var(--text3);font-family:'DM Sans',sans-serif;font-weight:500;text-transform:capitalize;transition:all .15s}
-.tab.on{background:var(--bg3);color:var(--text)}
-.tab:hover:not(.on){color:var(--text2)}
-.btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:11px;padding:6px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
-.btn:hover{color:var(--text);border-color:var(--text3)}
-.btn.sel-act{background:var(--up-bg);border-color:#7CB32A55;color:#4a7a14}
-body.dark .btn.sel-act{color:#C8F04A}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:#7CB32A;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px}
-.toggle-wrap{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:11px;font-weight:500;color:var(--text2);transition:all .2s;user-select:none}
-.toggle-wrap:hover{border-color:var(--border2);color:var(--text)}
-.track{width:32px;height:18px;border-radius:9px;background:#2a2a2a;border:1px solid var(--border2);position:relative;transition:background .3s}
-body.light .track{background:#d4e8a0}
-.thumb{width:12px;height:12px;border-radius:50%;background:#555;position:absolute;top:2px;left:2px;transition:all .3s}
-body.light .thumb{background:#7CB32A;transform:translateX(14px)}
-/* Day strip */
-.day-btn{flex-shrink:0;width:44px;height:56px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .15s;position:relative;font-family:'DM Sans',sans-serif}
-.day-btn:hover:not(.nd){border-color:var(--border2);background:var(--bg3)}
-.day-btn.ab{border-bottom:2px solid #7CB32A66}
-.day-btn.bl{border-bottom:2px solid #8B5CF666}
-.day-btn.nd{opacity:.22;cursor:default}
-.day-btn.s1{border-color:#7CB32A;background:var(--up-bg)}
-.day-btn.sN{border-color:#7CB32A88;background:var(--up-bg)}
-.dnum{font-size:13px;font-weight:600;color:var(--text2);line-height:1}
-.s1 .dnum,.sN .dnum{color:#4a7a14}body.dark .s1 .dnum,body.dark .sN .dnum{color:#C8F04A}
-.dlbl{font-size:8px;color:var(--text3)}
-.ddot{width:4px;height:4px;border-radius:50%;background:var(--border2)}
-.ab .ddot{background:#7CB32A55}.bl .ddot{background:#8B5CF655}
-.badge{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:#7CB32A;color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
-/* Stat row */
-.srow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--sep)}
-.srow:last-child{border-bottom:none}
-.sk{font-size:10.5px;color:var(--text3)}
-.sv{font-size:12px;font-family:'DM Mono',monospace;font-weight:600}
-@media(max-width:900px){.g6{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.g6{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}}
-</style>
+    /* ── CSS Variables ── */
+    :root {
+      --bg:     #0a0a0a; --bg2:   #111111; --bg3:    #1a1a1a;
+      --bd:     #1c1c1c; --bd2:   #252525;
+      --tx:     #e2e2e2; --tx2:   #888888; --tx3:    #3a3a3a; --tx4: #1a1a1a;
+      --up:     #1a2e14; --upc:   #C8F04A;
+      --dn:     #2e1414; --dnc:   #f87171;
+      --bar:    #1a1a1a; --sep:   #181818; --shad: none;
+      --acc:    #7CB32A; --acc2:  #2BC4A8;
+      --f-sans: 'DM Sans', -apple-system, sans-serif;
+      --f-mono: 'DM Mono', 'Courier New', monospace;
+      --r:      12px; --r-sm: 8px; --r-pill: 20px;
+    }
+    body.light {
+      --bg: #f4f4f0; --bg2: #ffffff; --bg3: #eeeeea;
+      --bd: #e0e0da; --bd2: #d0d0ca;
+      --tx: #111111; --tx2: #555555; --tx3: #aaaaaa; --tx4: #cccccc;
+      --up: #e8f5d0; --upc: #4a7a14;
+      --dn: #fde8e8; --dnc: #c0392b;
+      --bar: #e8e8e4; --sep: #eeeeee; --shad: 0 1px 4px rgba(0,0,0,.06);
+    }
+    body {
+      background: var(--bg); color: var(--tx);
+      font-family: var(--f-sans); font-size: 14px; line-height: 1.5;
+      min-height: 100vh; min-height: 100dvh;
+      transition: background .3s, color .3s;
+      overflow-x: hidden;
+    }
 
-<div>
-<!-- Header -->
-<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-  <div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-      <span id="dot" style="width:7px;height:7px;border-radius:50%;background:#555;display:inline-block"></span>
-      <span id="st" class="mono" style="font-size:10px;color:var(--text3);letter-spacing:.08em"><span class="spin"></span>CONNECTING…</span>
-    </div>
-    <h1 style="font-size:22px;font-weight:600;letter-spacing:-.03em;color:var(--text);margin-bottom:2px">CEO Dashboard</h1>
-    <p style="font-size:11px;color:var(--text3)" id="sub">Live · Consolidated Data FY 2026-2027</p>
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <div class="toggle-wrap" onclick="toggleTheme()">
-      <span id="ticon">🌙</span>
-      <div class="track"><div class="thumb"></div></div>
-      <span id="tlbl">Dark</span>
-    </div>
-    <div class="tabs">
-      <button class="tab on" onclick="setTab('overview')">Overview</button>
-      <button class="tab" onclick="setTab('channels')">Channels</button>
-      <button class="tab" onclick="setTab('marketing')">Marketing</button>
-      <button class="tab" onclick="setTab('compare')">Compare</button>
-    </div>
-    <button class="btn" onclick="load()">↻ Refresh</button>
-  </div>
-</div>
+    /* ── Layout ── */
+    .wrap    { max-width: 1280px; margin: 0 auto; padding: 16px 16px 40px; }
+    .g2      { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .g3      { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .g6      { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    @media (max-width: 900px) { .g6 { grid-template-columns: repeat(3,1fr); } .g3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .g6 { grid-template-columns: repeat(2,1fr); } .g3, .g2 { grid-template-columns: 1fr; } }
 
-<!-- Date selector -->
-<div class="card" style="margin-bottom:12px;padding:12px 18px">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <span class="lbl" style="margin:0">April 2026</span>
-      <span id="sel-lbl" style="font-size:11px;font-family:'DM Mono',monospace;color:#7CB32A">All days</span>
-    </div>
-    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-      <div style="display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px">
-        <button id="ms" class="btn sel-act" onclick="setMode('single')" style="padding:3px 10px;border-radius:16px;font-size:10px;border:none">Single</button>
-        <button id="mm" class="btn"         onclick="setMode('multi')"  style="padding:3px 10px;border-radius:16px;font-size:10px;border:none">Multi</button>
-        <button id="mr" class="btn"         onclick="setMode('range')"  style="padding:3px 10px;border-radius:16px;font-size:10px;border:none">Range</button>
+    /* ── Cards ── */
+    .card {
+      background: var(--bg2); border: 1px solid var(--bd);
+      border-radius: var(--r); padding: 14px 16px;
+      box-shadow: var(--shad); transition: border-color .2s;
+    }
+    .card:hover { border-color: var(--bd2); }
+    .lbl {
+      font-size: 10px; font-weight: 500; color: var(--tx3);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px;
+      display: block;
+    }
+
+    /* ── Pills ── */
+    .up-pill, .dn-pill {
+      font-size: 9.5px; font-weight: 600; padding: 2px 7px;
+      border-radius: var(--r-pill); font-family: var(--f-mono); white-space: nowrap;
+      display: inline-block;
+    }
+    .up-pill { background: var(--up); color: var(--upc); }
+    .dn-pill { background: var(--dn); color: var(--dnc); }
+
+    /* ── Tabs ── */
+    .tab-bar { display: flex; gap: 2px; background: var(--bg2); border: 1px solid var(--bd); border-radius: var(--r-pill); padding: 3px; }
+    .tab {
+      flex: 1; padding: 6px 10px; border-radius: 18px; font-size: 12px; cursor: pointer;
+      border: none; background: transparent; color: var(--tx3); font-family: var(--f-sans);
+      font-weight: 500; text-transform: capitalize; transition: all .15s; text-align: center;
+    }
+    .tab.on { background: var(--bg3); color: var(--tx); }
+
+    /* ── Buttons ── */
+    .btn {
+      background: var(--bg3); border: 1px solid var(--bd2); border-radius: var(--r-sm);
+      color: var(--tx2); font-size: 11px; padding: 7px 12px; cursor: pointer;
+      font-family: var(--f-sans); transition: all .2s; white-space: nowrap;
+    }
+    .btn:hover { color: var(--tx); border-color: var(--tx3); }
+    .btn.act  { background: var(--up); border-color: var(--acc); color: var(--upc); }
+
+    /* ── Theme Toggle ── */
+    .theme-btn {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--r-pill);
+      padding: 6px 12px; cursor: pointer; font-size: 11px; font-weight: 500;
+      color: var(--tx2); transition: all .2s; user-select: none;
+    }
+    .track {
+      width: 30px; height: 17px; border-radius: 9px; background: var(--bg);
+      border: 1px solid var(--bd2); position: relative; transition: background .3s; flex-shrink: 0;
+    }
+    body.light .track { background: #d4e8a0; }
+    .thumb {
+      width: 11px; height: 11px; border-radius: 50%; background: #555;
+      position: absolute; top: 2px; left: 2px; transition: all .3s;
+    }
+    body.light .thumb { background: var(--acc); transform: translateX(13px); }
+
+    /* ── Header ── */
+    .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+    .header-left .status-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #555; display: inline-block; flex-shrink: 0; }
+    .status-text { font-size: 10px; color: var(--tx3); letter-spacing: .08em; font-family: var(--f-mono); }
+    h1 { font-size: clamp(18px, 5vw, 24px); font-weight: 600; letter-spacing: -.03em; color: var(--tx); margin-bottom: 2px; }
+    .subtitle { font-size: 11px; color: var(--tx3); }
+    .header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* ── Spinner ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin {
+      display: inline-block; width: 10px; height: 10px;
+      border: 1.5px solid var(--bd2); border-top-color: var(--acc);
+      border-radius: 50%; animation: spin .7s linear infinite;
+      vertical-align: middle; margin-right: 5px;
+    }
+
+    /* ── Date Strip ── */
+    .strip-wrap { margin-bottom: 12px; padding: 12px 14px; }
+    .strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+    .strip-title  { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .strip-label  { font-size: 11px; font-family: var(--f-mono); color: var(--acc); }
+    .strip-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .mode-bar { display: flex; gap: 2px; background: var(--bg); border: 1px solid var(--bd); border-radius: var(--r-pill); padding: 2px; }
+    .mode-btn { padding: 4px 10px; border-radius: 16px; font-size: 10px; border: none; background: transparent; color: var(--tx3); cursor: pointer; font-family: var(--f-sans); transition: all .15s; }
+    .mode-btn.act { background: var(--up); color: var(--upc); }
+    .hint { font-size: 10px; color: var(--tx3); margin-bottom: 8px; }
+    .legend { display: flex; gap: 10px; align-items: center; }
+    .leg-dot { width: 8px; height: 2px; border-radius: 1px; display: inline-block; }
+    .legend span { font-size: 9px; color: var(--tx3); display: flex; align-items: center; gap: 3px; }
+    .strip {
+      display: flex; gap: 5px; overflow-x: auto; padding: 4px 0 8px;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .strip::-webkit-scrollbar { display: none; }
+
+    /* ── Day Buttons ── */
+    .day {
+      flex-shrink: 0; width: 46px; height: 58px; border-radius: 10px;
+      border: 1px solid var(--bd); background: var(--bg2); cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px; transition: all .15s; position: relative; font-family: var(--f-sans);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .day:active:not(.nd) { transform: scale(.95); }
+    .day.ab { border-bottom: 2px solid rgba(124,179,42,.6); }
+    .day.bl { border-bottom: 2px solid rgba(139,92,246,.6); }
+    .day.nd { opacity: .22; cursor: default; pointer-events: none; }
+    .day.s1 { border-color: var(--acc); background: var(--up); }
+    .day.sn { border-color: rgba(124,179,42,.6); background: var(--up); }
+    .day-num { font-size: 14px; font-weight: 600; color: var(--tx2); line-height: 1; }
+    .day.s1 .day-num, .day.sn .day-num { color: var(--upc); }
+    .day-wk  { font-size: 8px; color: var(--tx3); }
+    .day-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--bd2); }
+    .day.ab .day-dot { background: rgba(124,179,42,.5); }
+    .day.bl .day-dot { background: rgba(139,92,246,.5); }
+    .badge {
+      position: absolute; top: -4px; right: -4px; width: 15px; height: 15px;
+      border-radius: 50%; background: var(--acc); color: #fff;
+      font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      font-family: var(--f-mono);
+    }
+
+    /* ── Progress Bar ── */
+    .prog-card { margin-bottom: 12px; }
+    .prog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; flex-wrap: wrap; gap: 8px; }
+    .prog-title { font-size: 10px; color: var(--tx3); letter-spacing: .06em; }
+    .prog-nums  { display: flex; gap: 14px; flex-wrap: wrap; }
+    .prog-num   { text-align: center; }
+    .prog-num .pl { font-size: 9px; color: var(--tx3); margin-bottom: 1px; }
+    .prog-num .pv { font-size: 12px; font-weight: 700; font-family: var(--f-mono); }
+    .prog-track { background: var(--bar); border-radius: 6px; height: 7px; position: relative; overflow: hidden; }
+    .prog-fill  { height: 100%; border-radius: 6px; background: linear-gradient(90deg,#A78BFA,#7CB32A); width: 0; transition: width .8s ease; }
+    .prog-mark  { position: absolute; top: 0; width: 1.5px; height: 100%; background: #6EE7D0; opacity: .4; }
+    .prog-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--tx4); margin-top: 3px; }
+
+    /* ── KPI Cards ── */
+    .kpi-val  { font-size: clamp(16px, 4vw, 20px); font-weight: 600; letter-spacing: -.04em; font-family: var(--f-mono); margin-bottom: 6px; }
+    .kpi-sub  { font-size: 9px; color: var(--tx3); font-family: var(--f-mono); }
+
+    /* ── Bar Chart ── */
+    .bar-chart { display: flex; align-items: flex-end; gap: 2px; }
+    .bar-col   { flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+    .bar-col:active { opacity: .6; }
+    .bar-fill  { width: 100%; border-radius: 3px 3px 0 0; transition: height .4s, opacity .2s; }
+    .bar-lbl   { font-size: 7.5px; text-align: center; margin-top: 3px; transition: color .2s; }
+
+    /* ── Channel Bars ── */
+    .ch-row    { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .ch-name   { width: 72px; font-size: 11px; color: var(--tx2); flex-shrink: 0; }
+    .ch-track  { flex: 1; background: var(--bar); border-radius: 4px; height: 5px; overflow: hidden; }
+    .ch-fill   { height: 100%; border-radius: 4px; opacity: .85; transition: width .6s; }
+    .ch-val    { width: 58px; font-size: 11px; font-family: var(--f-mono); text-align: right; }
+
+    /* ── Detail rows ── */
+    .srow { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--sep); }
+    .srow:last-child { border-bottom: none; }
+    .sk { font-size: 10.5px; color: var(--tx3); }
+    .sv { font-size: 12px; font-family: var(--f-mono); font-weight: 600; }
+
+    /* ── Table ── */
+    .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 440px; }
+    th { padding: 6px 8px; font-weight: 500; white-space: nowrap; }
+    td { padding: 7px 8px; white-space: nowrap; font-family: var(--f-mono); }
+    tr { border-bottom: 1px solid var(--sep); }
+    .tbl-total { background: var(--bg3); font-weight: 600; }
+    .tbl-avg   { background: var(--bar); }
+
+    /* ── ROAS bar ── */
+    .roas-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .roas-lbl { width: 80px; font-size: 10px; color: var(--tx2); text-align: right; flex-shrink: 0; }
+    .roas-track { flex: 1; background: var(--bar); border-radius: 4px; height: 14px; overflow: hidden; }
+    .roas-fill  { height: 100%; border-radius: 0 4px 4px 0; opacity: .85; transition: width .6s; }
+    .roas-val   { width: 32px; font-size: 11px; font-family: var(--f-mono); }
+
+    /* ── Error box ── */
+    .err-box { display: none; background: var(--dn); border: 1px solid rgba(248,113,113,.3); border-radius: var(--r); padding: 14px 16px; margin-bottom: 12px; }
+    .err-title { font-size: 12px; font-weight: 600; color: var(--dnc); margin-bottom: 4px; }
+    .err-msg   { font-size: 11px; color: var(--dnc); font-family: var(--f-mono); }
+    .err-hint  { font-size: 11px; color: var(--tx3); margin-top: 6px; }
+
+    /* ── Footer ── */
+    .footer { font-size: 9px; color: var(--tx4); text-align: center; margin-top: 14px; font-family: var(--f-mono); }
+
+    /* ── Empty state ── */
+    .empty { text-align: center; padding: 36px 16px; }
+    .empty p { font-size: 13px; color: var(--tx2); margin-bottom: 6px; }
+    .empty small { font-size: 11px; color: var(--tx3); }
+
+    /* ── Mobile tweaks ── */
+    @media (max-width: 480px) {
+      .wrap { padding: 12px 12px 60px; }
+      .header { gap: 8px; }
+      .header-right { width: 100%; }
+      .tab-bar { width: 100%; }
+      .theme-btn .theme-label { display: none; }
+      .prog-nums { gap: 10px; }
+    }
+
+    /* ── Install banner (mobile) ── */
+    #install-banner {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--bg2); border-top: 1px solid var(--bd);
+      padding: 12px 16px; z-index: 100;
+      align-items: center; justify-content: space-between; gap: 12px;
+    }
+    #install-banner.show { display: flex; }
+    #install-banner p { font-size: 12px; color: var(--tx2); }
+    #install-banner strong { color: var(--tx); }
+    #install-banner button { background: var(--acc); border: none; border-radius: var(--r-sm); color: #fff; font-size: 12px; font-weight: 600; padding: 8px 14px; cursor: pointer; white-space: nowrap; }
+    #ib-close { background: transparent; border: none; color: var(--tx3); font-size: 18px; cursor: pointer; padding: 4px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="status-row">
+        <span class="dot" id="dot"></span>
+        <span class="status-text" id="st"><span class="spin"></span>CONNECTING…</span>
       </div>
-      <span style="font-size:9px;color:var(--text3);display:flex;align-items:center;gap:3px"><span style="width:8px;height:2px;background:#7CB32A;display:inline-block;border-radius:1px"></span>Above</span>
-      <span style="font-size:9px;color:var(--text3);display:flex;align-items:center;gap:3px"><span style="width:8px;height:2px;background:#8B5CF6;display:inline-block;border-radius:1px"></span>Below</span>
-      <button class="btn" id="clr" onclick="clearSel()" style="display:none;font-size:10px;padding:3px 9px">× Clear</button>
+      <h1>CEO Dashboard</h1>
+      <p class="subtitle">Live · Consolidated Data FY 2026-2027</p>
+    </div>
+    <div class="header-right">
+      <div class="theme-btn" onclick="toggleTheme()">
+        <span id="ticon">🌙</span>
+        <div class="track"><div class="thumb"></div></div>
+        <span class="theme-label" id="tlbl">Dark</span>
+      </div>
+      <div class="tab-bar">
+        <button class="tab on" onclick="setTab('overview')">Overview</button>
+        <button class="tab" onclick="setTab('channels')">Channels</button>
+        <button class="tab" onclick="setTab('marketing')">Marketing</button>
+        <button class="tab" onclick="setTab('compare')">Compare</button>
+      </div>
+      <button class="btn" onclick="load()" style="flex-shrink:0">↻</button>
     </div>
   </div>
-  <div id="hint" style="font-size:10px;color:var(--text3);margin-bottom:8px">Tap a date to view that day's data</div>
-  <div id="strip" style="display:flex;gap:5px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none"></div>
+
+  <!-- Date strip -->
+  <div class="card strip-wrap">
+    <div class="strip-header">
+      <div class="strip-title">
+        <span class="lbl" style="margin:0">April 2026</span>
+        <span class="strip-label" id="sel-lbl">All days</span>
+      </div>
+      <div class="strip-controls">
+        <div class="mode-bar">
+          <button class="mode-btn act" id="ms" onclick="setMode('single')">Single</button>
+          <button class="mode-btn"     id="mm" onclick="setMode('multi')">Multi</button>
+          <button class="mode-btn"     id="mr" onclick="setMode('range')">Range</button>
+        </div>
+        <div class="legend">
+          <span><span class="leg-dot" style="background:#7CB32A"></span>Above</span>
+          <span><span class="leg-dot" style="background:#8B5CF6"></span>Below</span>
+        </div>
+        <button class="btn" id="clr" onclick="clearSel()" style="display:none;font-size:10px;padding:3px 9px">× Clear</button>
+      </div>
+    </div>
+    <div class="hint" id="hint">Tap a date to view that day's data</div>
+    <div class="strip" id="strip"></div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="card prog-card">
+    <div class="prog-header">
+      <span class="prog-title" id="bt">APRIL MTD · GOAL ₹135Cr</span>
+      <div class="prog-nums" id="bn"></div>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="bp"></div>
+      <div class="prog-mark" id="bline" style="left:72.6%"></div>
+    </div>
+    <div class="prog-labels">
+      <span>₹0</span><span id="bml" style="color:rgba(110,231,208,.3)">₹98Cr target</span><span id="bel">₹135Cr goal</span>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="g6" id="kpis" style="margin-bottom:12px"></div>
+
+  <!-- Main content -->
+  <div id="main"></div>
+
+  <!-- Error -->
+  <div class="err-box" id="err">
+    <div class="err-title">Connection error</div>
+    <div class="err-msg" id="errmsg"></div>
+    <div class="err-hint">Redeploy Code.gs → Manage Deployments → New version → Deploy. Ensure "Who has access: Anyone".</div>
+  </div>
+
+  <div class="footer" id="footer">—</div>
 </div>
 
-<!-- Summary bar -->
-<div class="card" style="margin-bottom:12px">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;flex-wrap:wrap;gap:8px">
-    <span id="bt" style="font-size:10px;color:var(--text3);letter-spacing:.06em">APRIL MTD · GOAL ₹135Cr</span>
-    <div id="bn" style="display:flex;gap:14px;flex-wrap:wrap"></div>
-  </div>
-  <div style="background:var(--bar);border-radius:6px;height:7px;position:relative;overflow:hidden">
-    <div id="bp" style="background:linear-gradient(90deg,#A78BFA,#7CB32A);height:100%;border-radius:6px;width:0;transition:width .8s"></div>
-    <div id="bline" style="position:absolute;left:72.6%;top:0;width:1.5px;height:100%;background:#6EE7D0;opacity:.4"></div>
-  </div>
-  <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text4);margin-top:3px">
-    <span>₹0</span><span id="bml" style="color:#6EE7D022">₹98Cr target</span><span id="bel">₹135Cr goal</span>
-  </div>
-</div>
-
-<!-- KPIs -->
-<div class="g6" id="kpis" style="margin-bottom:12px"></div>
-
-<!-- Main -->
-<div id="main"></div>
-
-<div id="err" style="display:none;background:var(--dn-bg);border:1px solid #f8717155;border-radius:10px;padding:14px 18px;margin-bottom:12px">
-  <div style="font-size:12px;font-weight:600;color:#c0392b;margin-bottom:4px">Connection error</div>
-  <div id="errmsg" style="font-size:11px;color:#c0392b;font-family:'DM Mono',monospace"></div>
-  <div style="font-size:11px;color:var(--text3);margin-top:6px">Redeploy Code.gs → Manage Deployments → New version → Deploy</div>
-</div>
-<div id="footer" class="mono" style="font-size:9px;color:var(--text4);text-align:center;margin-top:12px">—</div>
+<!-- Install banner -->
+<div id="install-banner">
+  <p><strong>Add to Home Screen</strong> — tap Share → Add to Home Screen for instant access</p>
+  <button onclick="document.getElementById('install-banner').classList.remove('show')">Add</button>
+  <button id="ib-close" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
 </div>
 
 <script>
-const SURL  = 'https://script.google.com/macros/s/AKfycbx5VmO_cQuGK-VDISDFtHt2-jnErMmIqcTgenlPwCRutwHVt0mGogbg3iS2urTn5QoJ/exec';
+// ─── CONFIG — update this URL if you redeploy ───────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5VmO_cQuGK-VDISDFtHt2-jnErMmIqcTgenlPwCRutwHVt0mGogbg3iS2urTn5QoJ/exec';
+
+// ─── Constants ──────────────────────────────────────────────────────────────
 const DTGT  = 3354429, MTGT = 98078435, MGOAL = 135000000;
 const WK    = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const APRS  = 2; // April 1 2026 = Wed
+const APRS  = 2; // April 1 2026 = Wednesday
 const C     = { stores:'#7CB32A', online:'#2BC4A8', crm:'#A78BFA', app:'#FB923C', intl:'#38BDF8', acc:'#F472B6' };
+const CH_KEYS = ['stores','online','crm','app','intl'];
+const CH_LABS = ['Stores','Online','CRM','App','Intl.'];
+const CH_TGTS = [1988836, 673670, 458590, 150000, 83333];
 
+// ─── State ───────────────────────────────────────────────────────────────────
 let D={}, TAB='overview', SEL=[], MODE='single', THEME='dark';
-document.body.classList.add('dark');
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-const fmt   = n=>'₹'+((n||0)/1e5).toFixed(1)+'L';
-const fmtC  = n=>'₹'+((n||0)/1e7).toFixed(2)+'Cr';
-const fmtK  = n=>'₹'+((n||0)/1000).toFixed(1)+'K';
-const pv    = (a,b)=>b?(a-b)/b*100:(a?100:-100);
-const ps    = n=>(n>=0?'+':'')+n.toFixed(1)+'%';
-const pill  = v=>`<span class="${v>=0?'up':'dn'}">${ps(v)}</span>`;
-const wk    = d=>WK[(APRS+d-1)%7];
-const sum   = (arr,k)=>arr.reduce((s,r)=>s+(r[k]||0),0);
-const avg   = (arr,k)=>arr.length?sum(arr,k)/arr.length:0;
-const tm    = ()=>THEME==='dark'?'#e2e2e2':'#111';
-const ts    = ()=>THEME==='dark'?'#888':'#555';
-const tm3   = ()=>THEME==='dark'?'#3a3a3a':'#aaa';
-const bar   = ()=>THEME==='dark'?'#1a1a1a':'#e8e8e4';
-const sep   = ()=>THEME==='dark'?'#181818':'#eee';
-const apos  = ()=>THEME==='dark'?'#C8F04A':'#4a7a14';
-const aneg  = ()=>THEME==='dark'?'#f87171':'#c0392b';
-const acol  = v=>v>=0?apos():aneg();
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const fmt   = n => '₹' + ((n||0)/1e5).toFixed(1) + 'L';
+const fmtC  = n => '₹' + ((n||0)/1e7).toFixed(2) + 'Cr';
+const fmtK  = n => '₹' + ((n||0)/1000).toFixed(1) + 'K';
+const pv    = (a,b) => b ? (a-b)/b*100 : (a ? 100 : -100);
+const ps    = n => (n>=0?'+':'') + n.toFixed(1) + '%';
+const pill  = v => `<span class="${v>=0?'up-pill':'dn-pill'}">${ps(v)}</span>`;
+const wk    = d => WK[(APRS+d-1)%7];
+const sum   = (arr,k) => arr.reduce((s,r) => s+(r[k]||0), 0);
+const avg   = (arr,k) => arr.length ? sum(arr,k)/arr.length : 0;
 
-// ── Aggregation — the core fix ────────────────────────────────────────────────
-// Given an array of day rows, return totals + avgs for all metrics
-function agg(rows) {
+// Theme-reactive helpers (call as functions so they pick up current theme)
+const tx    = () => THEME==='dark' ? '#e2e2e2' : '#111';
+const tx2   = () => THEME==='dark' ? '#888' : '#555';
+const tx3   = () => THEME==='dark' ? '#3a3a3a' : '#aaa';
+const bar   = () => THEME==='dark' ? '#1a1a1a' : '#e8e8e4';
+const sep   = () => THEME==='dark' ? '#181818' : '#eee';
+const bg3   = () => THEME==='dark' ? '#1a1a1a' : '#eeeeea';
+const apos  = () => THEME==='dark' ? '#C8F04A' : '#4a7a14';
+const aneg  = () => THEME==='dark' ? '#f87171' : '#c0392b';
+const acol  = v => v >= 0 ? apos() : aneg();
+
+// ─── Aggregation ──────────────────────────────────────────────────────────────
+function aggRev(rows) {
   if (!rows.length) return null;
   const n = rows.length;
   const totRev    = sum(rows,'total');
@@ -180,501 +403,738 @@ function agg(rows) {
   const totCRM    = sum(rows,'crm');
   const totApp    = sum(rows,'app');
   const totIntl   = sum(rows,'intl');
-  return {
-    n, totRev, avgRev: totRev/n,
+  const best  = rows.reduce((a,b) => a.total>b.total ? a : b);
+  const valid = rows.filter(r => r.total>0);
+  const worst = valid.length ? valid.reduce((a,b) => a.total<b.total ? a : b) : {day:'—'};
+  return { n, totRev, avgRev: totRev/n,
     stores:totStores, online:totOnline, crm:totCRM, app:totApp, intl:totIntl,
-    bestDay: rows.reduce((a,b)=>a.total>b.total?a:b),
-    worstDay: rows.filter(r=>r.total>0).reduce((a,b)=>a.total<b.total?a:b,{total:Infinity,day:'—'}),
-    aboveTgt: rows.filter(r=>r.total>=DTGT).length,
-  };
+    best, worst, aboveTgt: rows.filter(r=>r.total>=DTGT).length };
 }
-
 function aggMkt(rows) {
   if (!rows.length) return null;
-  const n = rows.length;
-  const ms=sum(rows,'metaSpend'), mr=sum(rows,'metaRev');
-  const gs=sum(rows,'googleSpend'), gr=sum(rows,'googleRev');
-  const ts=ms+gs, tr=mr+gr;
-  return {
-    n, metaSpend:ms, metaRev:mr, metaRoas:ms?mr/ms:0,
+  const n  = rows.length;
+  const ms = sum(rows,'metaSpend'),   mr = sum(rows,'metaRev');
+  const gs = sum(rows,'googleSpend'), gr = sum(rows,'googleRev');
+  const ts = ms+gs, tr = mr+gr;
+  return { n, metaSpend:ms, metaRev:mr, metaRoas:ms?mr/ms:0,
     googleSpend:gs, googleRev:gr, googleRoas:gs?gr/gs:0,
     totalSpend:ts, totalRev:tr, totalRoas:ts?tr/ts:0,
-    avgDailySpend:ts/n, avgDailyRev:tr/n,
-  };
+    avgDailySpend: ts/n, avgDailyRev: tr/n };
 }
 
-// ── UI helpers ────────────────────────────────────────────────────────────────
-function setStatus(s,m){
-  const c={loading:'#FB923C',live:'#7CB32A',error:'#f87171'}[s]||'#555';
-  document.getElementById('dot').style.cssText=`width:7px;height:7px;border-radius:50%;background:${c};box-shadow:0 0 8px ${c}88;display:inline-block`;
-  document.getElementById('st').innerHTML=s==='loading'?`<span class="spin"></span>${m}`:m;
-  document.getElementById('err').style.display=s==='error'?'block':'none';
-  if(s==='error') document.getElementById('errmsg').textContent=m;
+// ─── UI helpers ───────────────────────────────────────────────────────────────
+function $id(id) { return document.getElementById(id); }
+function setStatus(s, m) {
+  const colors = {loading:'#FB923C', live:'#7CB32A', error:'#f87171'};
+  const c = colors[s] || '#555';
+  const dot = $id('dot');
+  dot.style.background = c;
+  dot.style.boxShadow  = `0 0 8px ${c}88`;
+  $id('st').innerHTML  = s==='loading' ? `<span class="spin"></span>${m}` : m;
+  $id('err').style.display = s==='error' ? 'block' : 'none';
+  if (s==='error') $id('errmsg').textContent = m;
 }
-function setTab(t){ TAB=t; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase()===t)); render(); }
-function toggleTheme(){
-  THEME=THEME==='dark'?'light':'dark';
-  document.body.classList.toggle('dark',THEME==='dark');
-  document.body.classList.toggle('light',THEME==='light');
-  document.getElementById('ticon').textContent=THEME==='dark'?'🌙':'☀️';
-  document.getElementById('tlbl').textContent=THEME==='dark'?'Dark':'Light';
+function setTab(t) {
+  TAB = t;
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.textContent.toLowerCase()===t));
   render();
 }
-function setMode(m){
-  MODE=m; SEL=SEL.slice(0,1);
-  ['ms','mm','mr'].forEach((id,i)=>document.getElementById(id).classList.toggle('sel-act',['single','multi','range'][i]===m));
-  document.getElementById('hint').textContent={single:'Tap a date to view that day',multi:'Tap multiple dates — all metrics aggregate automatically',range:'Tap start then end date to select a range'}[m];
+function toggleTheme() {
+  THEME = THEME==='dark' ? 'light' : 'dark';
+  document.body.classList.toggle('dark',  THEME==='dark');
+  document.body.classList.toggle('light', THEME==='light');
+  $id('ticon').textContent = THEME==='dark' ? '🌙' : '☀️';
+  $id('tlbl').textContent  = THEME==='dark' ? 'Dark' : 'Light';
+  render();
+}
+function setMode(m) {
+  MODE = m; SEL = SEL.slice(0,1);
+  ['ms','mm','mr'].forEach((id,i) => $id(id).classList.toggle('act', ['single','multi','range'][i]===m));
+  $id('hint').textContent = {
+    single: 'Tap a date to view that day',
+    multi:  'Tap multiple dates — all metrics aggregate automatically',
+    range:  'Tap start date, then end date to select a range'
+  }[m];
   buildStrip(); render();
 }
-function clearSel(){ SEL=[]; document.getElementById('clr').style.display='none'; document.getElementById('sel-lbl').textContent='All days'; buildStrip(); render(); }
-
-function tapDay(d){
-  if(MODE==='single')     { SEL=SEL[0]===d?[]:[d]; }
-  else if(MODE==='multi') { const i=SEL.indexOf(d); i>=0?SEL.splice(i,1):SEL.push(d); SEL.sort((a,b)=>a-b); }
+function clearSel() {
+  SEL = [];
+  $id('clr').style.display = 'none';
+  $id('sel-lbl').textContent = 'All days';
+  buildStrip(); render();
+}
+function tapDay(d) {
+  if (MODE==='single')      { SEL = SEL[0]===d ? [] : [d]; }
+  else if (MODE==='multi')  { const i=SEL.indexOf(d); i>=0 ? SEL.splice(i,1) : SEL.push(d); SEL.sort((a,b)=>a-b); }
   else {
-    if(SEL.length===0||SEL.length>=2) SEL=[d];
-    else { const lo=Math.min(SEL[0],d),hi=Math.max(SEL[0],d); SEL=Array.from({length:hi-lo+1},(_,i)=>lo+i); }
+    if (SEL.length===0 || SEL.length>=2) { SEL = [d]; }
+    else { const lo=Math.min(SEL[0],d), hi=Math.max(SEL[0],d); SEL = Array.from({length:hi-lo+1},(_,i)=>lo+i); }
   }
-  document.getElementById('clr').style.display=SEL.length?'block':'none';
-  document.getElementById('sel-lbl').textContent=SEL.length===0?'All days':SEL.length===1?`Apr ${SEL[0]} · ${wk(SEL[0])}`:`${SEL.length} days (Apr ${SEL[0]} – Apr ${SEL[SEL.length-1]})`;
+  $id('clr').style.display = SEL.length ? 'block' : 'none';
+  $id('sel-lbl').textContent = SEL.length===0 ? 'All days'
+    : SEL.length===1 ? `Apr ${SEL[0]} · ${wk(SEL[0])}`
+    : `${SEL.length} days (Apr ${SEL[0]} – Apr ${SEL[SEL.length-1]})`;
   buildStrip(); render();
 }
 
-function buildStrip(){
-  const daily=D.aprilDaily||[];
-  document.getElementById('strip').innerHTML=Array.from({length:30},(_,i)=>{
-    const d=i+1, row=daily.find(x=>+x.day===d), tot=row?row.total:0;
-    const idx=SEL.indexOf(d), isSel=idx>=0, isFirst=SEL[0]===d;
-    let cls='day-btn';
-    if(!tot) cls+=' nd'; else cls+=tot>=DTGT?' ab':' bl';
-    if(isFirst) cls+=' s1'; else if(isSel) cls+=' sN';
-    const badge=isSel&&SEL.length>1?`<span class="badge">${idx+1}</span>`:'';
-    return `<button class="${cls}" onclick="tapDay(${d})" title="Apr ${d} · ${wk(d)}${tot?' · '+fmt(tot):''}">
-      ${badge}<span class="dnum">${d}</span><span class="dlbl">${wk(d)}</span><span class="ddot"></span>
+// ─── Build date strip ────────────────────────────────────────────────────────
+function buildStrip() {
+  const daily = D.aprilDaily || [];
+  $id('strip').innerHTML = Array.from({length:30}, (_,i) => {
+    const d = i+1, row = daily.find(x=>+x.day===d), tot = row ? row.total : 0;
+    const idx = SEL.indexOf(d), isSel = idx>=0, isFirst = SEL[0]===d;
+    let cls = 'day';
+    if (!tot) cls += ' nd'; else cls += tot>=DTGT ? ' ab' : ' bl';
+    if (isFirst) cls += ' s1'; else if (isSel) cls += ' sn';
+    const badge = isSel && SEL.length>1 ? `<span class="badge">${idx+1}</span>` : '';
+    return `<button class="${cls}" onclick="tapDay(${d})" title="Apr ${d} · ${wk(d)}${tot ? ' · '+fmt(tot) : ''}">
+      ${badge}
+      <span class="day-num">${d}</span>
+      <span class="day-wk">${wk(d)}</span>
+      <span class="day-dot"></span>
     </button>`;
   }).join('');
 }
 
-async function load(){
-  setStatus('loading','CONNECTING…');
-  try{
-    const ctrl=new AbortController(), t=setTimeout(()=>ctrl.abort(),18000);
-    const r=await fetch(SURL,{signal:ctrl.signal}); clearTimeout(t);
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const j=await r.json();
-    if(j.error) throw new Error(j.error);
-    D=j;
-    setStatus('live',`LIVE · ${new Date().toLocaleTimeString()} · ${D.sheetName||''}`);
+// ─── Fetch data ──────────────────────────────────────────────────────────────
+async function load() {
+  setStatus('loading', 'FETCHING LIVE DATA…');
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000);
+    const res = await fetch(SCRIPT_URL, { signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json();
+    if (j.error) throw new Error(j.error);
+    D = j;
+    setStatus('live', `LIVE · ${new Date().toLocaleTimeString('en-IN')} · ${D.sheetName||''}`);
     buildStrip(); render();
-  }catch(e){
-    setStatus('error',e.name==='AbortError'?'Timed out — redeploy Code.gs':e.message);
+  } catch(e) {
+    setStatus('error', e.name==='AbortError' ? 'Timed out (20s) — redeploy Code.gs & check access' : e.message);
     buildStrip(); render();
   }
 }
 
-// ── Main render ───────────────────────────────────────────────────────────────
-function render(){
-  const daily  = D.aprilDaily||[];
-  const mktD   = D.mktDaily||[];
-  const ch     = D.channels||{};
-  const mkt    = D.marketing||{};
-  const accD   = D.accessories||{};
-  const filled = daily.filter(x=>x.total>0);
-  const mtdA   = D.mtdActual||0;
+// ─── Main render ─────────────────────────────────────────────────────────────
+function render() {
+  const daily  = D.aprilDaily || [];
+  const mktD   = D.mktDaily   || [];
+  const ch     = D.channels   || {};
+  const mkt    = D.marketing  || {};
+  const accD   = D.accessories || {};
+  const filled = daily.filter(x => x.total>0);
+  const mtdA   = D.mtdActual  || 0;
 
-  // Get selected rows from BOTH channel daily and marketing daily
-  const selRevRows = SEL.length ? SEL.map(d=>daily.find(x=>+x.day===d)).filter(Boolean) : [];
-  const selMktRows = SEL.length ? SEL.map(d=>mktD.find(x=>+x.day===d)).filter(Boolean)  : [];
-  const isSel      = SEL.length>0;
-  const isMulti    = SEL.length>1;
+  const selRevRows = SEL.length ? SEL.map(d => daily.find(x=>+x.day===d)).filter(Boolean) : [];
+  const selMktRows = SEL.length ? SEL.map(d => mktD.find(x=>+x.day===d)).filter(Boolean)  : [];
+  const isSel = SEL.length > 0, isMulti = SEL.length > 1;
+  const aRev  = isSel && selRevRows.length ? aggRev(selRevRows) : null;
+  const aMkt  = isSel && selMktRows.length ? aggMkt(selMktRows) : null;
 
-  // Aggregate selected data
-  const aggRev = isSel && selRevRows.length ? agg(selRevRows) : null;
-  const aggMk  = isSel && selMktRows.length ? aggMkt(selMktRows) : null;
-  const hasMkt = mktD.length > 0; // whether daily marketing data is available
-
-  // ── Summary bar ─────────────────────────────────────────────────────────
-  if(aggRev){
+  // ── Progress bar ──────────────────────────────────────────────────────────
+  if (aRev) {
     const isOne = selRevRows.length===1;
-    const t     = isOne ? selRevRows[0].total : aggRev.totRev;
-    const label = isOne ? `APR ${SEL[0]} · ${wk(SEL[0])} · DAILY` : `${SEL.length} DAYS SELECTED · COMBINED`;
-    document.getElementById('bt').textContent=label;
-    const ratio = isOne ? t/DTGT : aggRev.avgRev/DTGT;
-    document.getElementById('bp').style.cssText=`background:${ratio>=1?'linear-gradient(90deg,#2BC4A8,#7CB32A)':'linear-gradient(90deg,#8B5CF6,#A78BFA)'};height:100%;border-radius:6px;width:${Math.min(ratio*100,100)}%;transition:width .8s`;
-    document.getElementById('bml').textContent='';
-    document.getElementById('bel').textContent=isOne?`Target: ${fmt(DTGT)}`:`Avg vs ${fmt(DTGT)} daily target`;
-    document.getElementById('bline').style.left='71%';
-    document.getElementById('bn').innerHTML=[
-      isOne
-        ? [{l:'Revenue',v:fmt(t),c:acol(t-DTGT)},{l:'vs Target',v:ps(pv(t,DTGT)),c:acol(t-DTGT)},
-           {l:'Stores',v:fmt(selRevRows[0].stores||0),c:C.stores},{l:'Online',v:fmt(selRevRows[0].online||0),c:C.online},
-           {l:'CRM',v:fmt(selRevRows[0].crm||0),c:C.crm},{l:'App+Intl',v:fmt((selRevRows[0].app||0)+(selRevRows[0].intl||0)),c:C.app}]
-        : [{l:'Combined Rev',v:fmt(aggRev.totRev),c:C.stores},{l:'Avg / Day',v:fmt(aggRev.avgRev),c:acol(aggRev.avgRev-DTGT)},
-           {l:'vs Target',v:ps(pv(aggRev.avgRev,DTGT)),c:acol(aggRev.avgRev-DTGT)},{l:'Best Day',v:'Apr '+aggRev.bestDay.day,c:C.online},
-           {l:'Above Tgt',v:`${aggRev.aboveTgt}/${SEL.length}d`,c:apos()},{l:'Days',v:String(SEL.length),c:ts()}]
-    ].flat().map(r=>`<div style="text-align:center"><div style="font-size:9px;color:${tm3()};margin-bottom:1px">${r.l}</div><div style="font-size:12px;font-weight:700;color:${r.c};font-family:'DM Mono',monospace">${r.v}</div></div>`).join('');
+    const t = isOne ? selRevRows[0].total : aRev.totRev;
+    const ratio = isOne ? t/DTGT : aRev.avgRev/DTGT;
+    $id('bt').textContent = isOne ? `APR ${SEL[0]} · ${wk(SEL[0])}` : `${SEL.length} DAYS SELECTED`;
+    $id('bp').style.background = ratio>=1 ? 'linear-gradient(90deg,#2BC4A8,#7CB32A)' : 'linear-gradient(90deg,#8B5CF6,#A78BFA)';
+    $id('bp').style.width = Math.min(ratio*100,100) + '%';
+    $id('bml').textContent = '';
+    $id('bel').textContent = isOne ? `Target: ${fmt(DTGT)}` : `Avg vs daily target`;
+    $id('bline').style.left = '71%';
+    $id('bn').innerHTML = (isOne
+      ? [{l:'Revenue',v:fmt(t),c:acol(t-DTGT)},{l:'vs Tgt',v:ps(pv(t,DTGT)),c:acol(t-DTGT)},
+         {l:'Stores',v:fmt(selRevRows[0].stores||0),c:C.stores},{l:'Online',v:fmt(selRevRows[0].online||0),c:C.online},
+         {l:'CRM',v:fmt(selRevRows[0].crm||0),c:C.crm},{l:'App+Intl',v:fmt((selRevRows[0].app||0)+(selRevRows[0].intl||0)),c:C.app}]
+      : [{l:'Combined',v:fmt(aRev.totRev),c:C.stores},{l:'Avg/Day',v:fmt(aRev.avgRev),c:acol(aRev.avgRev-DTGT)},
+         {l:'vs Tgt',v:ps(pv(aRev.avgRev,DTGT)),c:acol(aRev.avgRev-DTGT)},{l:'Best',v:'Apr '+aRev.best.day,c:C.online},
+         {l:'Above',v:`${aRev.aboveTgt}/${SEL.length}d`,c:apos()},{l:'Days',v:String(SEL.length),c:tx2()}])
+    .map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   } else {
-    document.getElementById('bt').textContent='APRIL MTD · GOAL ₹135Cr';
-    document.getElementById('bp').style.cssText=`background:linear-gradient(90deg,#A78BFA,#7CB32A);height:100%;border-radius:6px;width:${Math.min((mtdA/MGOAL)*100,100)}%;transition:width .8s`;
-    document.getElementById('bml').textContent='₹98Cr target';
-    document.getElementById('bel').textContent='₹135Cr goal';
-    document.getElementById('bline').style.left='72.6%';
-    document.getElementById('bn').innerHTML=[
+    $id('bt').textContent = 'APRIL MTD · GOAL ₹135Cr';
+    $id('bp').style.background = 'linear-gradient(90deg,#A78BFA,#7CB32A)';
+    $id('bp').style.width = Math.min((mtdA/MGOAL)*100,100) + '%';
+    $id('bml').textContent = '₹98Cr target';
+    $id('bel').textContent = '₹135Cr goal';
+    $id('bline').style.left = '72.6%';
+    $id('bn').innerHTML = [
       {l:'MTD Actual',v:fmtC(mtdA),c:C.stores},{l:'vs 98Cr',v:ps(pv(mtdA,MTGT)),c:acol(mtdA-MTGT)},
-      {l:'Gap to 135Cr',v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr',c:aneg()},{l:'Days done',v:filled.length+'/30',c:ts()},
-    ].map(r=>`<div style="text-align:center"><div style="font-size:9px;color:${tm3()};margin-bottom:1px">${r.l}</div><div style="font-size:12px;font-weight:700;color:${r.c};font-family:'DM Mono',monospace">${r.v}</div></div>`).join('');
+      {l:'Gap 135Cr',v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr',c:aneg()},{l:'Days',v:filled.length+'/30',c:tx2()},
+    ].map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   }
 
   // ── KPIs ─────────────────────────────────────────────────────────────────
   let kpis;
-  if(aggRev && !isMulti){
-    const t=selRevRows[0].total, prev=daily.find(x=>+x.day===SEL[0]-1);
-    kpis=[
-      {l:'Day Revenue', v:fmt(t),                     chg:pv(t,DTGT),              c:acol(t-DTGT)},
-      {l:'vs Target',   v:ps(pv(t,DTGT)),              chg:pv(t,DTGT),              c:acol(t-DTGT)},
-      {l:'vs Prev Day', v:prev?ps(pv(t,prev.total)):'—', chg:prev?pv(t,prev.total):null, c:C.online},
-      {l:'Mkt Spend',   v:aggMk?fmtK(aggMk.totalSpend):(hasMkt?'—':'No daily mkt'), chg:null, c:C.app},
-      {l:'Day ROAS',    v:aggMk?aggMk.totalRoas.toFixed(2)+'×':(hasMkt?'—':'—'),   chg:null, c:C.intl},
-      {l:'Mkt Revenue', v:aggMk?fmt(aggMk.totalRev):(hasMkt?'—':'—'),              chg:null, c:C.crm},
+  if (aRev && !isMulti) {
+    const t = selRevRows[0].total, prev = daily.find(x=>+x.day===SEL[0]-1);
+    kpis = [
+      {l:'Day Revenue', v:fmt(t),                              chg:pv(t,DTGT),                c:acol(t-DTGT)},
+      {l:'vs Target',   v:ps(pv(t,DTGT)),                     chg:pv(t,DTGT),                c:acol(t-DTGT)},
+      {l:'vs Prev Day', v:prev?ps(pv(t,prev.total)):'—',      chg:prev?pv(t,prev.total):null, c:C.online},
+      {l:'Mkt Spend',   v:aMkt?fmtK(aMkt.totalSpend):'—',    chg:null,                      c:C.app},
+      {l:'ROAS',        v:aMkt?aMkt.totalRoas.toFixed(2)+'×':'—', chg:null,                  c:C.intl},
+      {l:'Mkt Rev',     v:aMkt?fmt(aMkt.totalRev):'—',        chg:null,                      c:C.crm},
     ];
-  } else if(aggRev && isMulti){
-    kpis=[
-      {l:'Combined Rev',  v:fmt(aggRev.totRev),         chg:pv(aggRev.avgRev,DTGT), c:C.stores},
-      {l:'Avg / Day',     v:fmt(aggRev.avgRev),          chg:pv(aggRev.avgRev,DTGT), c:acol(aggRev.avgRev-DTGT)},
-      {l:'Stores Total',  v:fmt(aggRev.stores),          chg:null, c:C.stores},
-      {l:'Online Total',  v:fmt(aggRev.online),          chg:null, c:C.online},
-      {l:'Mkt Spend',     v:aggMk?fmtK(aggMk.totalSpend):'—', chg:null, c:C.app},
-      {l:'ROAS (avg)',    v:aggMk?aggMk.totalRoas.toFixed(2)+'×':'—', chg:null, c:C.intl},
+  } else if (aRev && isMulti) {
+    kpis = [
+      {l:'Combined Rev', v:fmt(aRev.totRev),          chg:pv(aRev.avgRev,DTGT),  c:C.stores},
+      {l:'Avg / Day',    v:fmt(aRev.avgRev),           chg:pv(aRev.avgRev,DTGT),  c:acol(aRev.avgRev-DTGT)},
+      {l:'Stores Total', v:fmt(aRev.stores),           chg:null,                  c:C.stores},
+      {l:'Online Total', v:fmt(aRev.online),           chg:null,                  c:C.online},
+      {l:'Mkt Spend',    v:aMkt?fmtK(aMkt.totalSpend):'—', chg:null,             c:C.app},
+      {l:'ROAS (avg)',   v:aMkt?aMkt.totalRoas.toFixed(2)+'×':'—', chg:null,      c:C.intl},
     ];
   } else {
-    const last=daily[daily.length-1]||{};
-    kpis=[
-      {l:'Last Day Total', v:fmt(last.total||0),             chg:pv(last.total||0,DTGT),                             c:C.stores},
-      {l:'MTD (5-ch)',     v:fmtC(mtdA),                     chg:pv(mtdA,MTGT),                                      c:C.online},
-      {l:'Stores MTD',     v:fmtC(ch.stores?.mtdActual||0),  chg:pv(ch.stores?.mtdActual||0,ch.stores?.mtdTarget||1), c:C.stores},
-      {l:'Online MTD',     v:fmtC(ch.online?.mtdActual||0),  chg:pv(ch.online?.mtdActual||0,ch.online?.mtdTarget||1), c:C.online},
-      {l:'ROAS Today',     v:(mkt.totalRoas||0).toFixed(2)+'×', chg:null, c:C.intl},
-      {l:'135Cr Gap',      v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr', chg:null, c:aneg()},
+    const last = daily[daily.length-1] || {};
+    kpis = [
+      {l:'Last Day',    v:fmt(last.total||0),              chg:pv(last.total||0,DTGT),                              c:C.stores},
+      {l:'MTD (5-ch)',  v:fmtC(mtdA),                      chg:pv(mtdA,MTGT),                                       c:C.online},
+      {l:'Stores MTD',  v:fmtC(ch.stores?.mtdActual||0),   chg:pv(ch.stores?.mtdActual||0,ch.stores?.mtdTarget||1), c:C.stores},
+      {l:'Online MTD',  v:fmtC(ch.online?.mtdActual||0),   chg:pv(ch.online?.mtdActual||0,ch.online?.mtdTarget||1), c:C.online},
+      {l:'ROAS Today',  v:(mkt.totalRoas||0).toFixed(2)+'×', chg:null,                                              c:C.intl},
+      {l:'135Cr Gap',   v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr', chg:null,                                       c:aneg()},
     ];
   }
-  document.getElementById('kpis').innerHTML=kpis.map(k=>`<div class="card">
-    <div class="lbl">${k.l}</div>
-    <div style="font-size:18px;font-weight:600;letter-spacing:-.04em;color:${k.c};font-family:'DM Mono',monospace;margin-bottom:6px">${k.v}</div>
-    ${k.chg!==null?pill(k.chg):`<span style="font-size:9px;color:${tm3()};font-family:'DM Mono',monospace">${isSel?'selected':'MTD'}</span>`}
-  </div>`).join('');
+  $id('kpis').innerHTML = kpis.map(k => `
+    <div class="card">
+      <span class="lbl">${k.l}</span>
+      <div class="kpi-val" style="color:${k.c}">${k.v}</div>
+      ${k.chg!==null ? pill(k.chg) : `<span class="kpi-sub">${isSel?'selected':'MTD'}</span>`}
+    </div>`).join('');
 
-  const mc=document.getElementById('main');
+  const mc = $id('main');
 
-  // ── OVERVIEW tab ──────────────────────────────────────────────────────────
-  if(TAB==='overview'){
-    const maxT=Math.max(...daily.map(d=>d.total),DTGT)||1;
-    const above=daily.filter(d=>d.total>=DTGT).length, below=daily.filter(d=>d.total>0&&d.total<DTGT).length;
-    mc.innerHTML=`
+  // ── OVERVIEW ─────────────────────────────────────────────────────────────
+  if (TAB==='overview') {
+    const maxT = Math.max(...daily.map(d=>d.total), DTGT) || 1;
+    const above = daily.filter(d=>d.total>=DTGT).length, below = daily.filter(d=>d.total>0&&d.total<DTGT).length;
+    const avgR = filled.length ? sum(filled,'total')/filled.length : 0;
+    mc.innerHTML = `
     <div class="card" style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-        <p class="lbl" style="margin-bottom:0">April 2026 · Daily Revenue · tap bar to drill in</p>
-        <div style="display:flex;gap:12px;font-size:10px;color:${tm3()};flex-wrap:wrap">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+        <span class="lbl" style="margin:0">April 2026 · Daily Revenue · tap to drill in</span>
+        <div style="display:flex;gap:10px;font-size:10px;color:${tx3()};flex-wrap:wrap">
           <span><span style="display:inline-block;width:8px;height:8px;background:#7CB32A;border-radius:2px;margin-right:3px"></span>Above (${above}d)</span>
           <span><span style="display:inline-block;width:8px;height:8px;background:#8B5CF6;border-radius:2px;margin-right:3px"></span>Below (${below}d)</span>
-          <span>Avg ${fmt(filled.length?sum(filled,'total')/filled.length:0)}</span>
+          <span>Avg ${fmt(avgR)}</span>
         </div>
       </div>
       <div style="position:relative">
-        <div style="position:absolute;bottom:${(DTGT/maxT)*110+18}px;left:0;right:0;border-top:1px dashed #7CB32A33;pointer-events:none"></div>
-        <div style="display:flex;align-items:flex-end;gap:2px;height:128px">
-          ${daily.map(d=>{
-            const h=d.total>0?Math.max((d.total/maxT)*110,4):2;
-            const sel=SEL.includes(+d.day);
-            const bg=d.total===0?bar():d.total>=DTGT?'#7CB32A':'#8B5CF6';
-            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer" onclick="tapDay(${d.day})">
-              <div style="width:100%;background:${bg};height:${h}px;border-radius:3px 3px 0 0;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'};transition:opacity .2s"></div>
-            </div>`;}).join('')}
+        <div style="position:absolute;bottom:${(DTGT/maxT)*110+18}px;left:0;right:0;border-top:1px dashed rgba(124,179,42,.25);pointer-events:none"></div>
+        <div class="bar-chart" style="height:128px">
+          ${daily.map(d => {
+            const h = d.total>0 ? Math.max((d.total/maxT)*110,4) : 2;
+            const sel = SEL.includes(+d.day);
+            const bg = d.total===0 ? bar() : d.total>=DTGT ? '#7CB32A' : '#8B5CF6';
+            return `<div class="bar-col" onclick="tapDay(${d.day})">
+              <div class="bar-fill" style="background:${bg};height:${h}px;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'}"></div>
+            </div>`;
+          }).join('')}
         </div>
         <div style="display:flex;gap:2px;margin-top:3px">
-          ${daily.map(d=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+d.day)?'#7CB32A':tm3()};text-align:center">${d.day}</div>`).join('')}
+          ${daily.map(d=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+d.day)?'#7CB32A':tx3()};text-align:center">${d.day}</div>`).join('')}
         </div>
       </div>
     </div>
-    ${aggRev && !isMulti && selRevRows[0] ? dayDetailHTML(selRevRows[0],selMktRows[0]) : ''}
-    ${aggRev && isMulti ? multiSummaryHTML(aggRev, aggMk) : ''}`;
+    ${aRev && !isMulti && selRevRows[0] ? dayDetailHTML(selRevRows[0], selMktRows[0]) : ''}
+    ${aRev && isMulti ? multiSummaryHTML(aRev, aMkt) : ''}
+    ${insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, filled)}`;
   }
 
-  // ── CHANNELS tab ──────────────────────────────────────────────────────────
-  if(TAB==='channels'){
-    const chs=[
-      {n:'Stores',      mtdA:ch.stores?.mtdActual||0, mtdT:ch.stores?.mtdTarget||1, dayA:ch.stores?.lastDayActual||0, dayT:1988836, c:C.stores},
-      {n:'Online',      mtdA:ch.online?.mtdActual||0, mtdT:ch.online?.mtdTarget||1, dayA:ch.online?.lastDayActual||0, dayT:673670,  c:C.online},
-      {n:'CRM',         mtdA:ch.crm?.mtdActual||0,    mtdT:ch.crm?.mtdTarget||1,    dayA:ch.crm?.lastDayActual||0,    dayT:458590,  c:C.crm},
-      {n:'App',         mtdA:ch.app?.mtdActual||0,    mtdT:ch.app?.mtdTarget||1,    dayA:ch.app?.lastDayActual||0,    dayT:150000,  c:C.app},
-      {n:'Intl.',       mtdA:ch.intl?.mtdActual||0,   mtdT:ch.intl?.mtdTarget||1,   dayA:ch.intl?.lastDayActual||0,   dayT:83333,   c:C.intl},
-      {n:'Accessories', mtdA:accD.mtdActual||0,       mtdT:accD.mtdTarget||1,       dayA:accD.lastDayActual||0,       dayT:100000,  c:C.acc},
-    ];
-    // If dates selected, use aggregated data
-    const useSel = aggRev && selRevRows.length > 0;
-    mc.innerHTML=`<div class="g2">
-      <div class="card"><p class="lbl">${useSel?SEL.length+' Days Selected — Channel Totals':'Channel MTD'}</p>
-        ${chs.map((c,idx)=>{
-          const dispA = useSel ? [aggRev.stores,aggRev.online,aggRev.crm,aggRev.app,aggRev.intl,0][idx] : c.mtdA;
-          const dispT = useSel ? [1988836,673670,458590,150000,83333,100000][idx]*SEL.length : c.mtdT;
-          const v=pv(dispA,dispT), w=Math.min((dispA/Math.max(dispT,1))*100,100);
-          return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
-            <div style="width:72px;font-size:11px;color:${ts()}">${c.n}</div>
-            <div style="flex:1;background:${bar()};border-radius:4px;height:5px;overflow:hidden"><div style="background:${c.c};width:${w}%;height:100%;opacity:.85;transition:width .6s"></div></div>
-            <div style="width:62px;font-size:11px;font-family:'DM Mono',monospace;color:${c.c};text-align:right">${useSel?fmt(dispA):fmtC(dispA)}</div>
-            ${pill(v)}</div>`;}).join('')}
+  // ── CHANNELS ─────────────────────────────────────────────────────────────
+  if (TAB==='channels') {
+    const useSel = aRev && selRevRows.length>0;
+    const chData = CH_KEYS.map((k,i) => ({
+      n: CH_LABS[i], c: Object.values(C)[i],
+      mtdA: ch[k]?.mtdActual||0, mtdT: ch[k]?.mtdTarget||1,
+      dayA: ch[k]?.lastDayActual||0, dayT: CH_TGTS[i],
+      selA: useSel ? (aRev[k]||0) : 0,
+    }));
+    chData.push({ n:'Accessories', c:C.acc, mtdA:accD.mtdActual||0, mtdT:accD.mtdTarget||1, dayA:accD.lastDayActual||0, dayT:100000, selA:0 });
+
+    mc.innerHTML = `<div class="g2">
+      <div class="card">
+        <span class="lbl">${useSel ? SEL.length+' Days — Channel Totals' : 'Channel MTD'}</span>
+        ${chData.map((c,i) => {
+          const dispA = useSel && i<5 ? (aRev[CH_KEYS[i]]||0) : c.mtdA;
+          const dispT = useSel && i<5 ? CH_TGTS[i]*SEL.length : c.mtdT;
+          const v = pv(dispA, dispT), w = Math.min((dispA/Math.max(dispT,1))*100,100);
+          return `<div class="ch-row">
+            <span class="ch-name">${c.n}</span>
+            <div class="ch-track"><div class="ch-fill" style="background:${c.c};width:${w}%"></div></div>
+            <span class="ch-val" style="color:${c.c}">${useSel&&i<5?fmt(dispA):fmtC(dispA)}</span>
+            ${pill(v)}
+          </div>`;
+        }).join('')}
       </div>
-      <div class="card"><p class="lbl">${useSel?'Avg / Day vs Daily Target':'Last Day Breakdown'}</p>
-        ${chs.map((c,idx)=>{
-          const dispA = useSel ? [aggRev.stores,aggRev.online,aggRev.crm,aggRev.app,aggRev.intl,0][idx]/SEL.length : c.dayA;
-          const dispT = [1988836,673670,458590,150000,83333,100000][idx];
-          const v=pv(dispA,dispT);
+      <div class="card">
+        <span class="lbl">${useSel ? 'Avg / Day vs Daily Target' : 'Last Day Breakdown'}</span>
+        ${chData.slice(0,5).map((c,i) => {
+          const dispA = useSel ? (aRev[CH_KEYS[i]]||0)/SEL.length : c.dayA;
+          const v = pv(dispA, CH_TGTS[i]);
           return `<div class="srow">
             <span class="sk">${c.n}</span>
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:9.5px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(dispT)}</span>
-              <span class="sv" style="color:${tm()}">${fmt(dispA)}</span>
-              ${pill(v)}</div></div>`;}).join('')}
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="font-size:9.5px;color:${tx3()};font-family:var(--f-mono)">${fmt(CH_TGTS[i])}</span>
+              <span class="sv" style="color:${tx()}">${fmt(dispA)}</span>
+              ${pill(v)}
+            </div>
+          </div>`;
+        }).join('')}
         <div style="padding-top:7px;display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:11px;color:${ts()};font-weight:600">${useSel?'Avg Total':'Total'}</span>
+          <span style="font-size:11px;color:${tx2()};font-weight:600">${useSel?'Avg Total':'Total'}</span>
           <div style="display:flex;gap:8px;align-items:center">
-            <span style="font-size:9.5px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(DTGT)}</span>
-            <span style="font-size:13px;color:${apos()};font-family:'DM Mono',monospace;font-weight:700">${useSel?fmt(aggRev.avgRev):fmt(ch.stores?.lastDayActual||0)}</span>
-            ${pill(pv(useSel?aggRev.avgRev:(ch.stores?.lastDayActual||0),DTGT))}
+            <span style="font-size:9.5px;color:${tx3()};font-family:var(--f-mono)">${fmt(DTGT)}</span>
+            <span style="font-size:13px;color:${apos()};font-family:var(--f-mono);font-weight:700">${useSel?fmt(aRev.avgRev):fmt(D.aprilDaily?.[D.aprilDaily.length-1]?.total||0)}</span>
+            ${pill(pv(useSel?aRev.avgRev:(D.aprilDaily?.[D.aprilDaily.length-1]?.total||0), DTGT))}
           </div>
         </div>
       </div>
     </div>`;
   }
 
-  // ── MARKETING tab ─────────────────────────────────────────────────────────
-  if(TAB==='marketing'){
-    const useSel = aggMk && isSel;
-    const mShow  = useSel ? {
-      metaSpend:aggMk.metaSpend, metaRev:aggMk.metaRev, metaRoas:aggMk.metaRoas,
-      googleSpend:aggMk.googleSpend, googleRev:aggMk.googleRev, googleRoas:aggMk.googleRoas,
-      totalSpend:aggMk.totalSpend, totalRev:aggMk.totalRev, totalRoas:aggMk.totalRoas,
-    } : mkt;
-
-    mc.innerHTML=`
+  // ── MARKETING ────────────────────────────────────────────────────────────
+  if (TAB==='marketing') {
+    const useSel = aMkt && isSel;
+    const mShow = useSel ? aMkt : mkt;
+    const hasMktD = mktD.length > 0;
+    mc.innerHTML = `
     <div class="g3" style="margin-bottom:12px">
-      <div class="card"><p class="lbl">${useSel?(SEL.length>1?SEL.length+' Days — Combined':'Apr '+SEL[0]+' · Marketing'):'Today / Latest'}</p>
-        ${[{pl:'Meta',spend:mShow.metaSpend||0,rev:mShow.metaRev||0,roas:mShow.metaRoas||0,c:C.online},
-           {pl:'Google',spend:mShow.googleSpend||0,rev:mShow.googleRev||0,roas:mShow.googleRoas||0,c:C.crm},
-           {pl:'Combined',spend:mShow.totalSpend||0,rev:mShow.totalRev||0,roas:mShow.totalRoas||0,c:C.stores}].map(m=>`
+      <div class="card">
+        <span class="lbl">${useSel?(SEL.length>1?SEL.length+' Days Combined':'Apr '+SEL[0]):'Today / Latest'}</span>
+        ${[{pl:'Meta',  spend:mShow.metaSpend||0,   rev:mShow.metaRev||0,   roas:mShow.metaRoas||0,   c:C.online},
+           {pl:'Google',spend:mShow.googleSpend||0, rev:mShow.googleRev||0, roas:mShow.googleRoas||0, c:C.crm},
+           {pl:'Total', spend:mShow.totalSpend||0,  rev:mShow.totalRev||0,  roas:mShow.totalRoas||0,  c:C.stores}].map(m => `
           <div style="margin-bottom:12px">
             <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-              <span style="font-size:12px;color:${ts()}">${m.pl}</span>
-              <span style="font-size:14px;font-weight:700;color:${m.c};font-family:'DM Mono',monospace">${m.roas.toFixed(2)}×</span>
+              <span style="font-size:12px;color:${tx2()}">${m.pl}</span>
+              <span style="font-size:14px;font-weight:700;color:${m.c};font-family:var(--f-mono)">${m.roas.toFixed(2)}×</span>
             </div>
-            <div style="display:flex;gap:14px">
-              <div><div style="font-size:9px;color:${tm3()};margin-bottom:1px">SPEND</div><div style="font-size:11px;color:${ts()};font-family:'DM Mono',monospace">${fmtK(m.spend)}</div></div>
-              <div><div style="font-size:9px;color:${tm3()};margin-bottom:1px">REVENUE</div><div style="font-size:11px;color:${ts()};font-family:'DM Mono',monospace">${fmt(m.rev)}</div></div>
+            <div style="display:flex;gap:12px">
+              <div><div style="font-size:9px;color:${tx3()};margin-bottom:1px">SPEND</div>
+                   <div style="font-size:11px;color:${tx2()};font-family:var(--f-mono)">${fmtK(m.spend)}</div></div>
+              <div><div style="font-size:9px;color:${tx3()};margin-bottom:1px">REVENUE</div>
+                   <div style="font-size:11px;color:${tx2()};font-family:var(--f-mono)">${fmt(m.rev)}</div></div>
             </div>
           </div>`).join('')}
-        ${useSel&&SEL.length>1?`<div style="padding-top:8px;border-top:1px solid ${sep()};font-size:10px;color:${tm3()}">Avg daily spend: ${fmtK(aggMk.avgDailySpend)} · Avg daily rev: ${fmt(aggMk.avgDailyRev)}</div>`:''}
+        ${useSel&&SEL.length>1?`<div style="padding-top:6px;border-top:1px solid ${sep()};font-size:10px;color:${tx3()}">Avg daily: ${fmtK(aMkt.avgDailySpend)} spend · ${fmt(aMkt.avgDailyRev)} rev</div>`:''}
       </div>
-      <div class="card"><p class="lbl">MTD Marketing</p>
-        ${[{l:'Proj. spend',v:'₹'+((mkt.projSpend||0)/1e5).toFixed(1)+'L',c:ts()},
-           {l:'Actual spend',v:'₹'+((mkt.mtdSpend||0)/1e5).toFixed(1)+'L',c:tm()},
-           {l:'Proj. revenue',v:fmtC(mkt.projRev||0),c:ts()},
-           {l:'Actual revenue',v:fmtC(mkt.mtdRev||0),c:aneg()},
-           {l:'Proj. ROAS',v:(mkt.projRoas||0).toFixed(1)+'×',c:ts()},
-           {l:'Actual ROAS',v:(mkt.mtdRoas||0).toFixed(2)+'×',c:aneg()},
-           {l:'Rev vs proj.',v:ps(pv(mkt.mtdRev||0,mkt.projRev||1)),c:aneg()}].map(r=>`
-          <div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')}
+      <div class="card">
+        <span class="lbl">MTD Marketing</span>
+        ${[{l:'Proj. Spend',  v:'₹'+((mkt.projSpend||0)/1e5).toFixed(1)+'L', c:tx2()},
+           {l:'Actual Spend', v:'₹'+((mkt.mtdSpend||0)/1e5).toFixed(1)+'L',  c:tx()},
+           {l:'Proj. Rev',    v:fmtC(mkt.projRev||0),                         c:tx2()},
+           {l:'Actual Rev',   v:fmtC(mkt.mtdRev||0),                          c:aneg()},
+           {l:'Proj. ROAS',   v:(mkt.projRoas||0).toFixed(1)+'×',             c:tx2()},
+           {l:'Actual ROAS',  v:(mkt.mtdRoas||0).toFixed(2)+'×',              c:aneg()},
+           {l:'Rev vs Proj.', v:ps(pv(mkt.mtdRev||0,mkt.projRev||1)),         c:aneg()}].map(r =>
+          `<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')}
       </div>
-      <div class="card"><p class="lbl">ROAS Bars ${useSel?'(selected)':'(MTD)'}</p>
-        ${[{n:'Meta',v:mShow.metaRoas||0,c:C.online},{n:'Google',v:mShow.googleRoas||0,c:C.crm},
-           {n:'Combined',v:mShow.totalRoas||0,c:C.stores},{n:'MTD Actual',v:mkt.mtdRoas||0,c:aneg()},
-           {n:'MTD Target',v:mkt.projRoas||0,c:tm3()}].map(r=>`
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-            <div style="width:74px;font-size:10px;color:${ts()};text-align:right">${r.n}</div>
-            <div style="flex:1;background:${bar()};border-radius:4px;height:14px;overflow:hidden">
-              <div style="background:${r.c};width:${Math.min((r.v/7)*100,100)}%;height:100%;border-radius:0 4px 4px 0;opacity:.85;transition:width .6s"></div>
-            </div>
-            <div style="width:30px;font-size:11px;font-family:'DM Mono',monospace;color:${r.c}">${r.v.toFixed(1)}×</div>
+      <div class="card">
+        <span class="lbl">ROAS ${useSel?'(selected)':'(MTD)'}</span>
+        ${[{n:'Meta',       v:mShow.metaRoas||0,   c:C.online},
+           {n:'Google',     v:mShow.googleRoas||0, c:C.crm},
+           {n:'Combined',   v:mShow.totalRoas||0,  c:C.stores},
+           {n:'MTD Actual', v:mkt.mtdRoas||0,      c:aneg()},
+           {n:'MTD Target', v:mkt.projRoas||0,     c:tx3()}].map(r => `
+          <div class="roas-row">
+            <span class="roas-lbl">${r.n}</span>
+            <div class="roas-track"><div class="roas-fill" style="background:${r.c};width:${Math.min((r.v/7)*100,100)}%"></div></div>
+            <span class="roas-val" style="color:${r.c}">${r.v.toFixed(1)}×</span>
           </div>`).join('')}
       </div>
     </div>
-    ${hasMkt?`<div class="g2">
-      <div class="card"><p class="lbl">Daily ROAS Trend · tap bar</p>
-        <div style="display:flex;align-items:flex-end;gap:3px;height:90px">
-          ${mktD.map(r=>{const mx=Math.max(...mktD.map(x=>x.totalRoas||0),4),h=Math.max(((r.totalRoas||0)/mx)*80,3);
+    ${hasMktD ? `
+    <div class="g2">
+      <div class="card">
+        <span class="lbl" style="margin-bottom:10px">Daily ROAS Trend · tap bar</span>
+        <div class="bar-chart" style="height:80px">
+          ${mktD.map(r => {
+            const mx=Math.max(...mktD.map(x=>x.totalRoas||0),4), h=Math.max(((r.totalRoas||0)/mx)*70,3);
             const sel=SEL.includes(+r.day);
-            return `<div style="flex:1;cursor:pointer;display:flex;flex-direction:column;align-items:center" onclick="tapDay(${r.day})">
-              <div style="width:100%;background:${r.totalRoas>=4?C.stores:C.crm};height:${h}px;border-radius:3px 3px 0 0;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'}"></div>
+            return `<div class="bar-col" onclick="tapDay(${r.day})">
+              <div class="bar-fill" style="background:${r.totalRoas>=4?C.stores:C.crm};height:${h}px;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'}"></div>
             </div>`;}).join('')}
         </div>
-        <div style="display:flex;gap:3px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tm3()};text-align:center">${r.day}</div>`).join('')}</div>
+        <div style="display:flex;gap:2px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tx3()};text-align:center">${r.day}</div>`).join('')}</div>
       </div>
-      <div class="card"><p class="lbl">Daily Spend vs Revenue · tap bar</p>
-        <div style="display:flex;align-items:flex-end;gap:3px;height:90px">
-          ${mktD.map(r=>{const mx=Math.max(...mktD.map(x=>Math.max(x.totalSpend||0,x.totalRev||0)),1);
-            const sh=Math.max(((r.totalSpend||0)/mx)*80,2), rh=Math.max(((r.totalRev||0)/mx)*80,2);
+      <div class="card">
+        <span class="lbl" style="margin-bottom:10px">Spend vs Revenue · tap bar</span>
+        <div class="bar-chart" style="height:80px">
+          ${mktD.map(r => {
+            const mx=Math.max(...mktD.map(x=>Math.max(x.totalSpend||0,x.totalRev||0)),1);
+            const sh=Math.max(((r.totalSpend||0)/mx)*70,2), rh=Math.max(((r.totalRev||0)/mx)*70,2);
             const sel=SEL.includes(+r.day);
-            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;opacity:${SEL.length&&!sel?.3:.9}" onclick="tapDay(${r.day})">
+            return `<div class="bar-col" style="opacity:${SEL.length&&!sel?.3:.9}" onclick="tapDay(${r.day})">
               <div style="display:flex;gap:1px;align-items:flex-end;width:100%;justify-content:center">
                 <div style="width:46%;background:${C.app};height:${sh}px;border-radius:2px 2px 0 0"></div>
                 <div style="width:46%;background:${C.stores};height:${rh}px;border-radius:2px 2px 0 0"></div>
               </div>
             </div>`;}).join('')}
         </div>
-        <div style="display:flex;gap:3px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tm3()};text-align:center">${r.day}</div>`).join('')}</div>
-        <div style="display:flex;gap:14px;margin-top:8px">
-          <span style="font-size:9.5px;color:${ts()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.app};border-radius:2px;display:inline-block"></span>Spend</span>
-          <span style="font-size:9.5px;color:${ts()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.stores};border-radius:2px;display:inline-block"></span>Revenue</span>
+        <div style="display:flex;gap:2px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tx3()};text-align:center">${r.day}</div>`).join('')}</div>
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <span style="font-size:9.5px;color:${tx2()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.app};border-radius:2px;display:inline-block"></span>Spend</span>
+          <span style="font-size:9.5px;color:${tx2()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.stores};border-radius:2px;display:inline-block"></span>Revenue</span>
         </div>
       </div>
-    </div>`:`<div class="card" style="text-align:center;padding:20px"><p style="font-size:12px;color:${ts()}">Daily marketing data not detected</p><p style="font-size:10px;color:${tm3()};margin-top:4px">Add a Date column (col A) in "Daily Marketing report" sheet, then redeploy Code.gs</p></div>`}`;
+    </div>` : `<div class="card"><div class="empty"><p>No daily marketing rows detected</p><small>Add a Date column (col A) in "Daily Marketing report" and redeploy Code.gs</small></div></div>`}`;
   }
 
-  // ── COMPARE tab ───────────────────────────────────────────────────────────
-  if(TAB==='compare'){
-    if(!isSel){ mc.innerHTML=`<div class="card" style="text-align:center;padding:36px"><p style="font-size:13px;color:${ts()};margin-bottom:6px">Select dates to compare</p><p style="font-size:11px;color:${tm3()}">Use Multi or Range mode in the date strip above</p></div>`; return; }
-    const rows=selRevRows;
-    mc.innerHTML=`
+  // ── COMPARE ──────────────────────────────────────────────────────────────
+  if (TAB==='compare') {
+    if (!isSel) {
+      mc.innerHTML = `<div class="card"><div class="empty"><p>Select dates to compare</p><small>Use Multi or Range mode, then tap dates</small></div></div>`;
+      return;
+    }
+    const rows = selRevRows;
+    mc.innerHTML = `
     <div class="card" style="margin-bottom:12px">
-      <p class="lbl" style="margin-bottom:12px">Revenue breakdown · ${rows.length} days selected</p>
-      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px;min-width:500px">
+      <span class="lbl" style="margin-bottom:12px;display:block">Revenue · ${rows.length} days selected</span>
+      <div class="tbl-wrap"><table>
         <thead><tr style="border-bottom:1px solid ${sep()}">
-          <th style="text-align:left;padding:6px 8px;color:${tm3()};font-weight:500">Date</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.stores};font-weight:500">Stores</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.online};font-weight:500">Online</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.crm};font-weight:500">CRM</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.app};font-weight:500">App</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.intl};font-weight:500">Intl.</th>
-          <th style="text-align:right;padding:6px 8px;color:${tm()};font-weight:600">Total</th>
-          <th style="text-align:right;padding:6px 8px;color:${ts()};font-weight:500">vs Tgt</th>
+          <th style="text-align:left;color:${tx3()}">Date</th>
+          ${CH_KEYS.slice(0,5).map((k,i)=>`<th style="text-align:right;color:${C[k]}">${CH_LABS[i]}</th>`).join('')}
+          <th style="text-align:right;color:${tx()}">Total</th>
+          <th style="text-align:right;color:${tx2()}">vs Tgt</th>
         </tr></thead>
         <tbody>
-          ${rows.map((r,i)=>{const t=r.total||0;return `<tr style="border-bottom:1px solid ${sep()}">
-            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace;font-size:11px">Apr ${r.day}<br><span style="font-size:9px;color:${tm3()}">${wk(+r.day)}</span></td>
-            ${['stores','online','crm','app','intl'].map(k=>`<td style="text-align:right;padding:7px 8px;color:${C[k]};font-family:'DM Mono',monospace">${fmt(r[k]||0)}</td>`).join('')}
-            <td style="text-align:right;padding:7px 8px;color:${acol(t-DTGT)};font-family:'DM Mono',monospace;font-weight:700">${fmt(t)}</td>
-            <td style="text-align:right;padding:7px 8px">${pill(pv(t,DTGT))}</td>
-          </tr>`;}).join('')}
-          <tr style="background:${THEME==='dark'?'#161616':'#f0f0ec'};font-weight:600;border-top:1px solid ${sep()}">
-            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace;font-size:11px">TOTAL<br><span style="font-size:9px;color:${tm3()}">${rows.length} days</span></td>
-            ${['stores','online','crm','app','intl'].map(k=>`<td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">${fmt(sum(rows,k))}</td>`).join('')}
-            <td style="text-align:right;padding:7px 8px;color:${apos()};font-family:'DM Mono',monospace;font-weight:700">${fmt(aggRev.totRev)}</td>
-            <td style="text-align:right;padding:7px 8px">${pill(pv(aggRev.avgRev,DTGT))}</td>
+          ${rows.map(r => {
+            const t = r.total||0;
+            return `<tr>
+              <td style="color:${tx2()}">Apr ${r.day}<br><span style="font-size:9px;color:${tx3()}">${wk(+r.day)}</span></td>
+              ${CH_KEYS.slice(0,5).map(k=>`<td style="text-align:right;color:${C[k]}">${fmt(r[k]||0)}</td>`).join('')}
+              <td style="text-align:right;color:${acol(t-DTGT)};font-weight:700">${fmt(t)}</td>
+              <td style="text-align:right">${pill(pv(t,DTGT))}</td>
+            </tr>`;}).join('')}
+          <tr class="tbl-total">
+            <td style="color:${tx2()}">TOTAL<br><span style="font-size:9px;color:${tx3()}">${rows.length}d</span></td>
+            ${CH_KEYS.slice(0,5).map(k=>`<td style="text-align:right;color:${tx2()}">${fmt(sum(rows,k))}</td>`).join('')}
+            <td style="text-align:right;color:${apos()};font-weight:700">${fmt(aRev.totRev)}</td>
+            <td style="text-align:right">${pill(pv(aRev.avgRev,DTGT))}</td>
           </tr>
-          <tr style="background:${THEME==='dark'?'#141414':'#f8f8f4'}">
-            <td style="padding:7px 8px;color:${tm3()};font-family:'DM Mono',monospace;font-size:11px">AVG/DAY</td>
-            ${['stores','online','crm','app','intl'].map(k=>`<td style="text-align:right;padding:7px 8px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(sum(rows,k)/rows.length)}</td>`).join('')}
-            <td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace;font-weight:600">${fmt(aggRev.avgRev)}</td>
+          <tr class="tbl-avg">
+            <td style="color:${tx3()}">AVG/DAY</td>
+            ${CH_KEYS.slice(0,5).map(k=>`<td style="text-align:right;color:${tx3()}">${fmt(sum(rows,k)/rows.length)}</td>`).join('')}
+            <td style="text-align:right;color:${tx2()};font-weight:600">${fmt(aRev.avgRev)}</td>
             <td></td>
           </tr>
         </tbody>
       </table></div>
     </div>
-    ${selMktRows.length?`<div class="card">
-      <p class="lbl" style="margin-bottom:12px">Marketing breakdown · ${selMktRows.length} days</p>
-      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px;min-width:420px">
+    ${selMktRows.length ? `
+    <div class="card">
+      <span class="lbl" style="margin-bottom:12px;display:block">Marketing · ${selMktRows.length} days</span>
+      <div class="tbl-wrap"><table>
         <thead><tr style="border-bottom:1px solid ${sep()}">
-          <th style="text-align:left;padding:6px 8px;color:${tm3()};font-weight:500">Date</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.online};font-weight:500">Meta Spend</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.online};font-weight:500">Meta ROAS</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.crm};font-weight:500">Goog Spend</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.crm};font-weight:500">Goog ROAS</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.stores};font-weight:500">Total Spend</th>
-          <th style="text-align:right;padding:6px 8px;color:${C.stores};font-weight:500">ROAS</th>
+          <th style="text-align:left;color:${tx3()}">Date</th>
+          <th style="text-align:right;color:${C.online}">Meta Spend</th>
+          <th style="text-align:right;color:${C.online}">Meta ROAS</th>
+          <th style="text-align:right;color:${C.crm}">Goog Spend</th>
+          <th style="text-align:right;color:${C.crm}">Goog ROAS</th>
+          <th style="text-align:right;color:${C.stores}">Total</th>
+          <th style="text-align:right;color:${C.stores}">ROAS</th>
         </tr></thead>
         <tbody>
-          ${selMktRows.map(r=>`<tr style="border-bottom:1px solid ${sep()}">
-            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">Apr ${r.day} · ${wk(+r.day)}</td>
-            <td style="text-align:right;padding:7px 8px;color:${C.online};font-family:'DM Mono',monospace">${fmtK(r.metaSpend||0)}</td>
-            <td style="text-align:right;padding:7px 8px">${pill(pv(r.metaRoas||0,4))}</td>
-            <td style="text-align:right;padding:7px 8px;color:${C.crm};font-family:'DM Mono',monospace">${fmtK(r.googleSpend||0)}</td>
-            <td style="text-align:right;padding:7px 8px">${pill(pv(r.googleRoas||0,4))}</td>
-            <td style="text-align:right;padding:7px 8px;color:${C.stores};font-family:'DM Mono',monospace">${fmtK(r.totalSpend||0)}</td>
-            <td style="text-align:right;padding:7px 8px;font-family:'DM Mono',monospace;color:${acol((r.totalRoas||0)-4)}">${(r.totalRoas||0).toFixed(2)}×</td>
+          ${selMktRows.map(r=>`<tr>
+            <td style="color:${tx2()}">Apr ${r.day} · ${wk(+r.day)}</td>
+            <td style="text-align:right;color:${C.online}">${fmtK(r.metaSpend||0)}</td>
+            <td style="text-align:right">${pill(pv(r.metaRoas||0,4))}</td>
+            <td style="text-align:right;color:${C.crm}">${fmtK(r.googleSpend||0)}</td>
+            <td style="text-align:right">${pill(pv(r.googleRoas||0,4))}</td>
+            <td style="text-align:right;color:${C.stores}">${fmtK(r.totalSpend||0)}</td>
+            <td style="text-align:right;color:${acol((r.totalRoas||0)-4)}">${(r.totalRoas||0).toFixed(2)}×</td>
           </tr>`).join('')}
-          <tr style="background:${THEME==='dark'?'#161616':'#f0f0ec'};font-weight:600;border-top:1px solid ${sep()}">
-            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">TOTAL</td>
-            <td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">${fmtK(aggMk.metaSpend)}</td>
-            <td style="text-align:right;padding:7px 8px"><span class="${aggMk.metaRoas>=4?'up':'dn'}">${aggMk.metaRoas.toFixed(2)}×</span></td>
-            <td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">${fmtK(aggMk.googleSpend)}</td>
-            <td style="text-align:right;padding:7px 8px"><span class="${aggMk.googleRoas>=4?'up':'dn'}">${aggMk.googleRoas.toFixed(2)}×</span></td>
-            <td style="text-align:right;padding:7px 8px;color:${apos()};font-family:'DM Mono',monospace">${fmtK(aggMk.totalSpend)}</td>
-            <td style="text-align:right;padding:7px 8px;font-family:'DM Mono',monospace;color:${acol(aggMk.totalRoas-4)}">${aggMk.totalRoas.toFixed(2)}×</td>
+          <tr class="tbl-total">
+            <td style="color:${tx2()}">TOTAL</td>
+            <td style="text-align:right;color:${tx2()}">${fmtK(aMkt.metaSpend)}</td>
+            <td style="text-align:right"><span class="${aMkt.metaRoas>=4?'up-pill':'dn-pill'}">${aMkt.metaRoas.toFixed(2)}×</span></td>
+            <td style="text-align:right;color:${tx2()}">${fmtK(aMkt.googleSpend)}</td>
+            <td style="text-align:right"><span class="${aMkt.googleRoas>=4?'up-pill':'dn-pill'}">${aMkt.googleRoas.toFixed(2)}×</span></td>
+            <td style="text-align:right;color:${apos()}">${fmtK(aMkt.totalSpend)}</td>
+            <td style="text-align:right;color:${acol(aMkt.totalRoas-4)}">${aMkt.totalRoas.toFixed(2)}×</td>
           </tr>
         </tbody>
       </table></div>
-    </div>`:`<div class="card" style="text-align:center;padding:20px"><p style="font-size:12px;color:${ts()}">No daily marketing data for selected dates</p><p style="font-size:10px;color:${tm3()};margin-top:4px">Add dates to "Daily Marketing report" sheet and redeploy Code.gs</p></div>`}`;
+    </div>` : `<div class="card"><div class="empty"><p>No marketing data for selected dates</p><small>Add dates to "Daily Marketing report" sheet and redeploy Code.gs</small></div></div>`}`;
   }
 
-  document.getElementById('footer').textContent=`LIVE · ${D.sheetName||'—'} · ${new Date().toLocaleTimeString()} · AUTO-REFRESH 5 MIN`;
+  $id('footer').textContent = `LIVE · ${D.sheetName||'—'} · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
 }
 
-// ── Sub-renderers ─────────────────────────────────────────────────────────────
-function dayDetailHTML(rev, mkt){
-  const chs=[{n:'Stores',v:rev.stores||0,tgt:1988836,c:C.stores},{n:'Online',v:rev.online||0,tgt:673670,c:C.online},
-             {n:'CRM',v:rev.crm||0,tgt:458590,c:C.crm},{n:'App',v:rev.app||0,tgt:150000,c:C.app},{n:'Intl.',v:rev.intl||0,tgt:83333,c:C.intl}];
-  const mx=Math.max(...chs.map(c=>Math.max(c.v,c.tgt)));
+// ── Day detail (single selection) ────────────────────────────────────────────
+function dayDetailHTML(rev, mkt) {
+  const chs = CH_KEYS.slice(0,5).map((k,i) => ({ n:CH_LABS[i], v:rev[k]||0, tgt:CH_TGTS[i], c:Object.values(C)[i] }));
+  const mx  = Math.max(...chs.map(c=>Math.max(c.v,c.tgt)));
   return `<div class="g2">
-    <div class="card"><p class="lbl" style="margin-bottom:12px">Apr ${rev.day} · ${wk(+rev.day)} · Channel detail</p>
-      ${chs.map(c=>{const vw=Math.min((c.v/mx)*100,100);return `<div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-          <span style="font-size:11px;color:${ts()}">${c.n}</span>
-          <div style="display:flex;align-items:center;gap:7px">
-            <span style="font-size:9px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(c.tgt)}</span>
-            <span style="font-size:12px;color:${c.c};font-family:'DM Mono',monospace;font-weight:600">${fmt(c.v)}</span>
-            ${pill(pv(c.v,c.tgt))}</div></div>
-        <div style="position:relative;height:5px;background:${bar()};border-radius:3px;overflow:hidden">
-          <div style="position:absolute;left:0;top:0;height:100%;background:${c.c};width:${vw}%;opacity:.8;border-radius:3px;transition:width .5s"></div>
-        </div></div>`;}).join('')}
+    <div class="card">
+      <span class="lbl" style="margin-bottom:12px;display:block">Apr ${rev.day} · ${wk(+rev.day)} · Channels</span>
+      ${chs.map(c => {
+        const vw = Math.min((c.v/mx)*100,100);
+        return `<div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:11px;color:${tx2()}">${c.n}</span>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="font-size:9px;color:${tx3()};font-family:var(--f-mono)">${fmt(c.tgt)}</span>
+              <span style="font-size:12px;color:${c.c};font-family:var(--f-mono);font-weight:600">${fmt(c.v)}</span>
+              ${pill(pv(c.v,c.tgt))}
+            </div>
+          </div>
+          <div style="position:relative;height:5px;background:${bar()};border-radius:3px;overflow:hidden">
+            <div style="position:absolute;left:0;top:0;height:100%;background:${c.c};width:${vw}%;opacity:.8;border-radius:3px;transition:width .5s"></div>
+          </div>
+        </div>`;
+      }).join('')}
     </div>
-    <div class="card"><p class="lbl" style="margin-bottom:12px">Apr ${rev.day} · Marketing</p>
-      ${mkt?[{l:'Meta Spend',v:fmtK(mkt.metaSpend||0),c:C.online},{l:'Meta Revenue',v:fmt(mkt.metaRev||0),c:C.online},
-             {l:'Meta ROAS',v:(mkt.metaRoas||0).toFixed(2)+'×',c:acol((mkt.metaRoas||0)-4)},
-             {l:'Google Spend',v:fmtK(mkt.googleSpend||0),c:C.crm},{l:'Google Revenue',v:fmt(mkt.googleRev||0),c:C.crm},
-             {l:'Google ROAS',v:(mkt.googleRoas||0).toFixed(2)+'×',c:acol((mkt.googleRoas||0)-4)},
-             {l:'Total Spend',v:fmtK(mkt.totalSpend||0),c:ts()},{l:'Total ROAS',v:(mkt.totalRoas||0).toFixed(2)+'×',c:acol((mkt.totalRoas||0)-4)}
-            ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')
-           :`<div style="font-size:11px;color:${tm3()};padding:20px 0;text-align:center">No marketing data for this day<br><span style="font-size:10px">Add date rows to "Daily Marketing report"</span></div>`}
+    <div class="card">
+      <span class="lbl" style="margin-bottom:12px;display:block">Apr ${rev.day} · Marketing</span>
+      ${mkt ? [
+        {l:'Meta Spend',    v:fmtK(mkt.metaSpend||0),   c:C.online},
+        {l:'Meta Revenue',  v:fmt(mkt.metaRev||0),       c:C.online},
+        {l:'Meta ROAS',     v:(mkt.metaRoas||0).toFixed(2)+'×', c:acol((mkt.metaRoas||0)-4)},
+        {l:'Google Spend',  v:fmtK(mkt.googleSpend||0),  c:C.crm},
+        {l:'Google Revenue',v:fmt(mkt.googleRev||0),      c:C.crm},
+        {l:'Google ROAS',   v:(mkt.googleRoas||0).toFixed(2)+'×', c:acol((mkt.googleRoas||0)-4)},
+        {l:'Total Spend',   v:fmtK(mkt.totalSpend||0),   c:tx2()},
+        {l:'Total ROAS',    v:(mkt.totalRoas||0).toFixed(2)+'×', c:acol((mkt.totalRoas||0)-4)},
+      ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')
+      : `<div class="empty" style="padding:16px 0"><p style="font-size:12px">No marketing data for this day</p><small>Add dates to "Daily Marketing report"</small></div>`}
       <div style="display:flex;gap:8px;margin-top:12px">
-        ${+rev.day>1?`<button class="btn" onclick="tapDay(${+rev.day-1})" style="flex:1;font-size:11px">← Apr ${+rev.day-1}</button>`:''}
-        ${+rev.day<30?`<button class="btn" onclick="tapDay(${+rev.day+1})" style="flex:1;font-size:11px">Apr ${+rev.day+1} →</button>`:''}
+        ${+rev.day>1  ? `<button class="btn" onclick="tapDay(${+rev.day-1})" style="flex:1;font-size:11px">← Apr ${+rev.day-1}</button>` : ''}
+        ${+rev.day<30 ? `<button class="btn" onclick="tapDay(${+rev.day+1})" style="flex:1;font-size:11px">Apr ${+rev.day+1} →</button>` : ''}
       </div>
     </div>
   </div>`;
 }
 
-function multiSummaryHTML(aggR, aggM){
+// ── Multi-day summary ────────────────────────────────────────────────────────
+function multiSummaryHTML(aR, aM) {
   return `<div class="g2">
-    <div class="card"><p class="lbl" style="margin-bottom:12px">${SEL.length} Days · Channel Totals</p>
-      ${['stores','online','crm','app','intl'].map((k,i)=>{
-        const label=['Stores','Online','CRM','App','Intl.'][i], col=Object.values(C)[i];
-        const tgt=[1988836,673670,458590,150000,83333][i]*SEL.length;
-        const v=aggR[k]||0;
+    <div class="card">
+      <span class="lbl" style="margin-bottom:12px;display:block">${SEL.length} Days · Channel Totals</span>
+      ${CH_KEYS.slice(0,5).map((k,i) => {
+        const v=aR[k]||0, tgt=CH_TGTS[i]*SEL.length, c=Object.values(C)[i];
         return `<div style="margin-bottom:10px">
           <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-            <span style="font-size:11px;color:${ts()}">${label}</span>
+            <span style="font-size:11px;color:${tx2()}">${CH_LABS[i]}</span>
             <div style="display:flex;align-items:center;gap:7px">
-              <span style="font-size:9px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(tgt)}</span>
-              <span style="font-size:12px;color:${col};font-family:'DM Mono',monospace;font-weight:600">${fmt(v)}</span>
-              ${pill(pv(v,tgt))}</div></div>
+              <span style="font-size:9px;color:${tx3()};font-family:var(--f-mono)">${fmt(tgt)}</span>
+              <span style="font-size:12px;color:${c};font-family:var(--f-mono);font-weight:600">${fmt(v)}</span>
+              ${pill(pv(v,tgt))}
+            </div>
+          </div>
           <div style="position:relative;height:5px;background:${bar()};border-radius:3px;overflow:hidden">
-            <div style="position:absolute;left:0;top:0;height:100%;background:${col};width:${Math.min((v/Math.max(tgt,v))*100,100)}%;opacity:.8;border-radius:3px;transition:width .5s"></div>
-          </div></div>`;}).join('')}
+            <div style="position:absolute;left:0;top:0;height:100%;background:${c};width:${Math.min((v/Math.max(tgt,v))*100,100)}%;opacity:.8;border-radius:3px"></div>
+          </div>
+        </div>`;}).join('')}
     </div>
-    ${aggM?`<div class="card"><p class="lbl" style="margin-bottom:12px">${SEL.length} Days · Marketing Totals</p>
-      ${[{l:'Meta Spend',v:fmtK(aggM.metaSpend),c:C.online},{l:'Meta Revenue',v:fmt(aggM.metaRev),c:C.online},
-         {l:'Meta ROAS',v:aggM.metaRoas.toFixed(2)+'×',c:acol(aggM.metaRoas-4)},
-         {l:'Google Spend',v:fmtK(aggM.googleSpend),c:C.crm},{l:'Google Revenue',v:fmt(aggM.googleRev),c:C.crm},
-         {l:'Google ROAS',v:aggM.googleRoas.toFixed(2)+'×',c:acol(aggM.googleRoas-4)},
-         {l:'Total Spend',v:fmtK(aggM.totalSpend),c:ts()},{l:'Total Revenue',v:fmt(aggM.totalRev),c:C.stores},
-         {l:'Combined ROAS',v:aggM.totalRoas.toFixed(2)+'×',c:acol(aggM.totalRoas-4)},
-         {l:'Avg Daily Spend',v:fmtK(aggM.avgDailySpend),c:tm3()},{l:'Avg Daily Rev',v:fmt(aggM.avgDailyRev),c:tm3()},
+    ${aM ? `<div class="card">
+      <span class="lbl" style="margin-bottom:12px;display:block">${SEL.length} Days · Marketing Totals</span>
+      ${[{l:'Meta Spend',  v:fmtK(aM.metaSpend),  c:C.online},{l:'Meta Revenue', v:fmt(aM.metaRev), c:C.online},
+         {l:'Meta ROAS',   v:aM.metaRoas.toFixed(2)+'×', c:acol(aM.metaRoas-4)},
+         {l:'Google Spend',v:fmtK(aM.googleSpend), c:C.crm},{l:'Google Revenue',v:fmt(aM.googleRev),c:C.crm},
+         {l:'Google ROAS', v:aM.googleRoas.toFixed(2)+'×', c:acol(aM.googleRoas-4)},
+         {l:'Total Spend', v:fmtK(aM.totalSpend),  c:tx2()},{l:'Total Revenue',v:fmt(aM.totalRev), c:C.stores},
+         {l:'Combined ROAS',v:aM.totalRoas.toFixed(2)+'×', c:acol(aM.totalRoas-4)},
+         {l:'Avg Daily Spend',v:fmtK(aM.avgDailySpend),c:tx3()},{l:'Avg Daily Rev',v:fmt(aM.avgDailyRev),c:tx3()},
         ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')}
-    </div>`:`<div class="card" style="text-align:center;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center">
-      <p style="font-size:12px;color:${ts()};margin-bottom:4px">No daily marketing data matched</p>
-      <p style="font-size:10px;color:${tm3()}">Ensure "Daily Marketing report" has dates in col A matching the selected days</p>
-    </div>`}
+    </div>` : `<div class="card"><div class="empty"><p>No daily marketing data matched</p><small>Ensure "Daily Marketing report" has matching date rows</small></div></div>`}
+  </div>`;
+}
+
+// ── Install prompt (mobile) ──────────────────────────────────────────────────
+function maybeShowInstallBanner() {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone;
+  const isAndroid = /android/i.test(navigator.userAgent);
+  const alreadyShown = localStorage.getItem('ib_shown');
+  if ((isIOS || isAndroid) && !alreadyShown) {
+    setTimeout(() => {
+      document.getElementById('install-banner').classList.add('show');
+      localStorage.setItem('ib_shown', '1');
+    }, 4000);
+  }
+}
+
+// ── Boot ────────────────────────────────────────────────────────────────────
+// ── Insights Engine ───────────────────────────────────────────────────────────
+function insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, filled) {
+  // Work out which rows to analyse
+  const rows   = selRevRows.length ? selRevRows : filled;
+  const mkRows = selMktRows.length ? selMktRows : mktD;
+  if (!rows.length) return '';
+
+  const isFiltered = selRevRows.length > 0;
+  const label = isFiltered
+    ? (selRevRows.length===1 ? `Apr ${selRevRows[0].day}` : `${selRevRows.length} selected days`)
+    : 'April MTD';
+
+  const insights = [];
+
+  // ── helpers ─────────────────────────────────────────
+  const pct = (a,b) => b ? ((a-b)/b*100) : 0;
+  const wkName = d => ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][(2+d-1)%7];
+  const fmtN = n => '₹'+(n/1e5).toFixed(1)+'L';
+  const CH_KEYS = ['stores','online','crm','app','intl'];
+  const CH_LABS = ['Stores','Online','CRM','App','Intl.'];
+  const CH_TGTS = [1988836,673670,458590,150000,83333];
+  const CH_C    = ['#7CB32A','#2BC4A8','#A78BFA','#FB923C','#38BDF8'];
+
+  // ── 1. Overall performance ───────────────────────────
+  const totRev  = rows.reduce((s,r)=>s+r.total,0);
+  const avgRev  = totRev/rows.length;
+  const aboveCnt = rows.filter(r=>r.total>=DTGT).length;
+  const hitRate = (aboveCnt/rows.length)*100;
+  const revVsTgt = pct(avgRev, DTGT);
+
+  if (revVsTgt >= 5) {
+    insights.push({ type:'win', icon:'🚀', title:'Revenue above target', body:`Avg daily revenue ${fmtN(avgRev)} is <strong>${revVsTgt.toFixed(1)}% above</strong> the ₹${(DTGT/1e5).toFixed(1)}L daily target across ${label}. Strong momentum — maintain this pace.` });
+  } else if (revVsTgt >= -5) {
+    insights.push({ type:'watch', icon:'🎯', title:'Close to target', body:`Avg daily revenue ${fmtN(avgRev)} is within 5% of the daily target. Small push on Stores or Online could tip this above target.` });
+  } else {
+    insights.push({ type:'risk', icon:'⚠️', title:`Revenue ${Math.abs(revVsTgt).toFixed(1)}% below target`, body:`Avg daily at ${fmtN(avgRev)} vs ₹${(DTGT/1e5).toFixed(1)}L target across ${label}. Need ${fmtN(DTGT-avgRev)} more per day. Focus: Stores & CRM recovery.` });
+  }
+
+  // ── 2. Best performing channel ───────────────────────
+  const chPerf = CH_KEYS.map((k,i) => {
+    const actual = rows.reduce((s,r)=>s+(r[k]||0),0)/rows.length;
+    const tgt    = CH_TGTS[i];
+    return { key:k, label:CH_LABS[i], actual, tgt, pct:pct(actual,tgt), color:CH_C[i] };
+  }).filter(c => c.actual > 0);
+
+  const topCh = [...chPerf].sort((a,b)=>b.pct-a.pct)[0];
+  const botCh = [...chPerf].sort((a,b)=>a.pct-b.pct)[0];
+
+  if (topCh && topCh.pct > 5) {
+    insights.push({ type:'win', icon:'✅', title:`${topCh.label} leading the charge`, body:`${topCh.label} averaging ${fmtN(topCh.actual)}/day — <strong>${topCh.pct.toFixed(1)}% above its daily target</strong>. This is your anchor channel. Protect the supply chain & staff capacity here.` });
+  }
+
+  // ── 3. Worst performing channel ──────────────────────
+  if (botCh && botCh.pct < -15) {
+    const gap = botCh.tgt - botCh.actual;
+    insights.push({ type:'risk', icon:'🔻', title:`${botCh.label} needs urgent attention`, body:`${botCh.label} is averaging ${fmtN(botCh.actual)}/day — <strong>${Math.abs(botCh.pct).toFixed(1)}% below target</strong>. Closing this ${fmtN(gap)} gap daily would add ~₹${(gap*30/1e7).toFixed(1)}Cr monthly.` });
+  }
+
+  // ── 4. Day-of-week pattern ───────────────────────────
+  const byWk = {};
+  rows.forEach(r => {
+    const w = wkName(+r.day);
+    if (!byWk[w]) byWk[w] = [];
+    byWk[w].push(r.total);
+  });
+  const wkAvg = Object.entries(byWk).map(([w,vals])=>({ w, avg:vals.reduce((s,v)=>s+v,0)/vals.length }));
+  if (wkAvg.length >= 3) {
+    const bestWk  = wkAvg.reduce((a,b)=>a.avg>b.avg?a:b);
+    const worstWk = wkAvg.reduce((a,b)=>a.avg<b.avg?a:b);
+    if (bestWk.w !== worstWk.w) {
+      insights.push({ type:'info', icon:'📅', title:`${bestWk.w}s are your strongest day`, body:`Avg revenue on ${bestWk.w}s: ${fmtN(bestWk.avg)} vs ${fmtN(worstWk.avg)} on ${worstWk.w}s. <strong>Consider front-loading campaigns and inventory on ${bestWk.w}s</strong> to maximise the natural demand spike.` });
+    }
+  }
+
+  // ── 5. Marketing ROAS insight ────────────────────────
+  if (mkRows.length > 0) {
+    const avgMktSpend = mkRows.reduce((s,r)=>s+r.totalSpend,0)/mkRows.length;
+    const avgRoas     = mkRows.reduce((s,r)=>s+r.totalRoas,0)/mkRows.length;
+    const metaAvg     = mkRows.reduce((s,r)=>s+r.metaRoas,0)/mkRows.length;
+    const googAvg     = mkRows.reduce((s,r)=>s+r.googleRoas,0)/mkRows.length;
+    const roasTgt     = 4;
+
+    if (avgRoas >= roasTgt) {
+      insights.push({ type:'win', icon:'💰', title:`ROAS healthy at ${avgRoas.toFixed(2)}×`, body:`Marketing is returning ₹${avgRoas.toFixed(2)} for every ₹1 spent across ${label}. ${metaAvg > googAvg ? `Meta (${metaAvg.toFixed(2)}×) is outperforming Google (${googAvg.toFixed(2)}×) — consider shifting more budget to Meta.` : `Google (${googAvg.toFixed(2)}×) is leading — scale Google BOF spend.`}` });
+    } else if (avgRoas >= 3) {
+      insights.push({ type:'watch', icon:'📊', title:`ROAS at ${avgRoas.toFixed(2)}× — just below 4× target`, body:`${metaAvg > googAvg ? `Meta (${metaAvg.toFixed(2)}×) is closer to target than Google (${googAvg.toFixed(2)}×).` : `Google (${googAvg.toFixed(2)}×) leads Meta (${metaAvg.toFixed(2)}×).`} Tightening audience targeting or pausing low-performing ad sets could push ROAS over 4×.` });
+    } else {
+      insights.push({ type:'risk', icon:'💸', title:`ROAS at ${avgRoas.toFixed(2)}× — well below 4× target`, body:`Marketing is underperforming for ${label}. Avg spend ${fmtN(avgMktSpend*1000/1000)} is not generating proportional returns. Audit your worst-performing ad sets and reallocate budget to top creative.` });
+    }
+
+    // Meta vs Google recommendation
+    if (Math.abs(metaAvg - googAvg) > 0.5 && mkRows.length >= 3) {
+      const better  = metaAvg >= googAvg ? 'Meta' : 'Google BOF';
+      const worse   = metaAvg >= googAvg ? 'Google BOF' : 'Meta';
+      const betterR = Math.max(metaAvg,googAvg).toFixed(2);
+      const worseR  = Math.min(metaAvg,googAvg).toFixed(2);
+      insights.push({ type:'info', icon:'🔄', title:`Rebalance spend: ${better} outperforming`, body:`${better} ROAS (${betterR}×) is significantly stronger than ${worse} (${worseR}×) across ${label}. <strong>Shift 20–30% of ${worse} budget to ${better}</strong> to improve blended ROAS without increasing total spend.` });
+    }
+  }
+
+  // ── 6. Hit rate insight ──────────────────────────────
+  if (rows.length >= 5) {
+    if (hitRate >= 50) {
+      insights.push({ type:'win', icon:'🎯', title:`${hitRate.toFixed(0)}% of days beat target`, body:`${aboveCnt} out of ${rows.length} days crossed ₹${(DTGT/1e5).toFixed(1)}L. Consistency is high. Focus on understanding what drives the below-target days (typically ${[...rows].filter(r=>r.total<DTGT).map(r=>wkName(+r.day)).slice(0,2).join(', ')}) and addressing those levers.` });
+    } else {
+      insights.push({ type:'watch', icon:'📉', title:`Only ${hitRate.toFixed(0)}% of days hitting target`, body:`Just ${aboveCnt}/${rows.length} days crossed ₹${(DTGT/1e5).toFixed(1)}L. Look at your top 3 above-target days — what was different? Replicate that (inventory depth, CRM push, ad spend) on weak days.` });
+    }
+  }
+
+  // ── 7. CRM opportunity ───────────────────────────────
+  const crmAvg = rows.reduce((s,r)=>s+(r.crm||0),0)/rows.length;
+  const crmTgt = CH_TGTS[2];
+  if (pct(crmAvg,crmTgt) < -30) {
+    insights.push({ type:'info', icon:'👥', title:'CRM / Stylist channel opportunity', body:`CRM averaging ${fmtN(crmAvg)}/day vs ₹${(crmTgt/1e5).toFixed(1)}L target. This is your highest-margin channel. <strong>Adding 1 outreach per stylist per week</strong> could close this gap — consider structured follow-up cadence and reactivation campaigns.` });
+  }
+
+  // ── 8. Trend direction (last 7 vs first 7 of selection or month) ─────────
+  if (rows.length >= 10) {
+    const firstHalf = rows.slice(0, Math.floor(rows.length/2));
+    const secondHalf = rows.slice(Math.floor(rows.length/2));
+    const firstAvg  = firstHalf.reduce((s,r)=>s+r.total,0)/firstHalf.length;
+    const secondAvg = secondHalf.reduce((s,r)=>s+r.total,0)/secondHalf.length;
+    const trend     = pct(secondAvg, firstAvg);
+    if (trend > 5) {
+      insights.push({ type:'win', icon:'📈', title:`Upward trend: +${trend.toFixed(1)}% in second half`, body:`Revenue in the latter part of ${label} (avg ${fmtN(secondAvg)}) is outperforming the first part (avg ${fmtN(firstAvg)}). Momentum is building — sustain this with consistent CRM and ad spend.` });
+    } else if (trend < -5) {
+      insights.push({ type:'risk', icon:'📉', title:`Downward trend: ${trend.toFixed(1)}% in second half`, body:`Revenue slowed in the latter half of ${label} (avg ${fmtN(secondAvg)} vs ${fmtN(firstAvg)} earlier). Investigate: Was there a drop in marketing spend, stock-outs, or CRM activity? Address before next cycle.` });
+    }
+  }
+
+  // ── 9. Intl. channel flag ────────────────────────────
+  const intlAvg = rows.reduce((s,r)=>s+(r.intl||0),0)/rows.length;
+  const intlTgt = CH_TGTS[4];
+  if (pct(intlAvg,intlTgt) < -50 && intlAvg < 10000) {
+    insights.push({ type:'info', icon:'🌍', title:'International channel underutilised', body:`Intl. averaging ${fmtN(intlAvg)}/day vs ₹${(intlTgt/1e5).toFixed(1)}L target. If international orders are not being tracked or fulfilled, this is a quick-win revenue source. Review logistics, pricing and fulfilment SLAs.` });
+  }
+
+  if (!insights.length) {
+    insights.push({ type:'info', icon:'📊', title:'Select a date range for deeper insights', body:'Use Multi or Range mode on the date strip above to analyse specific periods and get targeted recommendations.' });
+  }
+
+  // ── Render ───────────────────────────────────────────
+  const typeStyle = {
+    win:   { bg: THEME==='dark'?'#0d1f08':'#f0fae8', bd: THEME==='dark'?'#2a4a12':'#b8e68a', tc: THEME==='dark'?'#8ecf3a':'#3a7a10' },
+    risk:  { bg: THEME==='dark'?'#1f0808':'#fef2f2', bd: THEME==='dark'?'#4a1212':'#fca5a5', tc: THEME==='dark'?'#f87171':'#b91c1c' },
+    watch: { bg: THEME==='dark'?'#1a1508':'#fffbeb', bd: THEME==='dark'?'#3d3210':'#fcd34d', tc: THEME==='dark'?'#fbbf24':'#92400e' },
+    info:  { bg: THEME==='dark'?'#0a0f1f':'#eff6ff', bd: THEME==='dark'?'#1a2a4a':'#93c5fd', tc: THEME==='dark'?'#60a5fa':'#1d4ed8' },
+  };
+
+  return `
+  <div style="margin-top:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="lbl" style="margin:0">Smart Insights</span>
+        <span style="font-size:10px;font-family:var(--f-mono);color:var(--acc);background:var(--up);padding:2px 8px;border-radius:12px">${label}</span>
+      </div>
+      <span style="font-size:10px;color:var(--tx3)">${insights.length} insights generated from your data</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">
+      ${insights.map(ins => {
+        const s = typeStyle[ins.type] || typeStyle.info;
+        return `<div style="background:${s.bg};border:1px solid ${s.bd};border-radius:var(--r);padding:14px 16px;transition:border-color .2s">
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <span style="font-size:18px;flex-shrink:0;line-height:1.3">${ins.icon}</span>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:${s.tc};margin-bottom:5px">${ins.title}</div>
+              <div style="font-size:11.5px;color:${THEME==='dark'?'#aaa':'#444'};line-height:1.55">${ins.body}</div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
   </div>`;
 }
 
 load();
-setInterval(load, 5*60*1000);
+setInterval(load, 5 * 60 * 1000);
+maybeShowInstallBanner();
 </script>
+</body>
+</html>
