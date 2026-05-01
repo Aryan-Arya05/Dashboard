@@ -1,0 +1,680 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#1c1c1c;--border2:#252525;
+  --text:#e2e2e2;--text2:#888;--text3:#3a3a3a;--text4:#1a1a1a;
+  --up-bg:#1a2e14;--dn-bg:#2e1414;--bar:#1a1a1a;--sep:#181818;--shadow:none;
+  background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;padding:20px 24px;min-height:100vh;transition:background .3s,color .3s
+}
+body.light{
+  --bg:#f4f4f0;--bg2:#fff;--bg3:#eeeee a;--border:#e0e0da;--border2:#d0d0ca;
+  --text:#111;--text2:#555;--text3:#aaa;--text4:#ccc;
+  --up-bg:#e8f5d0;--dn-bg:#fde8e8;--bar:#e8e8e4;--sep:#eee;--shadow:0 1px 4px #0000000a
+}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow);transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.lbl{font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.mono{font-family:'DM Mono',monospace}
+.up{background:var(--up-bg);color:#4a7a14;font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;white-space:nowrap}
+.dn{background:var(--dn-bg);color:#c0392b;font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px;font-family:'DM Mono',monospace;white-space:nowrap}
+body.dark .up{color:#C8F04A}body.dark .dn{color:#f87171}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.tabs{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:3px}
+.tab{padding:5px 13px;border-radius:20px;font-size:11.5px;cursor:pointer;border:none;background:transparent;color:var(--text3);font-family:'DM Sans',sans-serif;font-weight:500;text-transform:capitalize;transition:all .15s}
+.tab.on{background:var(--bg3);color:var(--text)}
+.tab:hover:not(.on){color:var(--text2)}
+.btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:11px;padding:6px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn:hover{color:var(--text);border-color:var(--text3)}
+.btn.sel-act{background:var(--up-bg);border-color:#7CB32A55;color:#4a7a14}
+body.dark .btn.sel-act{color:#C8F04A}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:#7CB32A;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px}
+.toggle-wrap{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:11px;font-weight:500;color:var(--text2);transition:all .2s;user-select:none}
+.toggle-wrap:hover{border-color:var(--border2);color:var(--text)}
+.track{width:32px;height:18px;border-radius:9px;background:#2a2a2a;border:1px solid var(--border2);position:relative;transition:background .3s}
+body.light .track{background:#d4e8a0}
+.thumb{width:12px;height:12px;border-radius:50%;background:#555;position:absolute;top:2px;left:2px;transition:all .3s}
+body.light .thumb{background:#7CB32A;transform:translateX(14px)}
+/* Day strip */
+.day-btn{flex-shrink:0;width:44px;height:56px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .15s;position:relative;font-family:'DM Sans',sans-serif}
+.day-btn:hover:not(.nd){border-color:var(--border2);background:var(--bg3)}
+.day-btn.ab{border-bottom:2px solid #7CB32A66}
+.day-btn.bl{border-bottom:2px solid #8B5CF666}
+.day-btn.nd{opacity:.22;cursor:default}
+.day-btn.s1{border-color:#7CB32A;background:var(--up-bg)}
+.day-btn.sN{border-color:#7CB32A88;background:var(--up-bg)}
+.dnum{font-size:13px;font-weight:600;color:var(--text2);line-height:1}
+.s1 .dnum,.sN .dnum{color:#4a7a14}body.dark .s1 .dnum,body.dark .sN .dnum{color:#C8F04A}
+.dlbl{font-size:8px;color:var(--text3)}
+.ddot{width:4px;height:4px;border-radius:50%;background:var(--border2)}
+.ab .ddot{background:#7CB32A55}.bl .ddot{background:#8B5CF655}
+.badge{position:absolute;top:-4px;right:-4px;width:14px;height:14px;border-radius:50%;background:#7CB32A;color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
+/* Stat row */
+.srow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--sep)}
+.srow:last-child{border-bottom:none}
+.sk{font-size:10.5px;color:var(--text3)}
+.sv{font-size:12px;font-family:'DM Mono',monospace;font-weight:600}
+@media(max-width:900px){.g6{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g6{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}}
+</style>
+
+<div>
+<!-- Header -->
+<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+  <div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <span id="dot" style="width:7px;height:7px;border-radius:50%;background:#555;display:inline-block"></span>
+      <span id="st" class="mono" style="font-size:10px;color:var(--text3);letter-spacing:.08em"><span class="spin"></span>CONNECTING…</span>
+    </div>
+    <h1 style="font-size:22px;font-weight:600;letter-spacing:-.03em;color:var(--text);margin-bottom:2px">CEO Dashboard</h1>
+    <p style="font-size:11px;color:var(--text3)" id="sub">Live · Consolidated Data FY 2026-2027</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <div class="toggle-wrap" onclick="toggleTheme()">
+      <span id="ticon">🌙</span>
+      <div class="track"><div class="thumb"></div></div>
+      <span id="tlbl">Dark</span>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="setTab('overview')">Overview</button>
+      <button class="tab" onclick="setTab('channels')">Channels</button>
+      <button class="tab" onclick="setTab('marketing')">Marketing</button>
+      <button class="tab" onclick="setTab('compare')">Compare</button>
+    </div>
+    <button class="btn" onclick="load()">↻ Refresh</button>
+  </div>
+</div>
+
+<!-- Date selector -->
+<div class="card" style="margin-bottom:12px;padding:12px 18px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span class="lbl" style="margin:0">April 2026</span>
+      <span id="sel-lbl" style="font-size:11px;font-family:'DM Mono',monospace;color:#7CB32A">All days</span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px">
+        <button id="ms" class="btn sel-act" onclick="setMode('single')" style="padding:3px 10px;border-radius:16px;font-size:10px;border:none">Single</button>
+        <button id="mm" class="btn"         onclick="setMode('multi')"  style="padding:3px 10px;border-radius:16px;font-size:10px;border:none">Multi</button>
+        <button id="mr" class="btn"         onclick="setMode('range')"  style="padding:3px 10px;border-radius:16px;font-size:10px;border:none">Range</button>
+      </div>
+      <span style="font-size:9px;color:var(--text3);display:flex;align-items:center;gap:3px"><span style="width:8px;height:2px;background:#7CB32A;display:inline-block;border-radius:1px"></span>Above</span>
+      <span style="font-size:9px;color:var(--text3);display:flex;align-items:center;gap:3px"><span style="width:8px;height:2px;background:#8B5CF6;display:inline-block;border-radius:1px"></span>Below</span>
+      <button class="btn" id="clr" onclick="clearSel()" style="display:none;font-size:10px;padding:3px 9px">× Clear</button>
+    </div>
+  </div>
+  <div id="hint" style="font-size:10px;color:var(--text3);margin-bottom:8px">Tap a date to view that day's data</div>
+  <div id="strip" style="display:flex;gap:5px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none"></div>
+</div>
+
+<!-- Summary bar -->
+<div class="card" style="margin-bottom:12px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;flex-wrap:wrap;gap:8px">
+    <span id="bt" style="font-size:10px;color:var(--text3);letter-spacing:.06em">APRIL MTD · GOAL ₹135Cr</span>
+    <div id="bn" style="display:flex;gap:14px;flex-wrap:wrap"></div>
+  </div>
+  <div style="background:var(--bar);border-radius:6px;height:7px;position:relative;overflow:hidden">
+    <div id="bp" style="background:linear-gradient(90deg,#A78BFA,#7CB32A);height:100%;border-radius:6px;width:0;transition:width .8s"></div>
+    <div id="bline" style="position:absolute;left:72.6%;top:0;width:1.5px;height:100%;background:#6EE7D0;opacity:.4"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text4);margin-top:3px">
+    <span>₹0</span><span id="bml" style="color:#6EE7D022">₹98Cr target</span><span id="bel">₹135Cr goal</span>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="g6" id="kpis" style="margin-bottom:12px"></div>
+
+<!-- Main -->
+<div id="main"></div>
+
+<div id="err" style="display:none;background:var(--dn-bg);border:1px solid #f8717155;border-radius:10px;padding:14px 18px;margin-bottom:12px">
+  <div style="font-size:12px;font-weight:600;color:#c0392b;margin-bottom:4px">Connection error</div>
+  <div id="errmsg" style="font-size:11px;color:#c0392b;font-family:'DM Mono',monospace"></div>
+  <div style="font-size:11px;color:var(--text3);margin-top:6px">Redeploy Code.gs → Manage Deployments → New version → Deploy</div>
+</div>
+<div id="footer" class="mono" style="font-size:9px;color:var(--text4);text-align:center;margin-top:12px">—</div>
+</div>
+
+<script>
+const SURL  = 'https://script.google.com/macros/s/AKfycbx5VmO_cQuGK-VDISDFtHt2-jnErMmIqcTgenlPwCRutwHVt0mGogbg3iS2urTn5QoJ/exec';
+const DTGT  = 3354429, MTGT = 98078435, MGOAL = 135000000;
+const WK    = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const APRS  = 2; // April 1 2026 = Wed
+const C     = { stores:'#7CB32A', online:'#2BC4A8', crm:'#A78BFA', app:'#FB923C', intl:'#38BDF8', acc:'#F472B6' };
+
+let D={}, TAB='overview', SEL=[], MODE='single', THEME='dark';
+document.body.classList.add('dark');
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const fmt   = n=>'₹'+((n||0)/1e5).toFixed(1)+'L';
+const fmtC  = n=>'₹'+((n||0)/1e7).toFixed(2)+'Cr';
+const fmtK  = n=>'₹'+((n||0)/1000).toFixed(1)+'K';
+const pv    = (a,b)=>b?(a-b)/b*100:(a?100:-100);
+const ps    = n=>(n>=0?'+':'')+n.toFixed(1)+'%';
+const pill  = v=>`<span class="${v>=0?'up':'dn'}">${ps(v)}</span>`;
+const wk    = d=>WK[(APRS+d-1)%7];
+const sum   = (arr,k)=>arr.reduce((s,r)=>s+(r[k]||0),0);
+const avg   = (arr,k)=>arr.length?sum(arr,k)/arr.length:0;
+const tm    = ()=>THEME==='dark'?'#e2e2e2':'#111';
+const ts    = ()=>THEME==='dark'?'#888':'#555';
+const tm3   = ()=>THEME==='dark'?'#3a3a3a':'#aaa';
+const bar   = ()=>THEME==='dark'?'#1a1a1a':'#e8e8e4';
+const sep   = ()=>THEME==='dark'?'#181818':'#eee';
+const apos  = ()=>THEME==='dark'?'#C8F04A':'#4a7a14';
+const aneg  = ()=>THEME==='dark'?'#f87171':'#c0392b';
+const acol  = v=>v>=0?apos():aneg();
+
+// ── Aggregation — the core fix ────────────────────────────────────────────────
+// Given an array of day rows, return totals + avgs for all metrics
+function agg(rows) {
+  if (!rows.length) return null;
+  const n = rows.length;
+  const totRev    = sum(rows,'total');
+  const totStores = sum(rows,'stores');
+  const totOnline = sum(rows,'online');
+  const totCRM    = sum(rows,'crm');
+  const totApp    = sum(rows,'app');
+  const totIntl   = sum(rows,'intl');
+  return {
+    n, totRev, avgRev: totRev/n,
+    stores:totStores, online:totOnline, crm:totCRM, app:totApp, intl:totIntl,
+    bestDay: rows.reduce((a,b)=>a.total>b.total?a:b),
+    worstDay: rows.filter(r=>r.total>0).reduce((a,b)=>a.total<b.total?a:b,{total:Infinity,day:'—'}),
+    aboveTgt: rows.filter(r=>r.total>=DTGT).length,
+  };
+}
+
+function aggMkt(rows) {
+  if (!rows.length) return null;
+  const n = rows.length;
+  const ms=sum(rows,'metaSpend'), mr=sum(rows,'metaRev');
+  const gs=sum(rows,'googleSpend'), gr=sum(rows,'googleRev');
+  const ts=ms+gs, tr=mr+gr;
+  return {
+    n, metaSpend:ms, metaRev:mr, metaRoas:ms?mr/ms:0,
+    googleSpend:gs, googleRev:gr, googleRoas:gs?gr/gs:0,
+    totalSpend:ts, totalRev:tr, totalRoas:ts?tr/ts:0,
+    avgDailySpend:ts/n, avgDailyRev:tr/n,
+  };
+}
+
+// ── UI helpers ────────────────────────────────────────────────────────────────
+function setStatus(s,m){
+  const c={loading:'#FB923C',live:'#7CB32A',error:'#f87171'}[s]||'#555';
+  document.getElementById('dot').style.cssText=`width:7px;height:7px;border-radius:50%;background:${c};box-shadow:0 0 8px ${c}88;display:inline-block`;
+  document.getElementById('st').innerHTML=s==='loading'?`<span class="spin"></span>${m}`:m;
+  document.getElementById('err').style.display=s==='error'?'block':'none';
+  if(s==='error') document.getElementById('errmsg').textContent=m;
+}
+function setTab(t){ TAB=t; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase()===t)); render(); }
+function toggleTheme(){
+  THEME=THEME==='dark'?'light':'dark';
+  document.body.classList.toggle('dark',THEME==='dark');
+  document.body.classList.toggle('light',THEME==='light');
+  document.getElementById('ticon').textContent=THEME==='dark'?'🌙':'☀️';
+  document.getElementById('tlbl').textContent=THEME==='dark'?'Dark':'Light';
+  render();
+}
+function setMode(m){
+  MODE=m; SEL=SEL.slice(0,1);
+  ['ms','mm','mr'].forEach((id,i)=>document.getElementById(id).classList.toggle('sel-act',['single','multi','range'][i]===m));
+  document.getElementById('hint').textContent={single:'Tap a date to view that day',multi:'Tap multiple dates — all metrics aggregate automatically',range:'Tap start then end date to select a range'}[m];
+  buildStrip(); render();
+}
+function clearSel(){ SEL=[]; document.getElementById('clr').style.display='none'; document.getElementById('sel-lbl').textContent='All days'; buildStrip(); render(); }
+
+function tapDay(d){
+  if(MODE==='single')     { SEL=SEL[0]===d?[]:[d]; }
+  else if(MODE==='multi') { const i=SEL.indexOf(d); i>=0?SEL.splice(i,1):SEL.push(d); SEL.sort((a,b)=>a-b); }
+  else {
+    if(SEL.length===0||SEL.length>=2) SEL=[d];
+    else { const lo=Math.min(SEL[0],d),hi=Math.max(SEL[0],d); SEL=Array.from({length:hi-lo+1},(_,i)=>lo+i); }
+  }
+  document.getElementById('clr').style.display=SEL.length?'block':'none';
+  document.getElementById('sel-lbl').textContent=SEL.length===0?'All days':SEL.length===1?`Apr ${SEL[0]} · ${wk(SEL[0])}`:`${SEL.length} days (Apr ${SEL[0]} – Apr ${SEL[SEL.length-1]})`;
+  buildStrip(); render();
+}
+
+function buildStrip(){
+  const daily=D.aprilDaily||[];
+  document.getElementById('strip').innerHTML=Array.from({length:30},(_,i)=>{
+    const d=i+1, row=daily.find(x=>+x.day===d), tot=row?row.total:0;
+    const idx=SEL.indexOf(d), isSel=idx>=0, isFirst=SEL[0]===d;
+    let cls='day-btn';
+    if(!tot) cls+=' nd'; else cls+=tot>=DTGT?' ab':' bl';
+    if(isFirst) cls+=' s1'; else if(isSel) cls+=' sN';
+    const badge=isSel&&SEL.length>1?`<span class="badge">${idx+1}</span>`:'';
+    return `<button class="${cls}" onclick="tapDay(${d})" title="Apr ${d} · ${wk(d)}${tot?' · '+fmt(tot):''}">
+      ${badge}<span class="dnum">${d}</span><span class="dlbl">${wk(d)}</span><span class="ddot"></span>
+    </button>`;
+  }).join('');
+}
+
+async function load(){
+  setStatus('loading','CONNECTING…');
+  try{
+    const ctrl=new AbortController(), t=setTimeout(()=>ctrl.abort(),18000);
+    const r=await fetch(SURL,{signal:ctrl.signal}); clearTimeout(t);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(j.error) throw new Error(j.error);
+    D=j;
+    setStatus('live',`LIVE · ${new Date().toLocaleTimeString()} · ${D.sheetName||''}`);
+    buildStrip(); render();
+  }catch(e){
+    setStatus('error',e.name==='AbortError'?'Timed out — redeploy Code.gs':e.message);
+    buildStrip(); render();
+  }
+}
+
+// ── Main render ───────────────────────────────────────────────────────────────
+function render(){
+  const daily  = D.aprilDaily||[];
+  const mktD   = D.mktDaily||[];
+  const ch     = D.channels||{};
+  const mkt    = D.marketing||{};
+  const accD   = D.accessories||{};
+  const filled = daily.filter(x=>x.total>0);
+  const mtdA   = D.mtdActual||0;
+
+  // Get selected rows from BOTH channel daily and marketing daily
+  const selRevRows = SEL.length ? SEL.map(d=>daily.find(x=>+x.day===d)).filter(Boolean) : [];
+  const selMktRows = SEL.length ? SEL.map(d=>mktD.find(x=>+x.day===d)).filter(Boolean)  : [];
+  const isSel      = SEL.length>0;
+  const isMulti    = SEL.length>1;
+
+  // Aggregate selected data
+  const aggRev = isSel && selRevRows.length ? agg(selRevRows) : null;
+  const aggMk  = isSel && selMktRows.length ? aggMkt(selMktRows) : null;
+  const hasMkt = mktD.length > 0; // whether daily marketing data is available
+
+  // ── Summary bar ─────────────────────────────────────────────────────────
+  if(aggRev){
+    const isOne = selRevRows.length===1;
+    const t     = isOne ? selRevRows[0].total : aggRev.totRev;
+    const label = isOne ? `APR ${SEL[0]} · ${wk(SEL[0])} · DAILY` : `${SEL.length} DAYS SELECTED · COMBINED`;
+    document.getElementById('bt').textContent=label;
+    const ratio = isOne ? t/DTGT : aggRev.avgRev/DTGT;
+    document.getElementById('bp').style.cssText=`background:${ratio>=1?'linear-gradient(90deg,#2BC4A8,#7CB32A)':'linear-gradient(90deg,#8B5CF6,#A78BFA)'};height:100%;border-radius:6px;width:${Math.min(ratio*100,100)}%;transition:width .8s`;
+    document.getElementById('bml').textContent='';
+    document.getElementById('bel').textContent=isOne?`Target: ${fmt(DTGT)}`:`Avg vs ${fmt(DTGT)} daily target`;
+    document.getElementById('bline').style.left='71%';
+    document.getElementById('bn').innerHTML=[
+      isOne
+        ? [{l:'Revenue',v:fmt(t),c:acol(t-DTGT)},{l:'vs Target',v:ps(pv(t,DTGT)),c:acol(t-DTGT)},
+           {l:'Stores',v:fmt(selRevRows[0].stores||0),c:C.stores},{l:'Online',v:fmt(selRevRows[0].online||0),c:C.online},
+           {l:'CRM',v:fmt(selRevRows[0].crm||0),c:C.crm},{l:'App+Intl',v:fmt((selRevRows[0].app||0)+(selRevRows[0].intl||0)),c:C.app}]
+        : [{l:'Combined Rev',v:fmt(aggRev.totRev),c:C.stores},{l:'Avg / Day',v:fmt(aggRev.avgRev),c:acol(aggRev.avgRev-DTGT)},
+           {l:'vs Target',v:ps(pv(aggRev.avgRev,DTGT)),c:acol(aggRev.avgRev-DTGT)},{l:'Best Day',v:'Apr '+aggRev.bestDay.day,c:C.online},
+           {l:'Above Tgt',v:`${aggRev.aboveTgt}/${SEL.length}d`,c:apos()},{l:'Days',v:String(SEL.length),c:ts()}]
+    ].flat().map(r=>`<div style="text-align:center"><div style="font-size:9px;color:${tm3()};margin-bottom:1px">${r.l}</div><div style="font-size:12px;font-weight:700;color:${r.c};font-family:'DM Mono',monospace">${r.v}</div></div>`).join('');
+  } else {
+    document.getElementById('bt').textContent='APRIL MTD · GOAL ₹135Cr';
+    document.getElementById('bp').style.cssText=`background:linear-gradient(90deg,#A78BFA,#7CB32A);height:100%;border-radius:6px;width:${Math.min((mtdA/MGOAL)*100,100)}%;transition:width .8s`;
+    document.getElementById('bml').textContent='₹98Cr target';
+    document.getElementById('bel').textContent='₹135Cr goal';
+    document.getElementById('bline').style.left='72.6%';
+    document.getElementById('bn').innerHTML=[
+      {l:'MTD Actual',v:fmtC(mtdA),c:C.stores},{l:'vs 98Cr',v:ps(pv(mtdA,MTGT)),c:acol(mtdA-MTGT)},
+      {l:'Gap to 135Cr',v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr',c:aneg()},{l:'Days done',v:filled.length+'/30',c:ts()},
+    ].map(r=>`<div style="text-align:center"><div style="font-size:9px;color:${tm3()};margin-bottom:1px">${r.l}</div><div style="font-size:12px;font-weight:700;color:${r.c};font-family:'DM Mono',monospace">${r.v}</div></div>`).join('');
+  }
+
+  // ── KPIs ─────────────────────────────────────────────────────────────────
+  let kpis;
+  if(aggRev && !isMulti){
+    const t=selRevRows[0].total, prev=daily.find(x=>+x.day===SEL[0]-1);
+    kpis=[
+      {l:'Day Revenue', v:fmt(t),                     chg:pv(t,DTGT),              c:acol(t-DTGT)},
+      {l:'vs Target',   v:ps(pv(t,DTGT)),              chg:pv(t,DTGT),              c:acol(t-DTGT)},
+      {l:'vs Prev Day', v:prev?ps(pv(t,prev.total)):'—', chg:prev?pv(t,prev.total):null, c:C.online},
+      {l:'Mkt Spend',   v:aggMk?fmtK(aggMk.totalSpend):(hasMkt?'—':'No daily mkt'), chg:null, c:C.app},
+      {l:'Day ROAS',    v:aggMk?aggMk.totalRoas.toFixed(2)+'×':(hasMkt?'—':'—'),   chg:null, c:C.intl},
+      {l:'Mkt Revenue', v:aggMk?fmt(aggMk.totalRev):(hasMkt?'—':'—'),              chg:null, c:C.crm},
+    ];
+  } else if(aggRev && isMulti){
+    kpis=[
+      {l:'Combined Rev',  v:fmt(aggRev.totRev),         chg:pv(aggRev.avgRev,DTGT), c:C.stores},
+      {l:'Avg / Day',     v:fmt(aggRev.avgRev),          chg:pv(aggRev.avgRev,DTGT), c:acol(aggRev.avgRev-DTGT)},
+      {l:'Stores Total',  v:fmt(aggRev.stores),          chg:null, c:C.stores},
+      {l:'Online Total',  v:fmt(aggRev.online),          chg:null, c:C.online},
+      {l:'Mkt Spend',     v:aggMk?fmtK(aggMk.totalSpend):'—', chg:null, c:C.app},
+      {l:'ROAS (avg)',    v:aggMk?aggMk.totalRoas.toFixed(2)+'×':'—', chg:null, c:C.intl},
+    ];
+  } else {
+    const last=daily[daily.length-1]||{};
+    kpis=[
+      {l:'Last Day Total', v:fmt(last.total||0),             chg:pv(last.total||0,DTGT),                             c:C.stores},
+      {l:'MTD (5-ch)',     v:fmtC(mtdA),                     chg:pv(mtdA,MTGT),                                      c:C.online},
+      {l:'Stores MTD',     v:fmtC(ch.stores?.mtdActual||0),  chg:pv(ch.stores?.mtdActual||0,ch.stores?.mtdTarget||1), c:C.stores},
+      {l:'Online MTD',     v:fmtC(ch.online?.mtdActual||0),  chg:pv(ch.online?.mtdActual||0,ch.online?.mtdTarget||1), c:C.online},
+      {l:'ROAS Today',     v:(mkt.totalRoas||0).toFixed(2)+'×', chg:null, c:C.intl},
+      {l:'135Cr Gap',      v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr', chg:null, c:aneg()},
+    ];
+  }
+  document.getElementById('kpis').innerHTML=kpis.map(k=>`<div class="card">
+    <div class="lbl">${k.l}</div>
+    <div style="font-size:18px;font-weight:600;letter-spacing:-.04em;color:${k.c};font-family:'DM Mono',monospace;margin-bottom:6px">${k.v}</div>
+    ${k.chg!==null?pill(k.chg):`<span style="font-size:9px;color:${tm3()};font-family:'DM Mono',monospace">${isSel?'selected':'MTD'}</span>`}
+  </div>`).join('');
+
+  const mc=document.getElementById('main');
+
+  // ── OVERVIEW tab ──────────────────────────────────────────────────────────
+  if(TAB==='overview'){
+    const maxT=Math.max(...daily.map(d=>d.total),DTGT)||1;
+    const above=daily.filter(d=>d.total>=DTGT).length, below=daily.filter(d=>d.total>0&&d.total<DTGT).length;
+    mc.innerHTML=`
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <p class="lbl" style="margin-bottom:0">April 2026 · Daily Revenue · tap bar to drill in</p>
+        <div style="display:flex;gap:12px;font-size:10px;color:${tm3()};flex-wrap:wrap">
+          <span><span style="display:inline-block;width:8px;height:8px;background:#7CB32A;border-radius:2px;margin-right:3px"></span>Above (${above}d)</span>
+          <span><span style="display:inline-block;width:8px;height:8px;background:#8B5CF6;border-radius:2px;margin-right:3px"></span>Below (${below}d)</span>
+          <span>Avg ${fmt(filled.length?sum(filled,'total')/filled.length:0)}</span>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div style="position:absolute;bottom:${(DTGT/maxT)*110+18}px;left:0;right:0;border-top:1px dashed #7CB32A33;pointer-events:none"></div>
+        <div style="display:flex;align-items:flex-end;gap:2px;height:128px">
+          ${daily.map(d=>{
+            const h=d.total>0?Math.max((d.total/maxT)*110,4):2;
+            const sel=SEL.includes(+d.day);
+            const bg=d.total===0?bar():d.total>=DTGT?'#7CB32A':'#8B5CF6';
+            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer" onclick="tapDay(${d.day})">
+              <div style="width:100%;background:${bg};height:${h}px;border-radius:3px 3px 0 0;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'};transition:opacity .2s"></div>
+            </div>`;}).join('')}
+        </div>
+        <div style="display:flex;gap:2px;margin-top:3px">
+          ${daily.map(d=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+d.day)?'#7CB32A':tm3()};text-align:center">${d.day}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+    ${aggRev && !isMulti && selRevRows[0] ? dayDetailHTML(selRevRows[0],selMktRows[0]) : ''}
+    ${aggRev && isMulti ? multiSummaryHTML(aggRev, aggMk) : ''}`;
+  }
+
+  // ── CHANNELS tab ──────────────────────────────────────────────────────────
+  if(TAB==='channels'){
+    const chs=[
+      {n:'Stores',      mtdA:ch.stores?.mtdActual||0, mtdT:ch.stores?.mtdTarget||1, dayA:ch.stores?.lastDayActual||0, dayT:1988836, c:C.stores},
+      {n:'Online',      mtdA:ch.online?.mtdActual||0, mtdT:ch.online?.mtdTarget||1, dayA:ch.online?.lastDayActual||0, dayT:673670,  c:C.online},
+      {n:'CRM',         mtdA:ch.crm?.mtdActual||0,    mtdT:ch.crm?.mtdTarget||1,    dayA:ch.crm?.lastDayActual||0,    dayT:458590,  c:C.crm},
+      {n:'App',         mtdA:ch.app?.mtdActual||0,    mtdT:ch.app?.mtdTarget||1,    dayA:ch.app?.lastDayActual||0,    dayT:150000,  c:C.app},
+      {n:'Intl.',       mtdA:ch.intl?.mtdActual||0,   mtdT:ch.intl?.mtdTarget||1,   dayA:ch.intl?.lastDayActual||0,   dayT:83333,   c:C.intl},
+      {n:'Accessories', mtdA:accD.mtdActual||0,       mtdT:accD.mtdTarget||1,       dayA:accD.lastDayActual||0,       dayT:100000,  c:C.acc},
+    ];
+    // If dates selected, use aggregated data
+    const useSel = aggRev && selRevRows.length > 0;
+    mc.innerHTML=`<div class="g2">
+      <div class="card"><p class="lbl">${useSel?SEL.length+' Days Selected — Channel Totals':'Channel MTD'}</p>
+        ${chs.map((c,idx)=>{
+          const dispA = useSel ? [aggRev.stores,aggRev.online,aggRev.crm,aggRev.app,aggRev.intl,0][idx] : c.mtdA;
+          const dispT = useSel ? [1988836,673670,458590,150000,83333,100000][idx]*SEL.length : c.mtdT;
+          const v=pv(dispA,dispT), w=Math.min((dispA/Math.max(dispT,1))*100,100);
+          return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+            <div style="width:72px;font-size:11px;color:${ts()}">${c.n}</div>
+            <div style="flex:1;background:${bar()};border-radius:4px;height:5px;overflow:hidden"><div style="background:${c.c};width:${w}%;height:100%;opacity:.85;transition:width .6s"></div></div>
+            <div style="width:62px;font-size:11px;font-family:'DM Mono',monospace;color:${c.c};text-align:right">${useSel?fmt(dispA):fmtC(dispA)}</div>
+            ${pill(v)}</div>`;}).join('')}
+      </div>
+      <div class="card"><p class="lbl">${useSel?'Avg / Day vs Daily Target':'Last Day Breakdown'}</p>
+        ${chs.map((c,idx)=>{
+          const dispA = useSel ? [aggRev.stores,aggRev.online,aggRev.crm,aggRev.app,aggRev.intl,0][idx]/SEL.length : c.dayA;
+          const dispT = [1988836,673670,458590,150000,83333,100000][idx];
+          const v=pv(dispA,dispT);
+          return `<div class="srow">
+            <span class="sk">${c.n}</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:9.5px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(dispT)}</span>
+              <span class="sv" style="color:${tm()}">${fmt(dispA)}</span>
+              ${pill(v)}</div></div>`;}).join('')}
+        <div style="padding-top:7px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:${ts()};font-weight:600">${useSel?'Avg Total':'Total'}</span>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="font-size:9.5px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(DTGT)}</span>
+            <span style="font-size:13px;color:${apos()};font-family:'DM Mono',monospace;font-weight:700">${useSel?fmt(aggRev.avgRev):fmt(ch.stores?.lastDayActual||0)}</span>
+            ${pill(pv(useSel?aggRev.avgRev:(ch.stores?.lastDayActual||0),DTGT))}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ── MARKETING tab ─────────────────────────────────────────────────────────
+  if(TAB==='marketing'){
+    const useSel = aggMk && isSel;
+    const mShow  = useSel ? {
+      metaSpend:aggMk.metaSpend, metaRev:aggMk.metaRev, metaRoas:aggMk.metaRoas,
+      googleSpend:aggMk.googleSpend, googleRev:aggMk.googleRev, googleRoas:aggMk.googleRoas,
+      totalSpend:aggMk.totalSpend, totalRev:aggMk.totalRev, totalRoas:aggMk.totalRoas,
+    } : mkt;
+
+    mc.innerHTML=`
+    <div class="g3" style="margin-bottom:12px">
+      <div class="card"><p class="lbl">${useSel?(SEL.length>1?SEL.length+' Days — Combined':'Apr '+SEL[0]+' · Marketing'):'Today / Latest'}</p>
+        ${[{pl:'Meta',spend:mShow.metaSpend||0,rev:mShow.metaRev||0,roas:mShow.metaRoas||0,c:C.online},
+           {pl:'Google',spend:mShow.googleSpend||0,rev:mShow.googleRev||0,roas:mShow.googleRoas||0,c:C.crm},
+           {pl:'Combined',spend:mShow.totalSpend||0,rev:mShow.totalRev||0,roas:mShow.totalRoas||0,c:C.stores}].map(m=>`
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:12px;color:${ts()}">${m.pl}</span>
+              <span style="font-size:14px;font-weight:700;color:${m.c};font-family:'DM Mono',monospace">${m.roas.toFixed(2)}×</span>
+            </div>
+            <div style="display:flex;gap:14px">
+              <div><div style="font-size:9px;color:${tm3()};margin-bottom:1px">SPEND</div><div style="font-size:11px;color:${ts()};font-family:'DM Mono',monospace">${fmtK(m.spend)}</div></div>
+              <div><div style="font-size:9px;color:${tm3()};margin-bottom:1px">REVENUE</div><div style="font-size:11px;color:${ts()};font-family:'DM Mono',monospace">${fmt(m.rev)}</div></div>
+            </div>
+          </div>`).join('')}
+        ${useSel&&SEL.length>1?`<div style="padding-top:8px;border-top:1px solid ${sep()};font-size:10px;color:${tm3()}">Avg daily spend: ${fmtK(aggMk.avgDailySpend)} · Avg daily rev: ${fmt(aggMk.avgDailyRev)}</div>`:''}
+      </div>
+      <div class="card"><p class="lbl">MTD Marketing</p>
+        ${[{l:'Proj. spend',v:'₹'+((mkt.projSpend||0)/1e5).toFixed(1)+'L',c:ts()},
+           {l:'Actual spend',v:'₹'+((mkt.mtdSpend||0)/1e5).toFixed(1)+'L',c:tm()},
+           {l:'Proj. revenue',v:fmtC(mkt.projRev||0),c:ts()},
+           {l:'Actual revenue',v:fmtC(mkt.mtdRev||0),c:aneg()},
+           {l:'Proj. ROAS',v:(mkt.projRoas||0).toFixed(1)+'×',c:ts()},
+           {l:'Actual ROAS',v:(mkt.mtdRoas||0).toFixed(2)+'×',c:aneg()},
+           {l:'Rev vs proj.',v:ps(pv(mkt.mtdRev||0,mkt.projRev||1)),c:aneg()}].map(r=>`
+          <div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')}
+      </div>
+      <div class="card"><p class="lbl">ROAS Bars ${useSel?'(selected)':'(MTD)'}</p>
+        ${[{n:'Meta',v:mShow.metaRoas||0,c:C.online},{n:'Google',v:mShow.googleRoas||0,c:C.crm},
+           {n:'Combined',v:mShow.totalRoas||0,c:C.stores},{n:'MTD Actual',v:mkt.mtdRoas||0,c:aneg()},
+           {n:'MTD Target',v:mkt.projRoas||0,c:tm3()}].map(r=>`
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <div style="width:74px;font-size:10px;color:${ts()};text-align:right">${r.n}</div>
+            <div style="flex:1;background:${bar()};border-radius:4px;height:14px;overflow:hidden">
+              <div style="background:${r.c};width:${Math.min((r.v/7)*100,100)}%;height:100%;border-radius:0 4px 4px 0;opacity:.85;transition:width .6s"></div>
+            </div>
+            <div style="width:30px;font-size:11px;font-family:'DM Mono',monospace;color:${r.c}">${r.v.toFixed(1)}×</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    ${hasMkt?`<div class="g2">
+      <div class="card"><p class="lbl">Daily ROAS Trend · tap bar</p>
+        <div style="display:flex;align-items:flex-end;gap:3px;height:90px">
+          ${mktD.map(r=>{const mx=Math.max(...mktD.map(x=>x.totalRoas||0),4),h=Math.max(((r.totalRoas||0)/mx)*80,3);
+            const sel=SEL.includes(+r.day);
+            return `<div style="flex:1;cursor:pointer;display:flex;flex-direction:column;align-items:center" onclick="tapDay(${r.day})">
+              <div style="width:100%;background:${r.totalRoas>=4?C.stores:C.crm};height:${h}px;border-radius:3px 3px 0 0;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'}"></div>
+            </div>`;}).join('')}
+        </div>
+        <div style="display:flex;gap:3px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tm3()};text-align:center">${r.day}</div>`).join('')}</div>
+      </div>
+      <div class="card"><p class="lbl">Daily Spend vs Revenue · tap bar</p>
+        <div style="display:flex;align-items:flex-end;gap:3px;height:90px">
+          ${mktD.map(r=>{const mx=Math.max(...mktD.map(x=>Math.max(x.totalSpend||0,x.totalRev||0)),1);
+            const sh=Math.max(((r.totalSpend||0)/mx)*80,2), rh=Math.max(((r.totalRev||0)/mx)*80,2);
+            const sel=SEL.includes(+r.day);
+            return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;opacity:${SEL.length&&!sel?.3:.9}" onclick="tapDay(${r.day})">
+              <div style="display:flex;gap:1px;align-items:flex-end;width:100%;justify-content:center">
+                <div style="width:46%;background:${C.app};height:${sh}px;border-radius:2px 2px 0 0"></div>
+                <div style="width:46%;background:${C.stores};height:${rh}px;border-radius:2px 2px 0 0"></div>
+              </div>
+            </div>`;}).join('')}
+        </div>
+        <div style="display:flex;gap:3px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tm3()};text-align:center">${r.day}</div>`).join('')}</div>
+        <div style="display:flex;gap:14px;margin-top:8px">
+          <span style="font-size:9.5px;color:${ts()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.app};border-radius:2px;display:inline-block"></span>Spend</span>
+          <span style="font-size:9.5px;color:${ts()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.stores};border-radius:2px;display:inline-block"></span>Revenue</span>
+        </div>
+      </div>
+    </div>`:`<div class="card" style="text-align:center;padding:20px"><p style="font-size:12px;color:${ts()}">Daily marketing data not detected</p><p style="font-size:10px;color:${tm3()};margin-top:4px">Add a Date column (col A) in "Daily Marketing report" sheet, then redeploy Code.gs</p></div>`}`;
+  }
+
+  // ── COMPARE tab ───────────────────────────────────────────────────────────
+  if(TAB==='compare'){
+    if(!isSel){ mc.innerHTML=`<div class="card" style="text-align:center;padding:36px"><p style="font-size:13px;color:${ts()};margin-bottom:6px">Select dates to compare</p><p style="font-size:11px;color:${tm3()}">Use Multi or Range mode in the date strip above</p></div>`; return; }
+    const rows=selRevRows;
+    mc.innerHTML=`
+    <div class="card" style="margin-bottom:12px">
+      <p class="lbl" style="margin-bottom:12px">Revenue breakdown · ${rows.length} days selected</p>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px;min-width:500px">
+        <thead><tr style="border-bottom:1px solid ${sep()}">
+          <th style="text-align:left;padding:6px 8px;color:${tm3()};font-weight:500">Date</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.stores};font-weight:500">Stores</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.online};font-weight:500">Online</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.crm};font-weight:500">CRM</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.app};font-weight:500">App</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.intl};font-weight:500">Intl.</th>
+          <th style="text-align:right;padding:6px 8px;color:${tm()};font-weight:600">Total</th>
+          <th style="text-align:right;padding:6px 8px;color:${ts()};font-weight:500">vs Tgt</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map((r,i)=>{const t=r.total||0;return `<tr style="border-bottom:1px solid ${sep()}">
+            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace;font-size:11px">Apr ${r.day}<br><span style="font-size:9px;color:${tm3()}">${wk(+r.day)}</span></td>
+            ${['stores','online','crm','app','intl'].map(k=>`<td style="text-align:right;padding:7px 8px;color:${C[k]};font-family:'DM Mono',monospace">${fmt(r[k]||0)}</td>`).join('')}
+            <td style="text-align:right;padding:7px 8px;color:${acol(t-DTGT)};font-family:'DM Mono',monospace;font-weight:700">${fmt(t)}</td>
+            <td style="text-align:right;padding:7px 8px">${pill(pv(t,DTGT))}</td>
+          </tr>`;}).join('')}
+          <tr style="background:${THEME==='dark'?'#161616':'#f0f0ec'};font-weight:600;border-top:1px solid ${sep()}">
+            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace;font-size:11px">TOTAL<br><span style="font-size:9px;color:${tm3()}">${rows.length} days</span></td>
+            ${['stores','online','crm','app','intl'].map(k=>`<td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">${fmt(sum(rows,k))}</td>`).join('')}
+            <td style="text-align:right;padding:7px 8px;color:${apos()};font-family:'DM Mono',monospace;font-weight:700">${fmt(aggRev.totRev)}</td>
+            <td style="text-align:right;padding:7px 8px">${pill(pv(aggRev.avgRev,DTGT))}</td>
+          </tr>
+          <tr style="background:${THEME==='dark'?'#141414':'#f8f8f4'}">
+            <td style="padding:7px 8px;color:${tm3()};font-family:'DM Mono',monospace;font-size:11px">AVG/DAY</td>
+            ${['stores','online','crm','app','intl'].map(k=>`<td style="text-align:right;padding:7px 8px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(sum(rows,k)/rows.length)}</td>`).join('')}
+            <td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace;font-weight:600">${fmt(aggRev.avgRev)}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+    ${selMktRows.length?`<div class="card">
+      <p class="lbl" style="margin-bottom:12px">Marketing breakdown · ${selMktRows.length} days</p>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px;min-width:420px">
+        <thead><tr style="border-bottom:1px solid ${sep()}">
+          <th style="text-align:left;padding:6px 8px;color:${tm3()};font-weight:500">Date</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.online};font-weight:500">Meta Spend</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.online};font-weight:500">Meta ROAS</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.crm};font-weight:500">Goog Spend</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.crm};font-weight:500">Goog ROAS</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.stores};font-weight:500">Total Spend</th>
+          <th style="text-align:right;padding:6px 8px;color:${C.stores};font-weight:500">ROAS</th>
+        </tr></thead>
+        <tbody>
+          ${selMktRows.map(r=>`<tr style="border-bottom:1px solid ${sep()}">
+            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">Apr ${r.day} · ${wk(+r.day)}</td>
+            <td style="text-align:right;padding:7px 8px;color:${C.online};font-family:'DM Mono',monospace">${fmtK(r.metaSpend||0)}</td>
+            <td style="text-align:right;padding:7px 8px">${pill(pv(r.metaRoas||0,4))}</td>
+            <td style="text-align:right;padding:7px 8px;color:${C.crm};font-family:'DM Mono',monospace">${fmtK(r.googleSpend||0)}</td>
+            <td style="text-align:right;padding:7px 8px">${pill(pv(r.googleRoas||0,4))}</td>
+            <td style="text-align:right;padding:7px 8px;color:${C.stores};font-family:'DM Mono',monospace">${fmtK(r.totalSpend||0)}</td>
+            <td style="text-align:right;padding:7px 8px;font-family:'DM Mono',monospace;color:${acol((r.totalRoas||0)-4)}">${(r.totalRoas||0).toFixed(2)}×</td>
+          </tr>`).join('')}
+          <tr style="background:${THEME==='dark'?'#161616':'#f0f0ec'};font-weight:600;border-top:1px solid ${sep()}">
+            <td style="padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">TOTAL</td>
+            <td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">${fmtK(aggMk.metaSpend)}</td>
+            <td style="text-align:right;padding:7px 8px"><span class="${aggMk.metaRoas>=4?'up':'dn'}">${aggMk.metaRoas.toFixed(2)}×</span></td>
+            <td style="text-align:right;padding:7px 8px;color:${ts()};font-family:'DM Mono',monospace">${fmtK(aggMk.googleSpend)}</td>
+            <td style="text-align:right;padding:7px 8px"><span class="${aggMk.googleRoas>=4?'up':'dn'}">${aggMk.googleRoas.toFixed(2)}×</span></td>
+            <td style="text-align:right;padding:7px 8px;color:${apos()};font-family:'DM Mono',monospace">${fmtK(aggMk.totalSpend)}</td>
+            <td style="text-align:right;padding:7px 8px;font-family:'DM Mono',monospace;color:${acol(aggMk.totalRoas-4)}">${aggMk.totalRoas.toFixed(2)}×</td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>`:`<div class="card" style="text-align:center;padding:20px"><p style="font-size:12px;color:${ts()}">No daily marketing data for selected dates</p><p style="font-size:10px;color:${tm3()};margin-top:4px">Add dates to "Daily Marketing report" sheet and redeploy Code.gs</p></div>`}`;
+  }
+
+  document.getElementById('footer').textContent=`LIVE · ${D.sheetName||'—'} · ${new Date().toLocaleTimeString()} · AUTO-REFRESH 5 MIN`;
+}
+
+// ── Sub-renderers ─────────────────────────────────────────────────────────────
+function dayDetailHTML(rev, mkt){
+  const chs=[{n:'Stores',v:rev.stores||0,tgt:1988836,c:C.stores},{n:'Online',v:rev.online||0,tgt:673670,c:C.online},
+             {n:'CRM',v:rev.crm||0,tgt:458590,c:C.crm},{n:'App',v:rev.app||0,tgt:150000,c:C.app},{n:'Intl.',v:rev.intl||0,tgt:83333,c:C.intl}];
+  const mx=Math.max(...chs.map(c=>Math.max(c.v,c.tgt)));
+  return `<div class="g2">
+    <div class="card"><p class="lbl" style="margin-bottom:12px">Apr ${rev.day} · ${wk(+rev.day)} · Channel detail</p>
+      ${chs.map(c=>{const vw=Math.min((c.v/mx)*100,100);return `<div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <span style="font-size:11px;color:${ts()}">${c.n}</span>
+          <div style="display:flex;align-items:center;gap:7px">
+            <span style="font-size:9px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(c.tgt)}</span>
+            <span style="font-size:12px;color:${c.c};font-family:'DM Mono',monospace;font-weight:600">${fmt(c.v)}</span>
+            ${pill(pv(c.v,c.tgt))}</div></div>
+        <div style="position:relative;height:5px;background:${bar()};border-radius:3px;overflow:hidden">
+          <div style="position:absolute;left:0;top:0;height:100%;background:${c.c};width:${vw}%;opacity:.8;border-radius:3px;transition:width .5s"></div>
+        </div></div>`;}).join('')}
+    </div>
+    <div class="card"><p class="lbl" style="margin-bottom:12px">Apr ${rev.day} · Marketing</p>
+      ${mkt?[{l:'Meta Spend',v:fmtK(mkt.metaSpend||0),c:C.online},{l:'Meta Revenue',v:fmt(mkt.metaRev||0),c:C.online},
+             {l:'Meta ROAS',v:(mkt.metaRoas||0).toFixed(2)+'×',c:acol((mkt.metaRoas||0)-4)},
+             {l:'Google Spend',v:fmtK(mkt.googleSpend||0),c:C.crm},{l:'Google Revenue',v:fmt(mkt.googleRev||0),c:C.crm},
+             {l:'Google ROAS',v:(mkt.googleRoas||0).toFixed(2)+'×',c:acol((mkt.googleRoas||0)-4)},
+             {l:'Total Spend',v:fmtK(mkt.totalSpend||0),c:ts()},{l:'Total ROAS',v:(mkt.totalRoas||0).toFixed(2)+'×',c:acol((mkt.totalRoas||0)-4)}
+            ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')
+           :`<div style="font-size:11px;color:${tm3()};padding:20px 0;text-align:center">No marketing data for this day<br><span style="font-size:10px">Add date rows to "Daily Marketing report"</span></div>`}
+      <div style="display:flex;gap:8px;margin-top:12px">
+        ${+rev.day>1?`<button class="btn" onclick="tapDay(${+rev.day-1})" style="flex:1;font-size:11px">← Apr ${+rev.day-1}</button>`:''}
+        ${+rev.day<30?`<button class="btn" onclick="tapDay(${+rev.day+1})" style="flex:1;font-size:11px">Apr ${+rev.day+1} →</button>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function multiSummaryHTML(aggR, aggM){
+  return `<div class="g2">
+    <div class="card"><p class="lbl" style="margin-bottom:12px">${SEL.length} Days · Channel Totals</p>
+      ${['stores','online','crm','app','intl'].map((k,i)=>{
+        const label=['Stores','Online','CRM','App','Intl.'][i], col=Object.values(C)[i];
+        const tgt=[1988836,673670,458590,150000,83333][i]*SEL.length;
+        const v=aggR[k]||0;
+        return `<div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:11px;color:${ts()}">${label}</span>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="font-size:9px;color:${tm3()};font-family:'DM Mono',monospace">${fmt(tgt)}</span>
+              <span style="font-size:12px;color:${col};font-family:'DM Mono',monospace;font-weight:600">${fmt(v)}</span>
+              ${pill(pv(v,tgt))}</div></div>
+          <div style="position:relative;height:5px;background:${bar()};border-radius:3px;overflow:hidden">
+            <div style="position:absolute;left:0;top:0;height:100%;background:${col};width:${Math.min((v/Math.max(tgt,v))*100,100)}%;opacity:.8;border-radius:3px;transition:width .5s"></div>
+          </div></div>`;}).join('')}
+    </div>
+    ${aggM?`<div class="card"><p class="lbl" style="margin-bottom:12px">${SEL.length} Days · Marketing Totals</p>
+      ${[{l:'Meta Spend',v:fmtK(aggM.metaSpend),c:C.online},{l:'Meta Revenue',v:fmt(aggM.metaRev),c:C.online},
+         {l:'Meta ROAS',v:aggM.metaRoas.toFixed(2)+'×',c:acol(aggM.metaRoas-4)},
+         {l:'Google Spend',v:fmtK(aggM.googleSpend),c:C.crm},{l:'Google Revenue',v:fmt(aggM.googleRev),c:C.crm},
+         {l:'Google ROAS',v:aggM.googleRoas.toFixed(2)+'×',c:acol(aggM.googleRoas-4)},
+         {l:'Total Spend',v:fmtK(aggM.totalSpend),c:ts()},{l:'Total Revenue',v:fmt(aggM.totalRev),c:C.stores},
+         {l:'Combined ROAS',v:aggM.totalRoas.toFixed(2)+'×',c:acol(aggM.totalRoas-4)},
+         {l:'Avg Daily Spend',v:fmtK(aggM.avgDailySpend),c:tm3()},{l:'Avg Daily Rev',v:fmt(aggM.avgDailyRev),c:tm3()},
+        ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')}
+    </div>`:`<div class="card" style="text-align:center;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <p style="font-size:12px;color:${ts()};margin-bottom:4px">No daily marketing data matched</p>
+      <p style="font-size:10px;color:${tm3()}">Ensure "Daily Marketing report" has dates in col A matching the selected days</p>
+    </div>`}
+  </div>`;
+}
+
+load();
+setInterval(load, 5*60*1000);
+</script>
