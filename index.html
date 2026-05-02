@@ -297,7 +297,8 @@
   <div class="card strip-wrap">
     <div class="strip-header">
       <div class="strip-title">
-        <span class="lbl" style="margin:0">April 2026</span>
+        <span class="lbl" style="margin:0" id="month-lbl">April 2026</span>
+        <div id="month-switcher" style="display:flex;gap:3px;flex-wrap:wrap"></div>
         <span class="strip-label" id="sel-lbl">All days</span>
       </div>
       <div class="strip-controls">
@@ -320,7 +321,7 @@
   <!-- Progress bar -->
   <div class="card prog-card">
     <div class="prog-header">
-      <span class="prog-title" id="bt">APRIL MTD · GOAL ₹135Cr</span>
+      <span class="prog-title" id="bt">MTD · GOAL</span>
       <div class="prog-nums" id="bn"></div>
     </div>
     <div class="prog-track">
@@ -360,16 +361,26 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5VmO_cQuGK-VDISDFtHt2-jnErMmIqcTgenlPwCRutwHVt0mGogbg3iS2urTn5QoJ/exec';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
-const DTGT  = 3354429, MTGT = 98078435, MGOAL = 135000000;
 const WK    = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const APRS  = 2; // April 1 2026 = Wednesday
 const C     = { stores:'#7CB32A', online:'#2BC4A8', crm:'#A78BFA', app:'#FB923C', intl:'#38BDF8', acc:'#F472B6' };
+// ── Month config ──────────────────────────────────────────────────────────────
+const MONTH_START_DOW = { '2026-04':2,'2026-05':4,'2026-06':0,'2026-07':2,'2026-08':5,'2026-09':1 };
+const MONTH_DAYS      = { '2026-04':30,'2026-05':31,'2026-06':30,'2026-07':31,'2026-08':31,'2026-09':30 };
+const MONTH_LABELS    = { '2026-04':'April 2026','2026-05':'May 2026','2026-06':'June 2026','2026-07':'July 2026','2026-08':'August 2026','2026-09':'September 2026' };
+const MONTH_TARGETS   = {
+  '2026-04':{ daily:3354429, goal:135000000, mtg:98078435 },
+  '2026-05':{ daily:3500000, goal:140000000, mtg:105000000 },
+  '2026-06':{ daily:3500000, goal:110000000, mtg:100000000 },
+  '2026-07':{ daily:3500000, goal:110000000, mtg:100000000 },
+};
+// Dynamic targets — updated per active month
+let DTGT=3354429, MTGT=98078435, MGOAL=135000000;
 const CH_KEYS = ['stores','online','crm','app','intl'];
 const CH_LABS = ['Stores','Online','CRM','App','Intl.'];
 const CH_TGTS = [1988836, 673670, 458590, 150000, 83333];
 
 // ─── State ───────────────────────────────────────────────────────────────────
-let D={}, TAB='overview', SEL=[], MODE='single', THEME='dark';
+let D={}, TAB='overview', SEL=[], MODE='single', THEME='dark', ACTIVE_MONTH=null;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const fmt   = n => '₹' + ((n||0)/1e5).toFixed(1) + 'L';
@@ -378,7 +389,7 @@ const fmtK  = n => '₹' + ((n||0)/1000).toFixed(1) + 'K';
 const pv    = (a,b) => b ? (a-b)/b*100 : (a ? 100 : -100);
 const ps    = n => (n>=0?'+':'') + n.toFixed(1) + '%';
 const pill  = v => `<span class="${v>=0?'up-pill':'dn-pill'}">${ps(v)}</span>`;
-const wk    = d => WK[(APRS+d-1)%7];
+const wk    = d => { const dow = MONTH_START_DOW[ACTIVE_MONTH]||2; return WK[(dow+d-1)%7]; };
 const sum   = (arr,k) => arr.reduce((s,r) => s+(r[k]||0), 0);
 const avg   = (arr,k) => arr.length ? sum(arr,k)/arr.length : 0;
 
@@ -478,9 +489,34 @@ function tapDay(d) {
 }
 
 // ─── Build date strip ────────────────────────────────────────────────────────
+function buildMonthSwitcher() {
+  const months = D.availableMonths || ['2026-04'];
+  const sw = $id('month-switcher');
+  const ml = $id('month-lbl');
+  if (!sw) return;
+  if (months.length <= 1) { sw.innerHTML = ''; if(ml) ml.textContent = MONTH_LABELS[ACTIVE_MONTH]||ACTIVE_MONTH; return; }
+  sw.innerHTML = months.map(m => {
+    const lbl = (MONTH_LABELS[m]||m).replace(' 2026','');
+    const isActive = m === ACTIVE_MONTH;
+    return `<button onclick="switchMonth('${m}')" style="padding:3px 9px;border-radius:12px;font-size:10px;cursor:pointer;border:1px solid ${isActive?'var(--acc)':'var(--bd2)'};background:${isActive?'var(--up)':'var(--bg3)'};color:${isActive?'var(--upc)':'var(--tx3)'};font-family:var(--f-sans);font-weight:500;transition:all .15s">${lbl}</button>`;
+  }).join('');
+  if(ml) ml.textContent = '';
+}
+
+function switchMonth(m) {
+  ACTIVE_MONTH = m;
+  const mt = MONTH_TARGETS[m] || MONTH_TARGETS['2026-04'];
+  DTGT = mt.daily; MTGT = mt.mtg; MGOAL = mt.goal;
+  SEL = [];
+  $id('clr').style.display = 'none';
+  $id('sel-lbl').textContent = 'All days';
+  buildMonthSwitcher(); buildStrip(); render();
+}
+
 function buildStrip() {
-  const daily = D.aprilDaily || [];
-  $id('strip').innerHTML = Array.from({length:30}, (_,i) => {
+  const daily = (D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH]) || D.aprilDaily || [];
+  const numDays = MONTH_DAYS[ACTIVE_MONTH] || 30;
+  $id('strip').innerHTML = Array.from({length:numDays}, (_,i) => {
     const d = i+1, row = daily.find(x=>+x.day===d), tot = row ? row.total : 0;
     const idx = SEL.indexOf(d), isSel = idx>=0, isFirst = SEL[0]===d;
     let cls = 'day';
@@ -508,8 +544,17 @@ async function load() {
     const j = await res.json();
     if (j.error) throw new Error(j.error);
     D = j;
+    // Set active month to latest available
+    if (!ACTIVE_MONTH || !(D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH])) {
+      ACTIVE_MONTH = D.latestMonth || '2026-04';
+    }
+    const mt = MONTH_TARGETS[ACTIVE_MONTH] || MONTH_TARGETS['2026-04'];
+    DTGT = mt.daily; MTGT = mt.mtg; MGOAL = mt.goal;
+    SEL = [];
+    $id('clr').style.display = 'none';
+    $id('sel-lbl').textContent = 'All days';
     setStatus('live', `LIVE · ${new Date().toLocaleTimeString('en-IN')} · ${D.sheetName||''}`);
-    buildStrip(); render();
+    buildMonthSwitcher(); buildStrip(); render();
   } catch(e) {
     setStatus('error', e.name==='AbortError' ? 'Timed out (20s) — redeploy Code.gs & check access' : e.message);
     buildStrip(); render();
@@ -518,8 +563,8 @@ async function load() {
 
 // ─── Main render ─────────────────────────────────────────────────────────────
 function render() {
-  const daily  = D.aprilDaily || [];
-  const mktD   = D.mktDaily   || [];
+  const daily  = (D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH]) || D.aprilDaily || [];
+  const mktD   = (D.mktByMonth && D.mktByMonth[ACTIVE_MONTH]) || D.mktDaily || [];
   const ch     = D.channels   || {};
   const mkt    = D.marketing  || {};
   const accD   = D.accessories || {};
@@ -552,7 +597,7 @@ function render() {
          {l:'Above',v:`${aRev.aboveTgt}/${SEL.length}d`,c:apos()},{l:'Days',v:String(SEL.length),c:tx2()}])
     .map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   } else {
-    $id('bt').textContent = 'APRIL MTD · GOAL ₹135Cr';
+    $id('bt').textContent = `${(MONTH_LABELS[ACTIVE_MONTH]||'MTD').toUpperCase()} · GOAL ₹${(MGOAL/1e7).toFixed(0)}Cr`;
     $id('bp').style.background = 'linear-gradient(90deg,#A78BFA,#7CB32A)';
     $id('bp').style.width = Math.min((mtdA/MGOAL)*100,100) + '%';
     $id('bml').textContent = '₹98Cr target';
@@ -560,7 +605,7 @@ function render() {
     $id('bline').style.left = '72.6%';
     $id('bn').innerHTML = [
       {l:'MTD Actual',v:fmtC(mtdA),c:C.stores},{l:'vs 98Cr',v:ps(pv(mtdA,MTGT)),c:acol(mtdA-MTGT)},
-      {l:'Gap 135Cr',v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr',c:aneg()},{l:'Days',v:filled.length+'/30',c:tx2()},
+      {l:'Gap 135Cr',v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr',c:aneg()},{l:'Days',v:filled.length+'/'+(MONTH_DAYS[ACTIVE_MONTH]||30),c:tx2()},
     ].map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   }
 
@@ -613,7 +658,7 @@ function render() {
     mc.innerHTML = `
     <div class="card" style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px">
-        <span class="lbl" style="margin:0">April 2026 · Daily Revenue · tap to drill in</span>
+        <span class="lbl" style="margin:0">${MONTH_LABELS[ACTIVE_MONTH]||ACTIVE_MONTH} · Daily Revenue · tap to drill in</span>
         <div style="display:flex;gap:10px;font-size:10px;color:${tx3()};flex-wrap:wrap">
           <span><span style="display:inline-block;width:8px;height:8px;background:#7CB32A;border-radius:2px;margin-right:3px"></span>Above (${above}d)</span>
           <span><span style="display:inline-block;width:8px;height:8px;background:#8B5CF6;border-radius:2px;margin-right:3px"></span>Below (${below}d)</span>
@@ -860,7 +905,7 @@ function render() {
     </div>` : `<div class="card"><div class="empty"><p>No marketing data for selected dates</p><small>Add dates to "Daily Marketing report" sheet and redeploy Code.gs</small></div></div>`}`;
   }
 
-  $id('footer').textContent = `LIVE · ${D.sheetName||'—'} · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
+  $id('footer').textContent = `LIVE · ${D.sheetName||'—'} · ${MONTH_LABELS[ACTIVE_MONTH]||ACTIVE_MONTH} · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
 }
 
 // ── Day detail (single selection) ────────────────────────────────────────────
@@ -967,7 +1012,7 @@ function insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, 
   const isFiltered = selRevRows.length > 0;
   const label = isFiltered
     ? (selRevRows.length===1 ? `Apr ${selRevRows[0].day}` : `${selRevRows.length} selected days`)
-    : 'April MTD';
+    : `${MONTH_LABELS[ACTIVE_MONTH]||ACTIVE_MONTH} MTD`;
 
   const insights = [];
 
