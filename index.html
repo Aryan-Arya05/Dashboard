@@ -565,6 +565,13 @@ async function load() {
 function render() {
   const daily  = (D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH]) || D.aprilDaily || [];
   const mktD   = (D.mktByMonth && D.mktByMonth[ACTIVE_MONTH]) || D.mktDaily || [];
+  // Use real targets from Monthly target vs achieved sheet
+  const mTgts  = D.monthlyTargets  && D.monthlyTargets[ACTIVE_MONTH];
+  const mAchs  = D.monthlyAchieved && D.monthlyAchieved[ACTIVE_MONTH];
+  if (mTgts && mTgts.total > 0) {
+    MTGT  = mTgts.total;
+    MGOAL = Math.round(mTgts.total * 1.35); // goal = 135% of target
+  }
   const ch     = D.channels   || {};
   const mkt    = D.marketing  || {};
   const accD   = D.accessories || {};
@@ -692,7 +699,8 @@ function render() {
     const useSel = aRev && selRevRows.length>0;
     const chData = CH_KEYS.map((k,i) => ({
       n: CH_LABS[i], c: Object.values(C)[i],
-      mtdA: ch[k]?.mtdActual||0, mtdT: ch[k]?.mtdTarget||1,
+      mtdA: (mAchs && mAchs[k]) || ch[k]?.mtdActual||0,
+      mtdT: (mTgts && mTgts[k]) || ch[k]?.mtdTarget||CH_TGTS[i]*30,
       dayA: ch[k]?.lastDayActual||0, dayT: CH_TGTS[i],
       selA: useSel ? (aRev[k]||0) : 0,
     }));
