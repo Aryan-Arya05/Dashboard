@@ -375,9 +375,12 @@ const MONTH_TARGETS   = {
 };
 // Dynamic targets — updated per active month
 let DTGT=3354429, MTGT=98078435, MGOAL=135000000;
+let CH_TGTS_DYN = [1988836, 673670, 458590, 150000, 83333]; // updated per month
 const CH_KEYS = ['stores','online','crm','app','intl'];
 const CH_LABS = ['Stores','Online','CRM','App','Intl.'];
-const CH_TGTS = [1988836, 673670, 458590, 150000, 83333];
+// CH_TGTS is now dynamic — see updateTargets()
+const CH_TGTS_APRIL = [1988836, 673670, 458590, 150000, 83333];
+let CH_TGTS = [...CH_TGTS_APRIL];
 
 // ─── State ───────────────────────────────────────────────────────────────────
 let D={}, TAB='overview', SEL=[], MODE='single', THEME='dark', ACTIVE_MONTH=null;
@@ -435,6 +438,34 @@ function aggMkt(rows) {
 
 // ─── UI helpers ───────────────────────────────────────────────────────────────
 function $id(id) { return document.getElementById(id); }
+// ── Dynamic target calculator — runs every time month changes ────────────────
+function updateTargets() {
+  const mTgts = D.monthlyTargets && D.monthlyTargets[ACTIVE_MONTH];
+  const days   = MONTH_DAYS[ACTIVE_MONTH] || 30;
+  const CH_KEYS_LOCAL = ['stores','online','crm','app','intl'];
+
+  if (mTgts && mTgts.total > 0) {
+    // MTD / goal targets from real sheet data
+    MTGT  = mTgts.total;
+    MGOAL = Math.round(mTgts.total * 1.38); // ~38% stretch goal
+
+    // Daily target = monthly total / days in month
+    DTGT  = Math.round(mTgts.total / days);
+
+    // Per-channel daily targets from monthly data
+    // Order matches CH_KEYS: stores, online, crm, app, intl
+    CH_TGTS = [
+      Math.round((mTgts.stores || 0) / days),
+      Math.round((mTgts.online || 0) / days),
+      Math.round((mTgts.crm    || 0) / days),
+      Math.round((mTgts.app    || 0) / days),
+      Math.round((mTgts.intl   || 0) / days),
+    ];
+  } else {
+    // No sheet data — keep existing values unchanged
+  }
+}
+
 function setStatus(s, m) {
   const colors = {loading:'#FB923C', live:'#7CB32A', error:'#f87171'};
   const c = colors[s] || '#555';
@@ -505,8 +536,7 @@ function buildMonthSwitcher() {
 
 function switchMonth(m) {
   ACTIVE_MONTH = m;
-  const mt = MONTH_TARGETS[m] || MONTH_TARGETS['2026-04'];
-  DTGT = mt.daily; MTGT = mt.mtg; MGOAL = mt.goal;
+  updateTargets(); // recompute DTGT, MTGT, MGOAL, CH_TGTS from sheet data
   SEL = [];
   $id('clr').style.display = 'none';
   $id('sel-lbl').textContent = 'All days';
@@ -520,7 +550,7 @@ function buildStrip() {
     const d = i+1, row = daily.find(x=>+x.day===d), tot = row ? row.total : 0;
     const idx = SEL.indexOf(d), isSel = idx>=0, isFirst = SEL[0]===d;
     let cls = 'day';
-    if (!tot) cls += ' nd'; else cls += tot>=DTGT ? ' ab' : ' bl';
+    if (!tot) cls += ' nd'; else cls += (DTGT>0 ? tot>=DTGT : false) ? ' ab' : ' bl';
     if (isFirst) cls += ' s1'; else if (isSel) cls += ' sn';
     const badge = isSel && SEL.length>1 ? `<span class="badge">${idx+1}</span>` : '';
     return `<button class="${cls}" onclick="tapDay(${d})" title="Apr ${d} · ${wk(d)}${tot ? ' · '+fmt(tot) : ''}">
@@ -548,8 +578,7 @@ async function load() {
     if (!ACTIVE_MONTH || !(D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH])) {
       ACTIVE_MONTH = D.latestMonth || '2026-04';
     }
-    const mt = MONTH_TARGETS[ACTIVE_MONTH] || MONTH_TARGETS['2026-04'];
-    DTGT = mt.daily; MTGT = mt.mtg; MGOAL = mt.goal;
+    updateTargets(); // compute DTGT/MTGT/MGOAL/CH_TGTS from real sheet data
     SEL = [];
     $id('clr').style.display = 'none';
     $id('sel-lbl').textContent = 'All days';
@@ -568,10 +597,7 @@ function render() {
   // Use real targets from Monthly target vs achieved sheet
   const mTgts  = D.monthlyTargets  && D.monthlyTargets[ACTIVE_MONTH];
   const mAchs  = D.monthlyAchieved && D.monthlyAchieved[ACTIVE_MONTH];
-  if (mTgts && mTgts.total > 0) {
-    MTGT  = mTgts.total;
-    MGOAL = Math.round(mTgts.total * 1.35); // goal = 135% of target
-  }
+  // Targets are updated in updateTargets() — no need to override here
   const ch     = D.channels   || {};
   const mkt    = D.marketing  || {};
   const accD   = D.accessories || {};
@@ -611,7 +637,7 @@ function render() {
     $id('bel').textContent = '₹135Cr goal';
     $id('bline').style.left = '72.6%';
     $id('bn').innerHTML = [
-      {l:'MTD Actual',v:fmtC(mtdA),c:C.stores},{l:'vs 98Cr',v:ps(pv(mtdA,MTGT)),c:acol(mtdA-MTGT)},
+      {l:'MTD Actual',v:fmtC(mtdA),c:C.stores},{l:'vs Target',v:ps(pv(mtdA,MTGT)),c:acol(mtdA-MTGT)},
       {l:'Gap 135Cr',v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr',c:aneg()},{l:'Days',v:filled.length+'/'+(MONTH_DAYS[ACTIVE_MONTH]||30),c:tx2()},
     ].map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   }
@@ -645,7 +671,7 @@ function render() {
       {l:'Stores MTD',  v:fmtC(ch.stores?.mtdActual||0),   chg:pv(ch.stores?.mtdActual||0,ch.stores?.mtdTarget||1), c:C.stores},
       {l:'Online MTD',  v:fmtC(ch.online?.mtdActual||0),   chg:pv(ch.online?.mtdActual||0,ch.online?.mtdTarget||1), c:C.online},
       {l:'ROAS Today',  v:(mkt.totalRoas||0).toFixed(2)+'×', chg:null,                                              c:C.intl},
-      {l:'135Cr Gap',   v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr', chg:null,                                       c:aneg()},
+      {l:'Gap to Goal', v:'−₹'+((MGOAL-mtdA)/1e7).toFixed(1)+'Cr', chg:null,                                       c:aneg()},
     ];
   }
   $id('kpis').innerHTML = kpis.map(k => `
