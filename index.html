@@ -681,7 +681,7 @@ async function fetchShopifyForPeriod(period) {
   try {
     const ctrl  = new AbortController();
     // Only fetching Shopify — much faster, no sheet reads
-    const timer = setTimeout(() => ctrl.abort(), 30000);
+    const timer = setTimeout(() => ctrl.abort(), 55000);
     const url   = SCRIPT_URL + '?only=shopify&period=' + encodeURIComponent(period) + '&_t=' + Date.now();
     const r     = await fetch(url, { signal: ctrl.signal });
     clearTimeout(timer);
@@ -1108,8 +1108,8 @@ function render() {
     } else if (SHOPIFY_LOADING && !sh.todayRevenue) {
       mc.innerHTML = periodBar + `<div class="card"><div class="empty"><p style="display:flex;align-items:center;gap:8px"><span class="spin"></span>Fetching ${activePeriodLabel} data…</p><small>shopmulmul.myshopify.com</small></div></div>`;
     } else {
-      const fmtINR = n => '₹' + n.toLocaleString('en-IN', {maximumFractionDigits:0});
-      const fmtAOV = n => '₹' + n.toLocaleString('en-IN', {maximumFractionDigits:0});
+      const fmtINR = n => '₹' + ((n||0)).toLocaleString('en-IN', {maximumFractionDigits:0});
+      const fmtAOV = n => '₹' + ((n||0)).toLocaleString('en-IN', {maximumFractionDigits:0});
       const revVsYest = sh.yesterdayRevenue ? ((sh.todayRevenue - sh.yesterdayRevenue)/sh.yesterdayRevenue*100) : 0;
 
       // KPI strip — labels change based on selected period
@@ -1195,7 +1195,7 @@ function render() {
           <div style="border-top:1px solid ${sep()};padding-top:10px">
             ${[
               {l:'Today AOV',    v:fmtAOV(sh.todayAOV)},
-              {l:'MTD Refunds',  v:fmtINR(sh.mtdRefunds)},
+              {l:'Period Refunds',v:fmtINR(sh.mtdRefunds||sh.periodRefunds||0)},
               {l:'Active SKUs',  v:String(sh.activeProducts||0)},
             ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${tx2()}">${r.v}</span></div>`).join('')}
           </div>
