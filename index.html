@@ -682,7 +682,7 @@ async function fetchShopifyForPeriod(period) {
     const ctrl  = new AbortController();
     // Only fetching Shopify — much faster, no sheet reads
     const timer = setTimeout(() => ctrl.abort(), 30000);
-    const url   = SURL + '?only=shopify&period=' + encodeURIComponent(period) + '&_t=' + Date.now();
+    const url   = SCRIPT_URL + '?only=shopify&period=' + encodeURIComponent(period) + '&_t=' + Date.now();
     const r     = await fetch(url, { signal: ctrl.signal });
     clearTimeout(timer);
     if (!r.ok) throw new Error('HTTP ' + r.status);
