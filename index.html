@@ -288,6 +288,7 @@
         <button class="tab" onclick="setTab('channels')">Channels</button>
         <button class="tab" onclick="setTab('marketing')">Marketing</button>
         <button class="tab" onclick="setTab('compare')">Compare</button>
+        <button class="tab" onclick="setTab('shopify')">Shopify</button>
       </div>
       <button class="btn" onclick="load()" style="flex-shrink:0">↻</button>
     </div>
@@ -939,7 +940,137 @@ function render() {
     </div>` : `<div class="card"><div class="empty"><p>No marketing data for selected dates</p><small>Add dates to "Daily Marketing report" sheet and redeploy Code.gs</small></div></div>`}`;
   }
 
-  $id('footer').textContent = `LIVE · ${D.sheetName||'—'} · ${MONTH_LABELS[ACTIVE_MONTH]||ACTIVE_MONTH} · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
+
+  // ── SHOPIFY TAB ────────────────────────────────────────────────────────────
+  if (TAB === 'shopify') {
+    const sh = D.shopify || {};
+    if (sh.error) {
+      mc.innerHTML = `<div class="card"><div class="empty"><p>Shopify connection error</p><small>${sh.error}</small></div></div>`;
+    } else if (!sh.todayRevenue && sh.todayRevenue !== 0) {
+      mc.innerHTML = `<div class="card"><div class="empty"><p>Loading Shopify data…</p><small>Fetching from shopmulmul.myshopify.com</small></div></div>`;
+    } else {
+      const fmtINR = n => '₹' + n.toLocaleString('en-IN', {maximumFractionDigits:0});
+      const fmtAOV = n => '₹' + n.toLocaleString('en-IN', {maximumFractionDigits:0});
+      const revVsYest = sh.yesterdayRevenue ? ((sh.todayRevenue - sh.yesterdayRevenue)/sh.yesterdayRevenue*100) : 0;
+
+      // KPI strip
+      const shopKPIs = [
+        {l:'Today Revenue',  v:fmtINR(sh.todayRevenue),  chg:revVsYest,     c:'#7CB32A'},
+        {l:'Today Orders',   v:String(sh.todayOrders),   chg:null,           c:'#2BC4A8'},
+        {l:'Today AOV',      v:fmtAOV(sh.todayAOV),     chg:null,           c:'#A78BFA'},
+        {l:'MTD Revenue',    v:fmtINR(sh.mtdRevenue),    chg:null,           c:'#FB923C'},
+        {l:'MTD Orders',     v:String(sh.mtdOrders),     chg:null,           c:'#38BDF8'},
+        {l:'Refund Rate',    v:sh.mtdRefundRate+'%',     chg:null,           c:sh.mtdRefundRate>5?aneg():'#7CB32A'},
+      ];
+      const shopKPIHtml = `<div class="g6" style="margin-bottom:12px">
+        ${shopKPIs.map(k=>`<div class="card">
+          <span class="lbl">${k.l}</span>
+          <div style="font-size:18px;font-weight:600;letter-spacing:-.04em;color:${k.c};font-family:var(--f-mono);margin-bottom:6px">${k.v}</div>
+          ${k.chg!==null ? pill(k.chg) : `<span style="font-size:9px;color:${tx3()};font-family:var(--f-mono)">MTD</span>`}
+        </div>`).join('')}
+      </div>`;
+
+      // Revenue comparison bar
+      const maxRev = Math.max(sh.todayRevenue, sh.yesterdayRevenue, 1);
+      const todayW = Math.min((sh.todayRevenue/maxRev)*100,100);
+      const yestW  = Math.min((sh.yesterdayRevenue/maxRev)*100,100);
+
+      // Order status breakdown
+      const statusRows = Object.entries(sh.statusBreakdown||{}).map(([s,c])=>
+        `<div class="srow"><span class="sk" style="text-transform:capitalize">${s.replace(/_/g,' ')}</span><span class="sv" style="color:${tx2()}">${c} orders</span></div>`).join('');
+
+      // Fulfillment breakdown
+      const fulfillRows = Object.entries(sh.fulfillBreakdown||{}).map(([s,c])=>
+        `<div class="srow"><span class="sk" style="text-transform:capitalize">${(s||'unfulfilled').replace(/_/g,' ')}</span><span class="sv" style="color:${tx2()}">${c}</span></div>`).join('');
+
+      // Last 7 days bar chart
+      const last7 = sh.last7Days || [];
+      const maxDay7 = Math.max(...last7.map(d=>d.revenue), 1);
+      const last7Html = last7.map(d => {
+        const h = Math.max((d.revenue/maxDay7)*80, 3);
+        const label = d.date.slice(5); // MM-DD
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div style="width:100%;background:#7CB32A;height:${h}px;border-radius:3px 3px 0 0;opacity:.85"></div>
+          <div style="font-size:8px;color:${tx3()};text-align:center">${label}</div>
+          <div style="font-size:8px;color:${tx3()};text-align:center">₹${Math.round(d.revenue/1000)}K</div>
+        </div>`;
+      }).join('');
+
+      // Top products table
+      const topProds = (sh.topProducts||[]).map((p,i)=>`<tr style="border-bottom:1px solid ${sep()}">
+        <td style="padding:7px 8px;color:${tx3()};font-family:var(--f-mono)">${i+1}</td>
+        <td style="padding:7px 8px;color:${tx()};max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</td>
+        <td style="text-align:right;padding:7px 8px;color:${tx2()};font-family:var(--f-mono)">${p.qty}</td>
+        <td style="text-align:right;padding:7px 8px;color:#7CB32A;font-family:var(--f-mono);font-weight:600">${fmtINR(p.revenue)}</td>
+      </tr>`).join('');
+
+      mc.innerHTML = shopKPIHtml + `
+      <div class="g2" style="margin-bottom:12px">
+        <div class="card">
+          <span class="lbl" style="margin-bottom:12px;display:block">Today vs Yesterday</span>
+          <div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:11px;color:${tx2()}">Today</span>
+              <span style="font-size:12px;font-family:var(--f-mono);color:#7CB32A;font-weight:600">${fmtINR(sh.todayRevenue)}</span>
+            </div>
+            <div style="background:${bar()};border-radius:4px;height:6px;overflow:hidden">
+              <div style="background:#7CB32A;width:${todayW}%;height:100%;border-radius:4px"></div>
+            </div>
+          </div>
+          <div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:11px;color:${tx2()}">Yesterday</span>
+              <span style="font-size:12px;font-family:var(--f-mono);color:${tx2()};font-weight:600">${fmtINR(sh.yesterdayRevenue)}</span>
+            </div>
+            <div style="background:${bar()};border-radius:4px;height:6px;overflow:hidden">
+              <div style="background:${tx3()};width:${yestW}%;height:100%;border-radius:4px"></div>
+            </div>
+          </div>
+          <div style="border-top:1px solid ${sep()};padding-top:10px">
+            ${[
+              {l:'Today AOV',    v:fmtAOV(sh.todayAOV)},
+              {l:'MTD Refunds',  v:fmtINR(sh.mtdRefunds)},
+              {l:'Active SKUs',  v:String(sh.activeProducts||0)},
+            ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${tx2()}">${r.v}</span></div>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <span class="lbl" style="margin-bottom:12px;display:block">Order Status — Today</span>
+          ${statusRows || `<div style="font-size:11px;color:${tx3()};padding:8px 0">No orders yet today</div>`}
+          <div style="border-top:1px solid ${sep()};padding-top:10px;margin-top:4px">
+            <span class="lbl" style="margin-bottom:8px;display:block">Fulfillment Status</span>
+            ${fulfillRows || `<div style="font-size:11px;color:${tx3()}">—</div>`}
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:12px">
+        <span class="lbl" style="margin-bottom:10px;display:block">Revenue — Last 7 Days</span>
+        <div style="display:flex;align-items:flex-end;gap:3px;height:100px">
+          ${last7Html || `<div style="font-size:11px;color:${tx3()};padding:20px 0">No data</div>`}
+        </div>
+      </div>
+      <div class="card">
+        <span class="lbl" style="margin-bottom:12px;display:block">Top Products — MTD Revenue</span>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead><tr style="border-bottom:1px solid ${sep()}">
+            <th style="text-align:left;padding:6px 8px;color:${tx3()};font-weight:500;width:32px">#</th>
+            <th style="text-align:left;padding:6px 8px;color:${tx3()};font-weight:500">Product</th>
+            <th style="text-align:right;padding:6px 8px;color:${tx3()};font-weight:500">Qty</th>
+            <th style="text-align:right;padding:6px 8px;color:#7CB32A;font-weight:500">Revenue</th>
+          </tr></thead>
+          <tbody>${topProds || `<tr><td colspan="4" style="text-align:center;padding:16px;color:${tx3()}">No product data yet</td></tr>`}</tbody>
+        </table></div>
+        <div style="margin-top:8px;font-size:10px;color:${tx3()}">
+          Fetched from shopmulmul.myshopify.com · ${sh.fetchedAt||''}
+        </div>
+      </div>`;
+    }
+    document.getElementById('footer').textContent = `LIVE · Shopify: shopmulmul.myshopify.com · ${new Date().toLocaleTimeString('en-IN')}`;
+    return;
+  }
+
+
+    $id('footer').textContent = `LIVE · ${D.sheetName||'—'} · ${MONTH_LABELS[ACTIVE_MONTH]||ACTIVE_MONTH} · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
 }
 
 // ── Day detail (single selection) ────────────────────────────────────────────
