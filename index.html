@@ -5,88 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#080b0f">
+  <meta name="theme-color" content="#f5f1ec">
   <title>CEO Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-tap-highlight-color: transparent; }
 
-    /* ── CSS Variables — Minimal Luxury Palette ── */
+    /* ── CSS Variables — Mulmul Brand Palette ── */
     :root {
-      /* Backgrounds — warm dark, not cold blue */
-      --bg:      #0d0c0b;
-      --bg2:     #141310;
-      --bg3:     #1c1a17;
-      --bg4:     #252320;
-      /* Borders — very subtle */
-      --bd:      #28261f;
-      --bd2:     #363330;
-      --bd3:     #484540;
-      /* Text — warm white hierarchy */
-      --tx:      #edeae4;
-      --tx2:     #9a9490;
-      --tx3:     #625e58;
-      --tx4:     #3a3830;
-      /* Semantic — muted, readable */
-      --up:      #1a2018;
-      --upc:     #8fb898;
-      --dn:      #261618;
-      --dnc:     #c08888;
-      --warn:    #241e10;
-      --warnc:   #b89858;
-      /* Visual */
-      --bar:     #181610;
-      --sep:     #1e1c18;
-      --shad:    0 2px 20px rgba(0,0,0,.35);
-      --shad2:   0 1px 4px rgba(0,0,0,.2);
+      --bg:      #f5f1ec;
+      --bg2:     #ffffff;
+      --bg3:     #faf8f5;
+      --bg4:     #f0ece6;
+      --bd:      #e8e4dc;
+      --bd2:     #ddd8d0;
+      --bd3:     #ccc7be;
+      --tx:      #1c1a16;
+      --tx2:     #5c5850;
+      --tx3:     #9a9490;
+      --tx4:     #c4c0b8;
+      --up:      #edf4ef;
+      --upc:     #2d5c40;
+      --dn:      #f5edee;
+      --dnc:     #8c3040;
+      --warn:    #f8f2e8;
+      --warnc:   #7a5c2a;
+      --bar:     #ede9e2;
+      --sep:     #eae5de;
+      --shad:    0 2px 16px rgba(20,16,10,.08);
+      --shad2:   0 1px 4px rgba(20,16,10,.05);
       --glow:    none;
-      /* Accent — champagne gold, refined */
-      --acc:     #c4a87a;
-      --acc2:    #8fa87d;
-      --acc3:    #7a8caa;
-      /* Fonts */
-      --f-sans: 'Outfit', -apple-system, sans-serif;
-      --f-mono: 'JetBrains Mono', 'Courier New', monospace;
-      /* Radii — slightly tighter, more editorial */
-      --r:      10px; --r-sm: 7px; --r-pill: 20px;
-    }
-
-    body.light {
-      --bg:    #f5f2ed;
-      --bg2:   #ffffff;
-      --bg3:   #efece7;
-      --bg4:   #e8e4de;
-      --bd:    #ddd9d2;
-      --bd2:   #ccc8c0;
-      --bd3:   #b8b4ac;
-      --tx:    #1a1814;
-      --tx2:   #5a5650;
-      --tx3:   #8a8680;
-      --tx4:   #b4b0a8;
-      --up:    #eef4ec;
-      --upc:   #2d6040;
-      --dn:    #f8efef;
-      --dnc:   #8c3040;
-      --bar:   #e8e4de;
-      --sep:   #dedad4;
-      --shad:  0 1px 12px rgba(20,16,10,.08);
-      --shad2: 0 1px 3px rgba(20,16,10,.05);
-      --glow:  none;
-      --acc:   #8c6a30;
-      --acc2:  #4a6840;
-      --acc3:  #3a4c6a;
+      --acc:     #4a5c3a;
+      --acc2:    #6a7a5a;
+      --acc3:    #5a6a80;
+      --f-sans:  'Outfit', -apple-system, sans-serif;
+      --f-serif: 'Cormorant Garamond', Georgia, serif;
+      --f-mono:  'JetBrains Mono', monospace;
+      --r:       8px; --r-sm: 5px; --r-pill: 20px;
     }
 
     body {
       background: var(--bg); color: var(--tx);
-      font-family: var(--f-sans); font-size: 14px; line-height: 1.5;
+      font-family: var(--f-sans); font-size: 13.5px; line-height: 1.55;
       min-height: 100vh; min-height: 100dvh;
-      transition: background .35s, color .35s;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      font-weight: 300;
     }
 
     /* ── Layout ── */
@@ -104,9 +71,7 @@
       border-radius: var(--r);
       padding: 16px 18px;
       box-shadow: var(--shad2);
-      transition: border-color .25s, box-shadow .25s, transform .2s;
-      position: relative;
-      overflow: hidden;
+      transition: border-color .2s;
     }
     
     .card:hover {
@@ -121,8 +86,8 @@
 
     /* Labels — FIXED visibility */
     .lbl {
-      font-size: 10.5px; font-weight: 600; color: var(--tx3);
-      letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px;
+      font-size: 9.5px; font-weight: 500; color: var(--tx3);
+      letter-spacing: .14em; text-transform: uppercase; margin-bottom: 10px;
       display: block; font-family: var(--f-sans);
     }
 
@@ -132,8 +97,8 @@
       border-radius: var(--r-pill); font-family: var(--f-mono); white-space: nowrap;
       display: inline-flex; align-items: center; gap: 2px;
     }
-    .up-pill { background: var(--up); color: var(--upc); }
-    .dn-pill { background: var(--dn); color: var(--dnc); }
+    .up-pill { background: var(--up); color: var(--upc); font-weight: 500; }
+    .dn-pill { background: var(--dn); color: var(--dnc); font-weight: 500; }
 
     /* ── Tabs ── */
     .tab-bar {
@@ -148,9 +113,9 @@
       letter-spacing: .01em;
     }
     .tab.on {
-      background: var(--bg4);
-      color: var(--tx);
-      box-shadow: 0 1px 6px rgba(0,0,0,.3);
+      background: var(--tx);
+      color: var(--bg2);
+      border-radius: 18px;
     }
     .tab:hover:not(.on) { color: var(--tx2); }
 
@@ -198,7 +163,7 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .subtitle { font-size: 12px; color: var(--tx3); font-weight: 400; letter-spacing: .01em; }
+    .subtitle { font-size: 11.5px; color: var(--tx3); font-weight: 300; letter-spacing: .04em; text-transform: uppercase; }
     .header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     /* ── Spinner ── */
@@ -368,9 +333,7 @@
       <p class="subtitle">Live · Consolidated Data FY 2026-2027</p>
     </div>
     <div class="header-right">
-      <div class="theme-btn" onclick="toggleTheme()">
-        <span id="ticon">🌙</span>
-        <div class="track"><div class="thumb"></div></div>
+      </div>
         <span class="theme-label" id="tlbl">Dark</span>
       </div>
       <div class="tab-bar">
@@ -456,7 +419,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5VmO_cQuGK-VDISDFt
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const WK    = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const C     = { stores:'#7CB32A', online:'var(--acc2)', crm:'var(--acc3)', app:'#FB923C', intl:'#38BDF8', acc:'#F472B6' };
+const C     = { stores:'var(--upc)', online:'var(--acc2)', crm:'var(--acc3)', app:'#FB923C', intl:'#38BDF8', acc:'#F472B6' };
 // ── Month config ──────────────────────────────────────────────────────────────
 const MONTH_START_DOW = { '2026-04':2,'2026-05':4,'2026-06':0,'2026-07':2,'2026-08':5,'2026-09':1 };
 const MONTH_DAYS      = { '2026-04':30,'2026-05':31,'2026-06':30,'2026-07':31,'2026-08':31,'2026-09':30 };
@@ -477,7 +440,7 @@ const CH_TGTS_APRIL = [1988836, 673670, 458590, 150000, 83333];
 let CH_TGTS = [...CH_TGTS_APRIL];
 
 // ─── State ───────────────────────────────────────────────────────────────────
-let D={}, TAB='overview', SEL=[], MODE='single', THEME='dark', ACTIVE_MONTH=null, SHOPIFY_PERIOD='mtd', SHOPIFY_LOADING=false;
+let D={}, TAB='overview', SEL=[], MODE='single', ACTIVE_MONTH=null, SHOPIFY_PERIOD='mtd', SHOPIFY_LOADING=false; // light mode only
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const fmt   = n => '₹' + ((n||0)/1e5).toFixed(1) + 'L';
@@ -491,15 +454,17 @@ const sum   = (arr,k) => arr.reduce((s,r) => s+(r[k]||0), 0);
 const avg   = (arr,k) => arr.length ? sum(arr,k)/arr.length : 0;
 
 // Theme-reactive helpers (call as functions so they pick up current theme)
-const tx    = () => THEME==='dark' ? '#e2e2e2' : '#111';
-const tx2   = () => THEME==='dark' ? '#888' : '#555';
-const tx3   = () => THEME==='dark' ? '#3a3a3a' : '#aaa';
-const bar   = () => THEME==='dark' ? '#1a1a1a' : '#e8e8e4';
-const sep   = () => THEME==='dark' ? '#181818' : '#eee';
-const bg3   = () => THEME==='dark' ? '#1a1a1a' : '#eeeeea';
-const apos  = () => THEME==='dark' ? '#C8F04A' : '#4a7a14';
-const aneg  = () => THEME==='dark' ? '#f87171' : '#c0392b';
-const acol  = v => v >= 0 ? apos() : aneg();
+// Light-mode only — Mulmul palette
+const tx    = () => 'var(--tx)';
+const tx2   = () => 'var(--tx2)';
+const tx3   = () => 'var(--tx3)';
+const tx4   = () => 'var(--tx4)';
+const bar   = () => 'var(--bar)';
+const sep   = () => 'var(--sep)';
+const bg3   = () => 'var(--bg3)';
+const apos  = () => 'var(--upc)';
+const aneg  = () => 'var(--dnc)';
+const acol  = v => v >= 0 ? 'var(--upc)' : 'var(--dnc)';
 
 // ─── Aggregation ──────────────────────────────────────────────────────────────
 function aggRev(rows) {
@@ -561,7 +526,7 @@ function updateTargets() {
 }
 
 function setStatus(s, m) {
-  const colors = {loading:'#FB923C', live:'#7CB32A', error:'#f87171'};
+  const colors = {loading:'#FB923C', live:'var(--upc)', error:'#f87171'};
   const c = colors[s] || '#555';
   const dot = $id('dot');
   dot.style.background = c;
@@ -575,14 +540,7 @@ function setTab(t) {
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.textContent.toLowerCase()===t));
   render();
 }
-function toggleTheme() {
-  THEME = THEME==='dark' ? 'light' : 'dark';
-  document.body.classList.toggle('dark',  THEME==='dark');
-  document.body.classList.toggle('light', THEME==='light');
-  $id('ticon').textContent = THEME==='dark' ? '🌙' : '☀️';
-  $id('tlbl').textContent  = THEME==='dark' ? 'Dark' : 'Light';
-  render();
-}
+
 function setMode(m) {
   MODE = m; SEL = SEL.slice(0,1);
   ['ms','mm','mr'].forEach((id,i) => $id(id).classList.toggle('act', ['single','multi','range'][i]===m));
@@ -695,6 +653,56 @@ async function fetchShopifyForPeriod(period) {
 }
 
 // ── renderProducts: standalone, preserves search focus ────────────────────────
+// ── Global product grid updater (called from event listeners) ──────────────
+function updateProdGrid(imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol) {
+  const gridEl = document.getElementById('prod-grid');
+  const statsEl = document.getElementById('prod-stats');
+  if (!gridEl) return;
+  const q     = (window._pSearch  || '').toLowerCase();
+  const sFilt = window._pStatFilt || 'All';
+  const iFilt = window._pInvFilt  || 'All';
+  const cFilt = window._pCollFilt || 'All';
+  const expKey = window._pExpanded || null;
+  const filtered = imgs.filter(p => {
+    const ms = misMap[(p.name+'|'+p.colour).toLowerCase().trim()];
+    if (q && !p.name.toLowerCase().includes(q) && !p.colour.toLowerCase().includes(q)) return false;
+    if (sFilt !== 'All' && ms?.deliveryStatus !== sFilt) return false;
+    if (iFilt !== 'All' && ms?.inventoryStatus !== iFilt) return false;
+    if (cFilt !== 'All' && ms?.collection !== cFilt) return false;
+    return true;
+  });
+  gridEl.innerHTML = buildGrid(filtered, imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, expKey);
+  if (statsEl) statsEl.innerHTML = buildStats(filtered, imgs);
+}
+
+// ── Image lightbox ────────────────────────────────────────────────────────────
+function openImgLightbox(url, name, colour) {
+  let lb = document.getElementById('img-lightbox');
+  if (!lb) {
+    lb = document.createElement('div');
+    lb.id = 'img-lightbox';
+    lb.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(28,26,22,.92);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+    lb.onclick = function(e){ if(e.target===lb) closeLightbox(); };
+    document.body.appendChild(lb);
+  }
+  lb.innerHTML = `
+    <div style="position:relative;max-width:480px;width:90%;background:var(--bg2);border-radius:12px;overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,.3);">
+      <button onclick="closeLightbox()" style="position:absolute;top:12px;right:12px;z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(28,26,22,.7);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
+      <img src="${url}" style="width:100%;display:block;" onerror="this.src=''" alt="${name}">
+      <div style="padding:14px 16px;border-top:1px solid var(--bd);">
+        <p style="font-size:14px;font-weight:500;color:var(--tx);margin-bottom:2px;">${name}</p>
+        <p style="font-size:12px;color:var(--tx2);">${colour}</p>
+      </div>
+    </div>`;
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  const lb = document.getElementById('img-lightbox');
+  if (lb) lb.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
 function renderProducts() {
   const mc  = $id('main');
   const imgs = D.productImages || [];
@@ -713,8 +721,8 @@ function renderProducts() {
     'Early':      {e:'●', c:'#7fb898', bg:'rgba(127,184,152,.1)',  bdr:'rgba(127,184,152,.3)'},
     'On Time':    {e:'●', c:'#7fb898', bg:'rgba(127,184,152,.1)',  bdr:'rgba(127,184,152,.3)'},
     'Upcoming':   {e:'○', c:tx3(),     bg:'rgba(100,96,90,.1)',    bdr:'rgba(100,96,90,.25)'},
-    'Late':       {e:'●', c:'#c4a050', bg:'rgba(196,160,80,.1)',   bdr:'rgba(196,160,80,.3)'},
-    'Super Late': {e:'●', c:'#c08080', bg:'rgba(192,128,128,.1)',  bdr:'rgba(192,128,128,.3)'},
+    'Late':       {e:'●', c:'var(--warnc)', bg:'rgba(196,160,80,.1)',   bdr:'rgba(196,160,80,.3)'},
+    'Super Late': {e:'●', c:'var(--dnc)', bg:'rgba(192,128,128,.1)',  bdr:'rgba(192,128,128,.3)'},
     'No Date':    {e:'○', c:tx4(),     bg:'rgba(80,76,70,.08)',    bdr:'rgba(80,76,70,.2)'},
   };
   const ICFG = {
@@ -736,13 +744,16 @@ function renderProducts() {
     if (q && !p.name.toLowerCase().includes(q) && !p.colour.toLowerCase().includes(q)) return false;
     if (sFilt !== 'All' && ms?.deliveryStatus !== sFilt) return false;
     if (iFilt !== 'All' && ms?.inventoryStatus !== iFilt) return false;
+    if (cFilt !== 'All' && ms?.collection !== cFilt) return false;
     return true;
   });
+
+  // Build collection list from MIS data
+  const colls = (mis && mis.summary && mis.summary.collections) ? mis.summary.collections : [];
 
   // ── Check if this is just a grid update (preserve search focus) ────────────
   const isGridUpdate = !!document.getElementById('prod-grid');
   if (isGridUpdate) {
-    // Only update the grid and stats — preserve search input focus
     document.getElementById('prod-grid').innerHTML = buildGrid(filtered, imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, expKey);
     const statsEl = document.getElementById('prod-stats');
     if (statsEl) statsEl.innerHTML = buildStats(filtered, imgs);
@@ -772,16 +783,21 @@ function renderProducts() {
       color:${active ? (col||'var(--acc)') : 'var(--tx3)'};transition:all .18s;white-space:nowrap;
     ">${label}</button>`;
 
+  const cFilt = window._pCollFilt || 'All';
   const filtersHTML = `
-    <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px">
+    <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px;flex-direction:column">
       <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
-        <span style="font-size:9.5px;color:${tx4()};letter-spacing:.12em;text-transform:uppercase;font-weight:500;white-space:nowrap;margin-right:2px">Delivery</span>
+        <span style="font-size:9.5px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;font-weight:500;white-space:nowrap;width:64px">Delivery</span>
         ${['All','Upcoming','Early','On Time','Late','Super Late'].map(f => mkPill(f,'_pStatFilt',f,sFilt===f,SCFG[f]?.c)).join('')}
       </div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
-        <span style="font-size:9.5px;color:${tx4()};letter-spacing:.12em;text-transform:uppercase;font-weight:500;white-space:nowrap;margin-right:2px">Stock</span>
+        <span style="font-size:9.5px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;font-weight:500;white-space:nowrap;width:64px">Stock</span>
         ${['All','Full','Partial','Not Arrived'].map(f => mkPill(f,'_pInvFilt',f,iFilt===f,ICFG[f]?.c)).join('')}
       </div>
+      ${colls.length > 0 ? `<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:9.5px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;font-weight:500;white-space:nowrap;width:64px">Collection</span>
+        ${['All',...colls].map(f => mkPill(f,'_pCollFilt',f,cFilt===f,'var(--acc3)')).join('')}
+      </div>` : ''}
     </div>`;
 
   mc.innerHTML = `
@@ -799,32 +815,24 @@ function renderProducts() {
 
   inp.addEventListener('input', function() {
     window._pSearch = this.value;
-    // Autocomplete
     const v = this.value.trim().toLowerCase();
+    ac.style.display = 'none';
+
+    // Autocomplete suggestions
     if (v.length >= 1) {
       const matches = allNames.filter(n => n.toLowerCase().includes(v)).slice(0, 6);
-      if (matches.length > 0 && v !== this.value.trim().toLowerCase()) {
-        ac.style.display = 'block';
+      if (matches.length > 0) {
         ac.innerHTML = matches.map(n =>
-          `<div onclick="window._pSearch='${n.replace(/'/g,"\'")}';document.getElementById('prod-search').value='${n.replace(/'/g,"\'")}';document.getElementById('prod-autocomplete').style.display='none';renderProducts();"
-           style="padding:10px 14px;cursor:pointer;font-size:13px;color:var(--tx2);font-weight:300;border-bottom:1px solid var(--sep);transition:background .15s;"
+          `<div onclick="window._pSearch='';document.getElementById('prod-search').value='${n.replace(/'/g,"\'")}';window._pSearch=document.getElementById('prod-search').value;document.getElementById('prod-autocomplete').style.display='none';updateProdGrid(imgs,misMap,SCFG,ICFG,COL_SWATCH,swatchCol);"
+           style="padding:10px 14px;cursor:pointer;font-size:13px;color:var(--tx);font-weight:400;border-bottom:1px solid var(--sep);transition:background .15s;"
            onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">${n}</div>`
         ).join('');
         ac.style.display = 'block';
-      } else { ac.style.display = 'none'; }
-    } else { ac.style.display = 'none'; }
-    // Only update grid, not full re-render
-    document.getElementById('prod-grid').innerHTML = buildGrid(
-      imgs.filter(p => {
-        const ms = misMap[(p.name+'|'+p.colour).toLowerCase().trim()];
-        const qv = this.value.toLowerCase();
-        if (qv && !p.name.toLowerCase().includes(qv) && !p.colour.toLowerCase().includes(qv)) return false;
-        if (window._pStatFilt !== 'All' && ms?.deliveryStatus !== window._pStatFilt) return false;
-        if (window._pInvFilt  !== 'All' && ms?.inventoryStatus !== window._pInvFilt) return false;
-        return true;
-      }), imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, window._pExpanded||null);
-    const st = document.getElementById('prod-stats');
-    if (st) st.textContent = '';
+      }
+    }
+
+    // Update grid (empty search = show all)
+    updateProdGrid(imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol);
   });
   inp.addEventListener('focus', function() { this.style.borderColor='var(--bd2)'; });
   inp.addEventListener('blur',  function() { this.style.borderColor='var(--bd)'; setTimeout(()=>{if(ac)ac.style.display='none';},180); });
@@ -915,10 +923,10 @@ function buildGrid(filtered, imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, ex
           <div style="position:absolute;bottom:10px;right:10px;font-size:10px;color:rgba(237,234,228,.4)">${isExp?'↑':'↓'}</div>
         </div>
         <div style="padding:12px 14px ${isExp?'0':'14px'}">
-          <p style="font-size:12.5px;font-weight:400;color:${tx()};margin-bottom:5px;line-height:1.3;letter-spacing:-.01em">${p.name}</p>
+          <p style="font-size:13px;font-weight:500;color:var(--tx);margin-bottom:5px;line-height:1.3;letter-spacing:-.01em">${p.name}</p>
           <div style="display:flex;align-items:center;gap:7px">
-            <div style="width:9px;height:9px;border-radius:50%;background:${sw};border:1px solid rgba(237,234,228,.1);flex-shrink:0"></div>
-            <span style="font-size:11px;color:${tx3()};font-weight:300;letter-spacing:.01em">${p.colour}</span>
+            <div style="width:9px;height:9px;border-radius:50%;background:${sw};border:1px solid rgba(0,0,0,.15);flex-shrink:0"></div>
+            <span style="font-size:11.5px;color:var(--tx2);font-weight:400;letter-spacing:.01em">${p.colour}</span>
           </div>
         </div>
         ${expandDetail}
@@ -966,7 +974,7 @@ async function load() {
 // ─── Main render ─────────────────────────────────────────────────────────────
 function render() {
   // Hide date strip + KPIs + prog bar on Products tab
-  const isProductsTab = TAB === 'products';
+  const isProductsTab = TAB === 'products' || TAB === 'production';
   const _strip = $id('date-strip'), _prog = $id('prog-bar'), _kpis = $id('kpis');
   if (_strip) _strip.style.display = isProductsTab ? 'none' : '';
   if (_prog)  _prog.style.display  = isProductsTab ? 'none' : '';
@@ -1012,7 +1020,7 @@ function render() {
     .map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   } else {
     $id('bt').textContent = `${(MONTH_LABELS[ACTIVE_MONTH]||'MTD').toUpperCase()} · GOAL ₹${(MGOAL/1e7).toFixed(0)}Cr`;
-    $id('bp').style.background = 'linear-gradient(90deg,var(--acc3),var(--acc))';
+    $id('bp').style.background = 'linear-gradient(90deg,var(--acc),var(--acc2))';
     $id('bp').style.width = Math.min((mtdA/MGOAL)*100,100) + '%';
     $id('bml').textContent = '₹98Cr target';
     $id('bel').textContent = '₹135Cr goal';
@@ -1080,19 +1088,19 @@ function render() {
         </div>
       </div>
       <div style="position:relative">
-        <div style="position:absolute;bottom:${(DTGT/maxT)*110+18}px;left:0;right:0;border-top:1px dashed rgba(124,179,42,.25);pointer-events:none"></div>
+        <div style="position:absolute;bottom:${(DTGT/maxT)*110+18}px;left:0;right:0;border-top:1px dashed rgba(74,92,58,.25);pointer-events:none"></div>
         <div class="bar-chart" style="height:128px">
           ${daily.map(d => {
             const h = d.total>0 ? Math.max((d.total/maxT)*110,4) : 2;
             const sel = SEL.includes(+d.day);
-            const bg = d.total===0 ? bar() : d.total>=DTGT ? '#7CB32A' : '#8B5CF6';
+            const bg = d.total===0 ? bar() : d.total>=DTGT ? 'var(--upc)' : 'var(--acc3)';
             return `<div class="bar-col" onclick="tapDay(${d.day})">
               <div class="bar-fill" style="background:${bg};height:${h}px;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'}"></div>
             </div>`;
           }).join('')}
         </div>
         <div style="display:flex;gap:2px;margin-top:3px">
-          ${daily.map(d=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+d.day)?'#7CB32A':tx3()};text-align:center">${d.day}</div>`).join('')}
+          ${daily.map(d=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+d.day)?'var(--upc)':tx3()};text-align:center">${d.day}</div>`).join('')}
         </div>
       </div>
     </div>
@@ -1217,7 +1225,7 @@ function render() {
               <div class="bar-fill" style="background:${r.totalRoas>=4?C.stores:C.crm};height:${h}px;opacity:${SEL.length&&!sel?.3:.85};outline:${sel?'1.5px solid #7CB32A':'none'}"></div>
             </div>`;}).join('')}
         </div>
-        <div style="display:flex;gap:2px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tx3()};text-align:center">${r.day}</div>`).join('')}</div>
+        <div style="display:flex;gap:2px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'var(--upc)':tx3()};text-align:center">${r.day}</div>`).join('')}</div>
       </div>
       <div class="card">
         <span class="lbl" style="margin-bottom:10px">Spend vs Revenue · tap bar</span>
@@ -1233,7 +1241,7 @@ function render() {
               </div>
             </div>`;}).join('')}
         </div>
-        <div style="display:flex;gap:2px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'#7CB32A':tx3()};text-align:center">${r.day}</div>`).join('')}</div>
+        <div style="display:flex;gap:2px;margin-top:3px">${mktD.map(r=>`<div style="flex:1;font-size:7px;color:${SEL.includes(+r.day)?'var(--upc)':tx3()};text-align:center">${r.day}</div>`).join('')}</div>
         <div style="display:flex;gap:12px;margin-top:8px">
           <span style="font-size:9.5px;color:${tx2()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.app};border-radius:2px;display:inline-block"></span>Spend</span>
           <span style="font-size:9.5px;color:${tx2()};display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:${C.stores};border-radius:2px;display:inline-block"></span>Revenue</span>
@@ -1326,76 +1334,100 @@ function render() {
   if (TAB === 'production') {
     const mis = D.productionMIS;
     if (!mis || !mis.styles || mis.styles.length === 0) {
-      mc.innerHTML = `<div class="card"><div class="empty"><p>No production data</p><small>Redeploy Code.gs — "Production MIS Report" sheet not found</small></div></div>`;
+      mc.innerHTML = `<div class="card"><div class="empty"><p>No production data</p><small>Redeploy Code.gs</small></div></div>`;
     } else {
       const styles  = mis.styles;
       const summary = mis.summary;
-      const today   = new Date(); today.setHours(0,0,0,0);
+      const imgMap  = {};
+      (D.productImages||[]).forEach(p => { imgMap[(p.name+'|'+p.colour).toLowerCase().trim()] = p.imageUrl; });
 
-      // Status config
+      // Parse date strings like "25th April" → Date object (for past/future detection)
+      function parseDate(str) {
+        if (!str || !str.trim()) return null;
+        const MO = {january:0,february:1,march:2,april:3,may:4,june:5,july:6,august:7,september:8,october:9,november:10,december:11};
+        const m = str.trim().match(/(\d+)(?:st|nd|rd|th)?\s+([a-zA-Z]+)/i);
+        if (!m) return null;
+        const mo = MO[m[2].toLowerCase()]; if (mo === undefined) return null;
+        return new Date(2026, mo, parseInt(m[1]));
+      }
+
+      const todayMs = new Date().setHours(0,0,0,0);
+
       const STATUS_CFG = {
-        'Early':      { emoji:'🟢', label:'Early',      bg:'rgba(127,184,152,.1)',  border:'rgba(127,184,152,.3)',  col:'#8fb898' },
-        'On Time':    { emoji:'✅', label:'On Time',     bg:'rgba(127,184,152,.1)',  border:'rgba(127,184,152,.3)',  col:'#8fb898' },
-        'Upcoming':   { emoji:'⏳', label:'Upcoming',    bg:'rgba(160,180,200,.08)', border:'rgba(160,180,200,.3)', col:tx2() },
-        'Late':       { emoji:'⚠️', label:'Late',        bg:'rgba(196,160,80,.12)',  border:'rgba(196,160,80,.4)',  col:'#c4a050' },
-        'Super Late': { emoji:'🔴', label:'Super Late',  bg:'rgba(192,128,128,.12)', border:'rgba(192,128,128,.4)', col:'#c08080' },
-        'No Date':    { emoji:'❓', label:'No Date',     bg:'rgba(160,180,200,.06)', border:'rgba(160,180,200,.2)', col:tx3() },
+        'Early':      { label:'Early',      bg:'rgba(45,92,64,.07)',   border:'rgba(45,92,64,.25)',   col:'var(--upc)' },
+        'On Time':    { label:'On Time',    bg:'rgba(45,92,64,.07)',   border:'rgba(45,92,64,.25)',   col:'var(--upc)' },
+        'Upcoming':   { label:'Upcoming',   bg:'rgba(90,100,120,.06)', border:'rgba(90,100,120,.2)',  col:'var(--tx2)' },
+        'Late':       { label:'Late',       bg:'rgba(122,92,42,.08)',  border:'rgba(122,92,42,.25)',  col:'var(--warnc)' },
+        'Super Late': { label:'Super Late', bg:'rgba(140,48,64,.08)',  border:'rgba(140,48,64,.25)',  col:'var(--dnc)' },
+        'No Date':    { label:'No Date',    bg:'rgba(90,100,120,.04)', border:'rgba(90,100,120,.15)', col:'var(--tx3)' },
       };
       const INV_CFG = {
-        'Full':        { label:'Full ✓',       col:'#8fb898' },
-        'Partial':     { label:'Partial',      col:'#c4a050' },
-        'Not Arrived': { label:'Not Arrived',  col:'#c08080' },
+        'Full':        { label:'Full',        col:'var(--upc)' },
+        'Partial':     { label:'Partial',     col:'var(--warnc)' },
+        'Not Arrived': { label:'Not Arrived', col:'var(--dnc)' },
       };
 
-      // Active filter state
-      const filterKey = window._prodFilter || 'All';
+      // Filters
+      const fKey  = window._prodFilter    || 'All';
+      const cKey  = window._prodCollFilt  || 'All';
+      const colls = summary.collections   || [];
 
-      // Filter pills
-      const filterCounts = {
-        'All': styles.length,
-        'Early': summary.early, 'On Time': summary.onTime,
-        'Upcoming': summary.upcoming, 'Late': summary.late,
-        'Super Late': summary.superLate,
-        'Full': summary.full, 'Partial': summary.partial,
-        'Not Arrived': summary.notArrived,
-      };
-      const filterPills = Object.entries(filterCounts).map(([k,v]) => {
-        const isActive = filterKey === k;
-        const cfg = STATUS_CFG[k] || {};
-        return `<button onclick="window._prodFilter='${k}';render();" style="
-          padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;
-          font-family:'Outfit',sans-serif;transition:all .2s;border:1px solid;
-          background:${isActive?(cfg.bg||'var(--up)'):'var(--bg3)'};
-          border-color:${isActive?(cfg.border||'var(--acc)'):'var(--bd2)'};
-          color:${isActive?(cfg.col||'var(--upc)'):tx2()};
-        ">${cfg.emoji||''} ${k} <span style="opacity:.6">${v}</span></button>`;
-      }).join('');
+      // Filter pills row 1: delivery + inventory
+      const makeProdPill = (label, wKey, val, active, col) =>
+        `<button onclick="window['${wKey}']='${val}';render();" style="padding:4px 11px;border-radius:20px;font-size:11px;
+          font-weight:${active?'500':'400'};cursor:pointer;font-family:'Outfit',sans-serif;
+          border:1px solid ${active?(col||'var(--acc)'):'var(--bd)'};
+          background:${active?'var(--bg3)':'transparent'};
+          color:${active?(col||'var(--tx)'):'var(--tx2)'};transition:all .18s;">${label} <span style="opacity:.55;font-size:10px">${val==='All'?styles.length:''}</span></button>`;
+
+      const delivLabels = [
+        {v:'All',label:'All'},
+        {v:'Early',label:'● Early',col:'var(--upc)'},
+        {v:'On Time',label:'✓ On Time',col:'var(--upc)'},
+        {v:'Upcoming',label:'○ Upcoming',col:'var(--tx2)'},
+        {v:'Late',label:'⚠ Late',col:'var(--warnc)'},
+        {v:'Super Late',label:'● Super Late',col:'var(--dnc)'},
+        {v:'Full',label:'Full',col:'var(--upc)'},
+        {v:'Partial',label:'Partial',col:'var(--warnc)'},
+        {v:'Not Arrived',label:'Not Arrived',col:'var(--dnc)'},
+      ];
+
+      const filterBar = `
+        <div style="margin-bottom:14px">
+          <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+            <span style="font-size:9.5px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;font-weight:500;width:64px">Filter</span>
+            ${delivLabels.map(d => makeProdPill(d.label,'_prodFilter',d.v,fKey===d.v,d.col)).join('')}
+          </div>
+          ${colls.length>0 ? `<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+            <span style="font-size:9.5px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;font-weight:500;width:64px">Collection</span>
+            ${['All',...colls].map(c => makeProdPill(c,'_prodCollFilt',c,cKey===c,'var(--acc3)')).join('')}
+          </div>` : ''}
+        </div>`;
 
       // Summary strip
-      const summaryStrip = `<div class="g6" style="margin-bottom:12px">
+      const summaryStrip = `<div class="g6" style="margin-bottom:14px">
         ${[
-          {l:'Total Styles', v:String(summary.total),       c:tx()},
-          {l:'Upcoming',     v:String(summary.upcoming),    c:tx2()},
-          {l:'Early / On Time', v:String(summary.early+summary.onTime), c:'#8fb898'},
-          {l:'Late',         v:String(summary.late),        c:'#c4a050'},
-          {l:'Super Late',   v:String(summary.superLate),   c:'#c08080'},
-          {l:'Not Arrived',  v:String(summary.notArrived),  c:'#c08080'},
+          {l:'Total Styles', v:summary.total,                        c:'var(--tx)'},
+          {l:'Upcoming',     v:summary.upcoming,                     c:'var(--tx2)'},
+          {l:'Early/On Time',v:summary.early+summary.onTime,         c:'var(--upc)'},
+          {l:'Late',         v:summary.late,                         c:'var(--warnc)'},
+          {l:'Super Late',   v:summary.superLate,                    c:'var(--dnc)'},
+          {l:'Not Arrived',  v:summary.notArrived,                   c:'var(--dnc)'},
         ].map(k=>`<div class="card">
           <span class="lbl">${k.l}</span>
-          <div style="font-size:22px;font-weight:700;letter-spacing:-.05em;color:${k.c};font-family:'JetBrains Mono',monospace">${k.v}</div>
+          <div style="font-size:24px;font-weight:600;color:${k.c};font-family:'JetBrains Mono',monospace;letter-spacing:-.04em">${k.v}</div>
         </div>`).join('')}
       </div>`;
 
-      // Filter bar
-      const filterBar = `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
-        <span style="font-size:10.5px;color:${tx3()};font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-right:2px">Filter</span>
-        ${filterPills}
-      </div>`;
-
-      // Style cards
-      const filtered = filterKey==='All' ? styles : styles.filter(s => {
-        if (['Early','On Time','Upcoming','Late','Super Late'].includes(filterKey)) return s.deliveryStatus===filterKey;
-        if (['Full','Partial','Not Arrived'].includes(filterKey)) return s.inventoryStatus===filterKey;
+      // Style card filter
+      const filtered = styles.filter(s => {
+        if (fKey !== 'All') {
+          const matchDel = ['Early','On Time','Upcoming','Late','Super Late'].includes(fKey);
+          const matchInv = ['Full','Partial','Not Arrived'].includes(fKey);
+          if (matchDel && s.deliveryStatus !== fKey) return false;
+          if (matchInv && s.inventoryStatus !== fKey) return false;
+        }
+        if (cKey !== 'All' && s.collection !== cKey) return false;
         return true;
       });
 
@@ -1405,107 +1437,123 @@ function render() {
       const styleCards = filtered.map(s => {
         const scfg = STATUS_CFG[s.deliveryStatus] || STATUS_CFG['No Date'];
         const icfg = INV_CFG[s.inventoryStatus]   || INV_CFG['Not Arrived'];
+        const imgUrl = imgMap[(s.styleName+'|'+s.color).toLowerCase().trim()] || '';
 
         // Qty bars
         const maxQ = Math.max(s.planned, 1);
-        const qtyBar = (label, val, col) => val===undefined||val===null ? '' : `
-          <div style="margin-bottom:6px">
-            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-              <span style="font-size:10px;color:${tx3()}">${label}</span>
-              <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:${col};font-weight:600">${val}</span>
+        const qtyBar = (label, val, col) => !val ? '' : `
+          <div style="margin-bottom:7px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+              <span style="font-size:11px;color:var(--tx2);font-weight:400">${label}</span>
+              <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--tx);font-weight:500">${val}</span>
             </div>
-            <div style="background:${bar()};border-radius:3px;height:4px;overflow:hidden">
-              <div style="background:${col};width:${Math.min((val/maxQ)*100,100)}%;height:100%;border-radius:3px;transition:width .5s"></div>
+            <div style="background:var(--bar);border-radius:3px;height:3px;overflow:hidden">
+              <div style="background:${col};width:${Math.min((val/maxQ)*100,100)}%;height:100%;border-radius:3px"></div>
             </div>
           </div>`;
 
-        // Timeline dots
+        // Timeline: past=green, today=amber, future=muted
         const timelineDots = DATE_KEYS.map((k, i) => {
-          const val = s.dates[k];
-          const isEmpty = !val;
-          const isDelivery = k==='delivery' || k==='newDelivery';
-          const dotCol = isEmpty ? tx4() : (isDelivery ? '#c4a050' : tx3());
+          const val  = s.dates[k];
+          if (!val) return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;opacity:.2">
+            <div style="width:7px;height:7px;border-radius:50%;background:var(--bd2);flex-shrink:0"></div>
+            <div style="font-size:7.5px;color:var(--tx4);text-align:center">—</div>
+            <div style="font-size:7px;color:var(--tx4);text-align:center">${DATE_LABELS[i]}</div>
+          </div>`;
+          const dt   = parseDate(val);
+          const ms   = dt ? dt.getTime() : null;
+          const isPast  = ms && ms < todayMs;
+          const isToday = ms && ms === todayMs;
+          const dotCol  = isPast ? 'var(--upc)' : isToday ? 'var(--warnc)' : 'var(--bd3)';
+          const txtCol  = isPast ? 'var(--upc)' : isToday ? 'var(--warnc)' : 'var(--tx3)';
           return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0">
-            <div style="width:8px;height:8px;border-radius:50%;background:${dotCol};flex-shrink:0;${isEmpty?'opacity:.25':''}"></div>
-            <div style="font-size:8px;color:${isEmpty?tx4():tx3()};text-align:center;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">${val||'—'}</div>
-            <div style="font-size:7px;color:${tx4()};text-align:center;line-height:1.1">${DATE_LABELS[i]}</div>
+            <div style="width:7px;height:7px;border-radius:50%;background:${dotCol};flex-shrink:0"></div>
+            <div style="font-size:7.5px;color:${txtCol};text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${val}</div>
+            <div style="font-size:7px;color:var(--tx4);text-align:center">${DATE_LABELS[i]}</div>
           </div>`;
         });
-        // Timeline connector line
-        const timeline = `<div style="position:relative;margin:12px 0 4px">
-          <div style="position:absolute;top:4px;left:4%;right:4%;height:1px;background:${sep()}"></div>
+        const timeline = `<div style="position:relative;margin:10px 0 4px">
+          <div style="position:absolute;top:3px;left:3%;right:3%;height:1px;background:var(--bd)"></div>
           <div style="display:flex;gap:2px;position:relative">${timelineDots.join('')}</div>
         </div>`;
 
-        // Inventory progress
+        // Inventory bars
         const invBars = [
-          { label: 'Top',     received: s.topReceived },
-          { label: 'Bottom',  received: s.bottomReceived },
-          s.hasDupatta ? { label: 'Dupatta', received: s.dupatReceived } : null,
+          {label:'Top',    received:s.topReceived},
+          {label:'Bottom', received:s.bottomReceived},
+          s.hasDupatta ? {label:'Dupatta', received:s.dupatReceived} : null,
         ].filter(Boolean).map(inv => {
-          const rcv = inv.received === null ? 0 : inv.received;
-          const pct = s.planned > 0 ? Math.round((rcv / s.planned) * 100) : 0;
-          const col = pct >= 100 ? '#8fb898' : pct > 0 ? '#c4a050' : tx4();
-          const label2 = inv.received === null ? 'Not recorded' : `${rcv}/${s.planned} (${pct}%)`;
-          return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
-            <span style="font-size:10px;color:${tx3()};width:50px">${inv.label}</span>
-            <div style="flex:1;background:${bar()};border-radius:3px;height:5px;overflow:hidden">
-              <div style="background:${col};width:${Math.min(pct,100)}%;height:100%;border-radius:3px;transition:width .5s"></div>
+          const rcv = inv.received === null ? 0 : (inv.received||0);
+          const pct = s.planned > 0 ? Math.round((rcv/s.planned)*100) : 0;
+          const col = pct >= 100 ? 'var(--upc)' : pct > 0 ? 'var(--warnc)' : 'var(--tx4)';
+          return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:11px;color:var(--tx2);width:50px;font-weight:400">${inv.label}</span>
+            <div style="flex:1;background:var(--bar);border-radius:2px;height:4px;overflow:hidden">
+              <div style="background:${col};width:${Math.min(pct,100)}%;height:100%"></div>
             </div>
-            <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:${col};width:90px;text-align:right">${label2}</span>
+            <span style="font-size:10.5px;font-family:'JetBrains Mono',monospace;color:${col};width:80px;text-align:right">${inv.received===null?'—':rcv+'/'+s.planned}</span>
           </div>`;
         }).join('');
 
-        // Days overdue label
-        const overdueLabel = s.effectiveTs ? (
-          s.daysOverdue > 0 ? `+${s.daysOverdue}d overdue` :
-          s.daysOverdue < 0 ? `${Math.abs(s.daysOverdue)}d to go` : 'Due today'
-        ) : '';
+        const overdueLabel = s.effectiveTs
+          ? (s.daysOverdue>0 ? `<span style="color:var(--dnc);font-family:'JetBrains Mono',monospace;font-size:11px">+${s.daysOverdue}d overdue</span>`
+             : s.daysOverdue<0 ? `<span style="color:var(--upc);font-family:'JetBrains Mono',monospace;font-size:11px">${Math.abs(s.daysOverdue)}d to go</span>`
+             : `<span style="color:var(--warnc);font-size:11px">Due today</span>`) : '';
 
-        return `<div class="card" style="margin-bottom:10px;border-left:3px solid ${scfg.border||'var(--bd)'};background:${scfg.bg||'var(--bg2)'}">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-            <div>
-              <div style="font-size:10px;color:${tx3()};font-family:'JetBrains Mono',monospace;margin-bottom:2px">${s.styleCode} · ${s.color}</div>
-              <div style="font-size:13px;font-weight:600;color:${tx()}">${s.styleName}</div>
-              <div style="font-size:10px;color:${tx3()};margin-top:1px">${s.silhouette}${s.fabricTop?' · '+s.fabricTop:''}</div>
+        return `<div class="card" style="margin-bottom:10px;border-left:2px solid ${scfg.border}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:10.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace;margin-bottom:3px;letter-spacing:.02em">
+                ${s.styleCode} · ${s.color}${s.collection ? ' · <span style="color:var(--acc3)">' + s.collection + '</span>' : ''}
+              </div>
+              <div style="font-size:14px;font-weight:500;color:var(--tx);letter-spacing:-.01em;margin-bottom:2px">${s.styleName}</div>
+              <div style="font-size:11px;color:var(--tx3);font-weight:300">${s.sizes||''}</div>
             </div>
-            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">
-              <span style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:12px;background:${scfg.bg};border:1px solid ${scfg.border};color:${scfg.col}">${scfg.emoji} ${s.deliveryStatus}</span>
-              <span style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:12px;background:${bar()};border:1px solid ${sep()};color:${icfg.col}">${icfg.label}</span>
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:12px">
+              ${imgUrl ? `<button onclick="event.stopPropagation();openImgLightbox('${imgUrl}','${s.styleName.replace(/'/g,"\'")}','${s.color}')"
+                style="padding:4px 10px;border-radius:6px;border:1px solid var(--bd2);background:var(--bg3);
+                       font-size:10.5px;color:var(--tx2);cursor:pointer;font-family:'Outfit',sans-serif;
+                       font-weight:400;transition:all .15s;white-space:nowrap;"
+                onmouseover="this.style.borderColor='var(--acc)';this.style.color='var(--acc)'"
+                onmouseout="this.style.borderColor='var(--bd2)';this.style.color='var(--tx2)'">View Image</button>` : ''}
+              <span style="font-size:10px;font-weight:500;padding:3px 9px;border-radius:12px;
+                background:${scfg.bg};border:1px solid ${scfg.border};color:${scfg.col};white-space:nowrap">${s.deliveryStatus}</span>
+              <span style="font-size:10px;font-weight:500;padding:3px 9px;border-radius:12px;
+                background:var(--bg3);border:1px solid var(--bd);color:${icfg.col};white-space:nowrap">${icfg.label}</span>
             </div>
           </div>
 
-          <div class="g2" style="gap:10px;margin-bottom:10px">
+          <div class="g2" style="gap:16px;margin-bottom:12px">
             <div>
-              <div style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Quantities</div>
-              ${qtyBar('Planned',   s.planned,    tx2())}
-              ${qtyBar('Production',s.production, 'var(--acc2)')}
-              ${qtyBar('Cut',       s.cut,        '#8fb898')}
+              <div style="font-size:9.5px;color:var(--tx3);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Quantities</div>
+              ${qtyBar('Planned',    s.planned,    'var(--tx3)')}
+              ${qtyBar('Production', s.production, 'var(--acc2)')}
+              ${qtyBar('Cut',        s.cut,        'var(--upc)')}
               ${s.replenish > 0 ? qtyBar('Replenish', s.replenish, 'var(--acc3)') : ''}
             </div>
             <div>
-              <div style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Inventory Received</div>
+              <div style="font-size:9.5px;color:var(--tx3);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Inventory Received</div>
               ${invBars}
-              ${overdueLabel ? `<div style="font-size:10px;color:${scfg.col};font-weight:600;margin-top:6px;font-family:'JetBrains Mono',monospace">${overdueLabel}</div>` : ''}
+              ${overdueLabel ? `<div style="margin-top:8px">${overdueLabel}</div>` : ''}
             </div>
           </div>
 
-          <div style="margin-bottom:10px">
-            <div style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Production Timeline</div>
+          <div style="margin-bottom:${s.remarks?'12px':'0'}">
+            <div style="font-size:9.5px;color:var(--tx3);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Production Timeline</div>
             ${timeline}
           </div>
 
-          ${s.remarks ? `<div style="background:${bar()};border-radius:8px;padding:8px 10px;border-left:2px solid var(--acc2)">
-            <span style="font-size:9.5px;color:${tx3()};font-weight:600;text-transform:uppercase;letter-spacing:.08em">Remarks · </span>
-            <span style="font-size:11px;color:${tx2()}">${s.remarks}</span>
+          ${s.remarks ? `<div style="background:var(--bg3);border-radius:6px;padding:9px 12px;border-left:2px solid var(--bd2)">
+            <span style="font-size:9.5px;color:var(--tx3);font-weight:500;text-transform:uppercase;letter-spacing:.08em">Remarks</span>
+            <p style="font-size:12px;color:var(--tx);margin-top:3px;font-weight:300;line-height:1.5">${s.remarks}</p>
           </div>` : ''}
         </div>`;
       }).join('');
 
       mc.innerHTML = summaryStrip + filterBar +
-        (filtered.length === 0 ? `<div class="card"><div class="empty"><p>No styles match this filter</p></div></div>` : styleCards);
+        (filtered.length===0 ? `<div class="card"><div class="empty"><p style="color:var(--tx2)">No styles match</p></div></div>` : styleCards);
     }
-    $id('footer').textContent = `LIVE · Production MIS · ${(D.productionMIS?.summary?.total||0)} styles · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
+    $id('footer').textContent = `LIVE · Production MIS · ${D.productionMIS?.summary?.total||0} styles · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
     return;
   }
 
@@ -1524,7 +1572,7 @@ function render() {
       const pct      = (a,b) => b ? Math.round((a-b)/b*100) : 0;
 
       // City colours
-      const CITY_C = { 'Delhi':'#7CB32A','Delhi/NCR':'#5aa322','Mumbai':'var(--acc2)','Bangalore':'var(--acc3)','Hyderabad':'#FB923C','Kolkata':'#38BDF8','Chennai':'#F472B6','Jaipur':'#FBBF24','Lucknow':'#34D399','Punjab':'#60A5FA','Ahmedabad':'#F87171','Raipur':'#C084FC' };
+      const CITY_C = { 'Delhi':'var(--upc)','Delhi/NCR':'#5aa322','Mumbai':'var(--acc2)','Bangalore':'var(--acc3)','Hyderabad':'#FB923C','Kolkata':'#38BDF8','Chennai':'#F472B6','Jaipur':'#FBBF24','Lucknow':'#34D399','Punjab':'#60A5FA','Ahmedabad':'#F87171','Raipur':'#C084FC' };
       const cityCol = c => CITY_C[c] || '#888';
 
       // Summary strip
@@ -1917,7 +1965,7 @@ function insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, 
   const CH_KEYS = ['stores','online','crm','app','intl'];
   const CH_LABS = ['Stores','Online','CRM','App','Intl.'];
   const CH_TGTS = [1988836,673670,458590,150000,83333];
-  const CH_C    = ['#7CB32A','var(--acc2)','var(--acc3)','#FB923C','#38BDF8'];
+  const CH_C    = ['var(--upc)','var(--acc2)','var(--acc3)','#FB923C','#38BDF8'];
 
   // ── 1. Overall performance ───────────────────────────
   const totRev  = rows.reduce((s,r)=>s+r.total,0);
@@ -2039,10 +2087,10 @@ function insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, 
 
   // ── Render ───────────────────────────────────────────
   const typeStyle = {
-    win:   { bg: THEME==='dark'?'#0d1f08':'#f0fae8', bd: THEME==='dark'?'#2a4a12':'#b8e68a', tc: THEME==='dark'?'#8ecf3a':'#3a7a10' },
-    risk:  { bg: THEME==='dark'?'#1f0808':'#fef2f2', bd: THEME==='dark'?'#4a1212':'#fca5a5', tc: THEME==='dark'?'#f87171':'#b91c1c' },
-    watch: { bg: THEME==='dark'?'#1a1508':'#fffbeb', bd: THEME==='dark'?'#3d3210':'#fcd34d', tc: THEME==='dark'?'#fbbf24':'#92400e' },
-    info:  { bg: THEME==='dark'?'#0a0f1f':'#eff6ff', bd: THEME==='dark'?'#1a2a4a':'#93c5fd', tc: THEME==='dark'?'#60a5fa':'#1d4ed8' },
+    win:   { bg: false?'#0d1f08':'#f0fae8', bd: false?'#2a4a12':'#b8e68a', tc: false?'#8ecf3a':'#3a7a10' },
+    risk:  { bg: false?'#1f0808':'#fef2f2', bd: false?'#4a1212':'#fca5a5', tc: false?'#f87171':'#b91c1c' },
+    watch: { bg: false?'#1a1508':'#fffbeb', bd: false?'#3d3210':'#fcd34d', tc: false?'#fbbf24':'#92400e' },
+    info:  { bg: false?'#0a0f1f':'#eff6ff', bd: false?'#1a2a4a':'#93c5fd', tc: false?'#60a5fa':'#1d4ed8' },
   };
 
   return `
@@ -2062,7 +2110,7 @@ function insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, 
             <span style="font-size:18px;flex-shrink:0;line-height:1.3">${ins.icon}</span>
             <div>
               <div style="font-size:12px;font-weight:600;color:${s.tc};margin-bottom:5px">${ins.title}</div>
-              <div style="font-size:11.5px;color:${THEME==='dark'?'#aaa':'#444'};line-height:1.55">${ins.body}</div>
+              <div style="font-size:11.5px;color:${false?'#aaa':'#444'};line-height:1.55">${ins.body}</div>
             </div>
           </div>
         </div>`;
