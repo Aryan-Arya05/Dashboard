@@ -713,10 +713,16 @@ async function load() {
     const j = await res.json();
     if (j.error) throw new Error(j.error);
     D = j;
-    // If Shopify wasn't loaded yet (fast path), fetch it async now
+    // Load Shopify, Stores, Production async after sheets load
     if (!D.shopify || D.shopify.error) {
       fetchShopifyForPeriod(SHOPIFY_PERIOD || 'mtd'); // non-blocking
     }
+    // Fetch stores async
+    fetch(SCRIPT_URL + '?only=stores&_t=' + Date.now())
+      .then(r => r.json()).then(j => { if(j.storeData){ D.storeData = j.storeData; if(TAB==='stores') render(); } }).catch(()=>{});
+    // Fetch production async
+    fetch(SCRIPT_URL + '?only=production&_t=' + Date.now())
+      .then(r => r.json()).then(j => { if(j.productionMIS){ D.productionMIS = j.productionMIS; if(TAB==='production') render(); } }).catch(()=>{});
     // Set active month to latest available
     if (!ACTIVE_MONTH || !(D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH])) {
       ACTIVE_MONTH = D.latestMonth || '2026-04';
