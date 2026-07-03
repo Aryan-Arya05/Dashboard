@@ -14,70 +14,70 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-tap-highlight-color: transparent; }
 
-    /* ── CSS Variables ── */
+    /* ── CSS Variables — Minimal Luxury Palette ── */
     :root {
-      /* Backgrounds */
-      --bg:      #080b0f;
-      --bg2:     #0e1318;
-      --bg3:     #161d24;
-      --bg4:     #1c252f;
-      /* Borders */
-      --bd:      #1e2a35;
-      --bd2:     #2a3a48;
-      --bd3:     #344860;
-      /* Text — FIXED: all clearly visible */
-      --tx:      #f0f4f8;
-      --tx2:     #a8b8c8;
-      --tx3:     #6a8099;  /* was #3a3a3a — completely invisible */
-      --tx4:     #3a5068;  /* was #1a1a1a — completely invisible */
-      /* Semantic */
-      --up:      #0d2218;
-      --upc:     #5dde82;
-      --dn:      #2a0f12;
-      --dnc:     #ff6b7a;
-      --warn:    #2a1f08;
-      --warnc:   #f5a623;
+      /* Backgrounds — warm dark, not cold blue */
+      --bg:      #0d0c0b;
+      --bg2:     #141310;
+      --bg3:     #1c1a17;
+      --bg4:     #252320;
+      /* Borders — very subtle */
+      --bd:      #28261f;
+      --bd2:     #363330;
+      --bd3:     #484540;
+      /* Text — warm white hierarchy */
+      --tx:      #edeae4;
+      --tx2:     #9a9490;
+      --tx3:     #625e58;
+      --tx4:     #3a3830;
+      /* Semantic — muted, readable */
+      --up:      #1a2018;
+      --upc:     #8fb898;
+      --dn:      #261618;
+      --dnc:     #c08888;
+      --warn:    #241e10;
+      --warnc:   #b89858;
       /* Visual */
-      --bar:     #111820;
-      --sep:     #1a2430;
-      --shad:    0 4px 24px rgba(0,0,0,.4);
-      --shad2:   0 1px 8px rgba(0,0,0,.2);
-      --glow:    0 0 20px rgba(93,222,130,.08);
-      /* Accent */
-      --acc:     #5dde82;
-      --acc2:    #38d4c0;
-      --acc3:    #6b8cff;
+      --bar:     #181610;
+      --sep:     #1e1c18;
+      --shad:    0 2px 20px rgba(0,0,0,.35);
+      --shad2:   0 1px 4px rgba(0,0,0,.2);
+      --glow:    none;
+      /* Accent — champagne gold, refined */
+      --acc:     #c4a87a;
+      --acc2:    #8fa87d;
+      --acc3:    #7a8caa;
       /* Fonts */
       --f-sans: 'Outfit', -apple-system, sans-serif;
       --f-mono: 'JetBrains Mono', 'Courier New', monospace;
-      /* Radii */
-      --r:      14px; --r-sm: 9px; --r-pill: 22px;
+      /* Radii — slightly tighter, more editorial */
+      --r:      10px; --r-sm: 7px; --r-pill: 20px;
     }
 
     body.light {
-      --bg:    #f0f4f8;
+      --bg:    #f5f2ed;
       --bg2:   #ffffff;
-      --bg3:   #e8eef5;
-      --bg4:   #dce5ef;
-      --bd:    #d0dbe8;
-      --bd2:   #bfcfdf;
-      --bd3:   #a8bdd0;
-      --tx:    #0d1a26;
-      --tx2:   #3a5068;
-      --tx3:   #6a8099;
-      --tx4:   #a0b4c8;
-      --up:    #e8faf0;
-      --upc:   #1a7a3a;
-      --dn:    #fff0f0;
-      --dnc:   #cc2233;
-      --bar:   #e0eaf4;
-      --sep:   #dde6f0;
-      --shad:  0 2px 16px rgba(0,30,60,.08);
-      --shad2: 0 1px 4px rgba(0,30,60,.06);
+      --bg3:   #efece7;
+      --bg4:   #e8e4de;
+      --bd:    #ddd9d2;
+      --bd2:   #ccc8c0;
+      --bd3:   #b8b4ac;
+      --tx:    #1a1814;
+      --tx2:   #5a5650;
+      --tx3:   #8a8680;
+      --tx4:   #b4b0a8;
+      --up:    #eef4ec;
+      --upc:   #2d6040;
+      --dn:    #f8efef;
+      --dnc:   #8c3040;
+      --bar:   #e8e4de;
+      --sep:   #dedad4;
+      --shad:  0 1px 12px rgba(20,16,10,.08);
+      --shad2: 0 1px 3px rgba(20,16,10,.05);
       --glow:  none;
-      --acc:   #1a7a3a;
-      --acc2:  #0e8a78;
-      --acc3:  #3355cc;
+      --acc:   #8c6a30;
+      --acc2:  #4a6840;
+      --acc3:  #3a4c6a;
     }
 
     body {
@@ -108,18 +108,10 @@
       position: relative;
       overflow: hidden;
     }
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,.015) 0%, transparent 60%);
-      pointer-events: none;
-      border-radius: inherit;
-    }
+    
     .card:hover {
-      border-color: var(--bd3);
+      border-color: var(--bd2);
       box-shadow: var(--shad);
-      transform: translateY(-1px);
     }
 
     /* Card accent variant */
@@ -187,7 +179,7 @@
       background: var(--bg); border: 1px solid var(--bd2);
       position: relative; transition: background .3s; flex-shrink: 0;
     }
-    body.light .track { background: rgba(93,222,130,.3); }
+    body.light .track { background: rgba(196,168,122,.25); }
     .thumb {
       width: 12px; height: 12px; border-radius: 50%; background: var(--tx4);
       position: absolute; top: 2px; left: 2px; transition: all .3s;
@@ -202,7 +194,7 @@
     h1 {
       font-size: clamp(20px, 5vw, 28px); font-weight: 700;
       letter-spacing: -.04em; color: var(--tx); margin-bottom: 3px;
-      background: linear-gradient(135deg, var(--tx) 60%, var(--acc));
+      background: none; -webkit-text-fill-color: var(--tx);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
@@ -244,23 +236,23 @@
     }
     .day:active:not(.nd) { transform: scale(.93); }
     .day:hover:not(.nd):not(.s1):not(.sn) { border-color: var(--bd3); background: var(--bg3); }
-    .day.ab { border-bottom: 2px solid var(--acc); }
-    .day.bl { border-bottom: 2px solid #8b5cf6; }
+    .day.ab { border-bottom: 2px solid var(--acc2); }
+    .day.bl { border-bottom: 2px solid var(--acc3); }
     .day.nd { opacity: .18; cursor: default; pointer-events: none; }
-    .day.s1 { border-color: var(--acc); background: var(--up); box-shadow: 0 0 14px rgba(93,222,130,.12); }
+    .day.s1 { border-color: var(--acc); background: var(--up); box-shadow: 0 0 12px rgba(196,168,122,.1); }
     .day.sn { border-color: rgba(93,222,130,.5); background: var(--up); }
     .day-num { font-size: 15px; font-weight: 600; color: var(--tx2); line-height: 1; }
     .day.s1 .day-num, .day.sn .day-num { color: var(--upc); }
     .day-wk  { font-size: 8.5px; color: var(--tx3); font-weight: 500; letter-spacing: .02em; }
     .day.s1 .day-wk, .day.sn .day-wk { color: rgba(93,222,130,.7); }
     .day-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--bd2); }
-    .day.ab .day-dot { background: var(--acc); opacity: .6; }
-    .day.bl .day-dot { background: #8b5cf6; opacity: .6; }
+    .day.ab .day-dot { background: var(--acc2); opacity: .5; }
+    .day.bl .day-dot { background: var(--acc3); opacity: .5; }
     .badge {
       position: absolute; top: -5px; right: -5px; width: 16px; height: 16px;
       border-radius: 50%; background: var(--acc); color: var(--bg);
       font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center;
-      font-family: var(--f-mono); box-shadow: 0 0 8px rgba(93,222,130,.4);
+      font-family: var(--f-mono); box-shadow: none;
     }
 
     /* ── Progress Bar ── */
@@ -272,7 +264,7 @@
     .prog-num .pl { font-size: 9.5px; color: var(--tx3); margin-bottom: 2px; font-weight: 500; }
     .prog-num .pv { font-size: 13px; font-weight: 700; font-family: var(--f-mono); }
     .prog-track { background: var(--bar); border-radius: 8px; height: 8px; position: relative; overflow: hidden; }
-    .prog-fill  { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #6b8cff, var(--acc)); width: 0; transition: width .9s cubic-bezier(.4,0,.2,1); }
+    .prog-fill  { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--acc3), var(--acc)); width: 0; transition: width .9s cubic-bezier(.4,0,.2,1); }
     .prog-mark  { position: absolute; top: 0; width: 1.5px; height: 100%; background: var(--acc2); opacity: .5; }
     .prog-labels { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--tx4); margin-top: 4px; font-family: var(--f-mono); }
 
@@ -318,7 +310,7 @@
     .roas-val   { width: 34px; font-size: 11.5px; font-family: var(--f-mono); font-weight: 600; }
 
     /* ── Error box ── */
-    .err-box { display: none; background: var(--dn); border: 1px solid rgba(255,107,122,.25); border-radius: var(--r); padding: 14px 16px; margin-bottom: 12px; }
+    .err-box { display: none; background: var(--dn); border: 1px solid rgba(192,128,128,.25); border-radius: var(--r); padding: 14px 16px; margin-bottom: 12px; }
     .err-title { font-size: 12px; font-weight: 600; color: var(--dnc); margin-bottom: 4px; }
     .err-msg   { font-size: 11px; color: var(--dnc); font-family: var(--f-mono); }
     .err-hint  { font-size: 11px; color: var(--tx3); margin-top: 6px; }
@@ -332,12 +324,11 @@
     .empty small { font-size: 11px; color: var(--tx3); }
 
     /* ── Pulse animation for live dot ── */
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
     .dot-live { animation: pulse 2.5s ease-in-out infinite; }
 
     /* ── Fade in ── */
-    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-    .card { animation: fadeUp .3s ease both; }
+    
 
     /* ── Mobile tweaks ── */
     @media (max-width: 480px) {
@@ -397,7 +388,7 @@
   </div>
 
   <!-- Date strip -->
-  <div class="card strip-wrap">
+  <div class="card strip-wrap" id="date-strip">
     <div class="strip-header">
       <div class="strip-title">
         <span class="lbl" style="margin:0" id="month-lbl">April 2026</span>
@@ -422,7 +413,7 @@
   </div>
 
   <!-- Progress bar -->
-  <div class="card prog-card">
+  <div class="card prog-card" id="prog-bar">
     <div class="prog-header">
       <span class="prog-title" id="bt">MTD · GOAL</span>
       <div class="prog-nums" id="bn"></div>
@@ -465,7 +456,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5VmO_cQuGK-VDISDFt
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const WK    = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const C     = { stores:'#7CB32A', online:'#2BC4A8', crm:'#A78BFA', app:'#FB923C', intl:'#38BDF8', acc:'#F472B6' };
+const C     = { stores:'#7CB32A', online:'var(--acc2)', crm:'var(--acc3)', app:'#FB923C', intl:'#38BDF8', acc:'#F472B6' };
 // ── Month config ──────────────────────────────────────────────────────────────
 const MONTH_START_DOW = { '2026-04':2,'2026-05':4,'2026-06':0,'2026-07':2,'2026-08':5,'2026-09':1 };
 const MONTH_DAYS      = { '2026-04':30,'2026-05':31,'2026-06':30,'2026-07':31,'2026-08':31,'2026-09':30 };
@@ -703,6 +694,238 @@ async function fetchShopifyForPeriod(period) {
   }
 }
 
+// ── renderProducts: standalone, preserves search focus ────────────────────────
+function renderProducts() {
+  const mc  = $id('main');
+  const imgs = D.productImages || [];
+  const mis  = D.productionMIS;
+
+  if (imgs.length === 0) {
+    mc.innerHTML = `<div class="card" style="padding:40px;text-align:center"><p style="color:${tx2()};font-size:14px;font-weight:300">No product images yet</p><p style="color:${tx3()};font-size:12px;margin-top:6px">Add image URLs to the "Product images" sheet and redeploy Code.gs</p></div>`;
+    return;
+  }
+
+  // MIS lookup: styleName|colour → style object
+  const misMap = {};
+  if (mis && mis.styles) mis.styles.forEach(s => { misMap[(s.styleName+'|'+s.color).toLowerCase().trim()] = s; });
+
+  const SCFG = {
+    'Early':      {e:'●', c:'#7fb898', bg:'rgba(127,184,152,.1)',  bdr:'rgba(127,184,152,.3)'},
+    'On Time':    {e:'●', c:'#7fb898', bg:'rgba(127,184,152,.1)',  bdr:'rgba(127,184,152,.3)'},
+    'Upcoming':   {e:'○', c:tx3(),     bg:'rgba(100,96,90,.1)',    bdr:'rgba(100,96,90,.25)'},
+    'Late':       {e:'●', c:'#c4a050', bg:'rgba(196,160,80,.1)',   bdr:'rgba(196,160,80,.3)'},
+    'Super Late': {e:'●', c:'#c08080', bg:'rgba(192,128,128,.1)',  bdr:'rgba(192,128,128,.3)'},
+    'No Date':    {e:'○', c:tx4(),     bg:'rgba(80,76,70,.08)',    bdr:'rgba(80,76,70,.2)'},
+  };
+  const ICFG = {
+    'Full':        {c:'#7fb898', label:'Full'},
+    'Partial':     {c:'#c4a050', label:'Partial'},
+    'Not Arrived': {c:'#c08080', label:'Not Arrived'},
+  };
+  const COL_SWATCH = {'navy':'#1e2d4a','black':'#1a1a1a','yellow':'#c8a830','pink':'#d4688a','mustard':'#b88820','steel blue':'#4a7090','off white':'#d8d4cc','fuschia':'#cc3080','off white + reds':'#c8a0a0','off white + blues':'#a0aec8'};
+  const swatchCol = c => COL_SWATCH[c.toLowerCase()] || '#6a6660';
+
+  // Read current filter state
+  const q       = (window._pSearch  || '').toLowerCase();
+  const sFilt   = window._pStatFilt || 'All';
+  const iFilt   = window._pInvFilt  || 'All';
+  const expKey  = window._pExpanded || null;
+
+  const filtered = imgs.filter(p => {
+    const ms = misMap[(p.name+'|'+p.colour).toLowerCase().trim()];
+    if (q && !p.name.toLowerCase().includes(q) && !p.colour.toLowerCase().includes(q)) return false;
+    if (sFilt !== 'All' && ms?.deliveryStatus !== sFilt) return false;
+    if (iFilt !== 'All' && ms?.inventoryStatus !== iFilt) return false;
+    return true;
+  });
+
+  // ── Check if this is just a grid update (preserve search focus) ────────────
+  const isGridUpdate = !!document.getElementById('prod-grid');
+  if (isGridUpdate) {
+    // Only update the grid and stats — preserve search input focus
+    document.getElementById('prod-grid').innerHTML = buildGrid(filtered, imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, expKey);
+    const statsEl = document.getElementById('prod-stats');
+    if (statsEl) statsEl.innerHTML = buildStats(filtered, imgs);
+    return;
+  }
+
+  // ── Full render (first time) ─────────────────────────────────────────────
+  const searchHTML = `
+    <div style="position:relative;margin-bottom:16px">
+      <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);width:14px;height:14px;opacity:.35;pointer-events:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="prod-search" type="text" placeholder="Search products…" autocomplete="off"
+        value="${window._pSearch||''}"
+        style="width:100%;box-sizing:border-box;background:var(--bg2);border:1px solid var(--bd);
+               border-radius:8px;padding:11px 16px 11px 38px;font-size:13px;font-weight:300;
+               color:var(--tx);font-family:'Outfit',sans-serif;outline:none;
+               letter-spacing:.01em;transition:border-color .2s;">
+      <div id="prod-autocomplete" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;
+        background:var(--bg2);border:1px solid var(--bd2);border-radius:8px;z-index:100;
+        overflow:hidden;box-shadow:var(--shad)"></div>
+    </div>`;
+
+  const mkPill = (label, key, val, active, col) =>
+    `<button onclick="window['${key}']='${val}';renderProducts();" style="
+      padding:4px 12px;border-radius:20px;font-size:11px;font-weight:400;cursor:pointer;letter-spacing:.02em;
+      font-family:'Outfit',sans-serif;border:1px solid ${active ? (col||'var(--acc)') : 'var(--bd)'};
+      background:${active ? 'var(--bg3)' : 'transparent'};
+      color:${active ? (col||'var(--acc)') : 'var(--tx3)'};transition:all .18s;white-space:nowrap;
+    ">${label}</button>`;
+
+  const filtersHTML = `
+    <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px">
+      <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:9.5px;color:${tx4()};letter-spacing:.12em;text-transform:uppercase;font-weight:500;white-space:nowrap;margin-right:2px">Delivery</span>
+        ${['All','Upcoming','Early','On Time','Late','Super Late'].map(f => mkPill(f,'_pStatFilt',f,sFilt===f,SCFG[f]?.c)).join('')}
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:9.5px;color:${tx4()};letter-spacing:.12em;text-transform:uppercase;font-weight:500;white-space:nowrap;margin-right:2px">Stock</span>
+        ${['All','Full','Partial','Not Arrived'].map(f => mkPill(f,'_pInvFilt',f,iFilt===f,ICFG[f]?.c)).join('')}
+      </div>
+    </div>`;
+
+  mc.innerHTML = `
+    <div style="padding-bottom:32px">
+      ${searchHTML}
+      ${filtersHTML}
+      <div id="prod-stats" style="margin-bottom:14px">${buildStats(filtered, imgs)}</div>
+      <div id="prod-grid">${buildGrid(filtered, imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, expKey)}</div>
+    </div>`;
+
+  // Attach search listener (persistent, not re-rendered)
+  const inp = document.getElementById('prod-search');
+  const ac  = document.getElementById('prod-autocomplete');
+  const allNames = [...new Set(imgs.map(p => p.name))];
+
+  inp.addEventListener('input', function() {
+    window._pSearch = this.value;
+    // Autocomplete
+    const v = this.value.trim().toLowerCase();
+    if (v.length >= 1) {
+      const matches = allNames.filter(n => n.toLowerCase().includes(v)).slice(0, 6);
+      if (matches.length > 0 && v !== this.value.trim().toLowerCase()) {
+        ac.style.display = 'block';
+        ac.innerHTML = matches.map(n =>
+          `<div onclick="window._pSearch='${n.replace(/'/g,"\'")}';document.getElementById('prod-search').value='${n.replace(/'/g,"\'")}';document.getElementById('prod-autocomplete').style.display='none';renderProducts();"
+           style="padding:10px 14px;cursor:pointer;font-size:13px;color:var(--tx2);font-weight:300;border-bottom:1px solid var(--sep);transition:background .15s;"
+           onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">${n}</div>`
+        ).join('');
+        ac.style.display = 'block';
+      } else { ac.style.display = 'none'; }
+    } else { ac.style.display = 'none'; }
+    // Only update grid, not full re-render
+    document.getElementById('prod-grid').innerHTML = buildGrid(
+      imgs.filter(p => {
+        const ms = misMap[(p.name+'|'+p.colour).toLowerCase().trim()];
+        const qv = this.value.toLowerCase();
+        if (qv && !p.name.toLowerCase().includes(qv) && !p.colour.toLowerCase().includes(qv)) return false;
+        if (window._pStatFilt !== 'All' && ms?.deliveryStatus !== window._pStatFilt) return false;
+        if (window._pInvFilt  !== 'All' && ms?.inventoryStatus !== window._pInvFilt) return false;
+        return true;
+      }), imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, window._pExpanded||null);
+    const st = document.getElementById('prod-stats');
+    if (st) st.textContent = '';
+  });
+  inp.addEventListener('focus', function() { this.style.borderColor='var(--bd2)'; });
+  inp.addEventListener('blur',  function() { this.style.borderColor='var(--bd)'; setTimeout(()=>{if(ac)ac.style.display='none';},180); });
+
+  $id('footer').textContent = `LIVE · ${imgs.length} Products · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
+}
+
+function buildStats(filtered, imgs) {
+  if (filtered.length === imgs.length) return `<span style="font-size:11.5px;color:${tx3()};font-weight:300">${imgs.length} products</span>`;
+  return `<span style="font-size:11.5px;color:${tx3()};font-weight:300">Showing <span style="color:${tx()}">${filtered.length}</span> of ${imgs.length} products · <span onclick="window._pSearch='';window._pStatFilt='All';window._pInvFilt='All';document.getElementById('prod-search').value='';renderProducts();" style="color:var(--acc);cursor:pointer;font-weight:400">Clear filters</span></span>`;
+}
+
+function buildGrid(filtered, imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, expKey) {
+  if (filtered.length === 0) return `<div style="text-align:center;padding:48px 16px"><p style="color:${tx2()};font-size:13px;font-weight:300">No products match</p></div>`;
+
+  return `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--bd);">` +
+    filtered.map(p => {
+      const key  = p.name + '|' + p.colour;
+      const ms   = misMap[(p.name+'|'+p.colour).toLowerCase().trim()];
+      const ds   = ms?.deliveryStatus || 'No Date';
+      const is   = ms?.inventoryStatus || 'Not Arrived';
+      const sc   = SCFG[ds] || SCFG['No Date'];
+      const ic   = ICFG[is] || ICFG['Not Arrived'];
+      const pkey = (p.name+p.colour).replace(/[\s'"]/g,"");
+      const isExp = expKey === pkey;
+      const sw   = swatchCol(p.colour);
+
+      const expandDetail = !isExp ? '' : `
+        <div style="padding:14px 16px 16px;border-top:1px solid var(--bd)">
+          ${ms ? `
+            <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+              <span style="font-size:11px;color:${tx3()};font-weight:300">Planned <span style="color:${tx()};font-weight:500">${ms.planned}</span></span>
+              <span style="font-size:11px;color:${tx3()};font-weight:300">Cut <span style="color:${tx()};font-weight:500">${ms.cut}</span></span>
+              ${ms.replenish > 0 ? `<span style="font-size:11px;color:${tx3()};font-weight:300">Replenish <span style="color:var(--acc);font-weight:500">${ms.replenish}</span></span>` : ''}
+            </div>
+            ${[
+              {l:'Top',     v:ms.topReceived,    show:true},
+              {l:'Bottom',  v:ms.bottomReceived, show:true},
+              {l:'Dupatta', v:ms.dupatReceived,  show:ms.hasDupatta},
+            ].filter(x=>x.show).map(inv => {
+              const rv  = inv.v === null ? 0 : (inv.v || 0);
+              const pct = ms.planned > 0 ? Math.min(Math.round((rv/ms.planned)*100),100) : 0;
+              const bc  = pct >= 100 ? '#7fb898' : pct > 0 ? '#c4a050' : 'var(--tx4)';
+              return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">
+                <span style="font-size:10.5px;color:${tx3()};font-weight:300;width:48px">${inv.l}</span>
+                <div style="flex:1;background:var(--bg4);border-radius:2px;height:3px;overflow:hidden">
+                  <div style="background:${bc};width:${pct}%;height:100%;transition:width .5s"></div>
+                </div>
+                <span style="font-size:10.5px;font-family:'JetBrains Mono',monospace;color:${bc};width:60px;text-align:right">${inv.v===null?'—':rv+'/'+ms.planned}</span>
+              </div>`;
+            }).join('')}
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+              ${[
+                {l:'Greige',   v:ms.dates.greigeOrdered},
+                {l:'In House', v:ms.dates.greigeInHouse},
+                {l:'Dye',      v:ms.dates.dyePrint},
+                {l:'Cutting',  v:ms.dates.cutting},
+                {l:'Delivery', v:ms.dates.newDelivery||ms.dates.delivery},
+              ].filter(x=>x.v).map(d =>
+                `<div style="padding:4px 8px;border:1px solid var(--bd);border-radius:5px;font-size:9.5px;font-weight:300">
+                  <span style="color:${tx4()}">${d.l} </span><span style="color:${tx2()}">${d.v}</span>
+                </div>`
+              ).join('')}
+            </div>
+            ${ms.daysOverdue > 0 ? `<p style="margin-top:10px;font-size:11px;color:${SCFG['Super Late'].c};font-family:'JetBrains Mono',monospace">+${ms.daysOverdue}d overdue</p>` :
+              ms.daysOverdue < 0 ? `<p style="margin-top:10px;font-size:11px;color:${SCFG['Upcoming'].c};font-family:'JetBrains Mono',monospace">${Math.abs(ms.daysOverdue)}d to delivery</p>` : ''}
+            ${ms.remarks ? `<p style="margin-top:10px;font-size:11px;color:${tx3()};font-weight:300;line-height:1.5;border-left:1px solid var(--bd2);padding-left:10px">${ms.remarks}</p>` : ''}
+          ` : `<p style="font-size:11px;color:${tx4()};font-weight:300">No production data</p>`}
+        </div>`;
+
+      return `<div style="background:var(--bg2);cursor:pointer;transition:background .2s;"
+        data-pkey="${pkey}"
+        onclick="var k=this.getAttribute('data-pkey');window._pExpanded=(window._pExpanded===k?null:k);renderProducts();"
+        onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg2)'">
+        <div style="position:relative;width:100%;padding-top:125%;overflow:hidden;background:var(--bg4);">
+          <img src="${p.imageUrl}" loading="lazy"
+            onerror="this.style.display='none'"
+            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;"
+            onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:9.5px;padding:3px 8px;border-radius:3px;font-weight:400;letter-spacing:.04em;
+              background:rgba(13,12,11,.72);color:${sc.c};backdrop-filter:blur(6px);white-space:nowrap">
+              ${sc.e} ${ds}</span>
+            <span style="font-size:9.5px;padding:3px 8px;border-radius:3px;font-weight:400;letter-spacing:.04em;
+              background:rgba(13,12,11,.72);color:${ic.c};backdrop-filter:blur(6px);white-space:nowrap">
+              ${ic.label}</span>
+          </div>
+          <div style="position:absolute;bottom:10px;right:10px;font-size:10px;color:rgba(237,234,228,.4)">${isExp?'↑':'↓'}</div>
+        </div>
+        <div style="padding:12px 14px ${isExp?'0':'14px'}">
+          <p style="font-size:12.5px;font-weight:400;color:${tx()};margin-bottom:5px;line-height:1.3;letter-spacing:-.01em">${p.name}</p>
+          <div style="display:flex;align-items:center;gap:7px">
+            <div style="width:9px;height:9px;border-radius:50%;background:${sw};border:1px solid rgba(237,234,228,.1);flex-shrink:0"></div>
+            <span style="font-size:11px;color:${tx3()};font-weight:300;letter-spacing:.01em">${p.colour}</span>
+          </div>
+        </div>
+        ${expandDetail}
+      </div>`;
+    }).join('') + '</div>';
+}
+
 async function load() {
   setStatus('loading', 'FETCHING LIVE DATA…');
   try {
@@ -742,6 +965,14 @@ async function load() {
 
 // ─── Main render ─────────────────────────────────────────────────────────────
 function render() {
+  // Hide date strip + KPIs + prog bar on Products tab
+  const isProductsTab = TAB === 'products';
+  const _strip = $id('date-strip'), _prog = $id('prog-bar'), _kpis = $id('kpis');
+  if (_strip) _strip.style.display = isProductsTab ? 'none' : '';
+  if (_prog)  _prog.style.display  = isProductsTab ? 'none' : '';
+  if (_kpis)  _kpis.style.display  = isProductsTab ? 'none' : '';
+  if (isProductsTab) { renderProducts(); return; }
+
   const daily  = (D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH]) || D.aprilDaily || [];
   const mktD   = (D.mktByMonth && D.mktByMonth[ACTIVE_MONTH]) || D.mktDaily || [];
   // Use real targets from Monthly target vs achieved sheet
@@ -781,7 +1012,7 @@ function render() {
     .map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   } else {
     $id('bt').textContent = `${(MONTH_LABELS[ACTIVE_MONTH]||'MTD').toUpperCase()} · GOAL ₹${(MGOAL/1e7).toFixed(0)}Cr`;
-    $id('bp').style.background = 'linear-gradient(90deg,#A78BFA,#7CB32A)';
+    $id('bp').style.background = 'linear-gradient(90deg,var(--acc3),var(--acc))';
     $id('bp').style.width = Math.min((mtdA/MGOAL)*100,100) + '%';
     $id('bml').textContent = '₹98Cr target';
     $id('bel').textContent = '₹135Cr goal';
@@ -1103,17 +1334,17 @@ function render() {
 
       // Status config
       const STATUS_CFG = {
-        'Early':      { emoji:'🟢', label:'Early',      bg:'rgba(93,222,130,.12)',  border:'rgba(93,222,130,.4)',  col:'#5dde82' },
-        'On Time':    { emoji:'✅', label:'On Time',     bg:'rgba(93,222,130,.12)',  border:'rgba(93,222,130,.4)',  col:'#5dde82' },
+        'Early':      { emoji:'🟢', label:'Early',      bg:'rgba(127,184,152,.1)',  border:'rgba(127,184,152,.3)',  col:'#8fb898' },
+        'On Time':    { emoji:'✅', label:'On Time',     bg:'rgba(127,184,152,.1)',  border:'rgba(127,184,152,.3)',  col:'#8fb898' },
         'Upcoming':   { emoji:'⏳', label:'Upcoming',    bg:'rgba(160,180,200,.08)', border:'rgba(160,180,200,.3)', col:tx2() },
-        'Late':       { emoji:'⚠️', label:'Late',        bg:'rgba(245,166,35,.12)',  border:'rgba(245,166,35,.4)',  col:'#f5a623' },
-        'Super Late': { emoji:'🔴', label:'Super Late',  bg:'rgba(255,107,122,.12)', border:'rgba(255,107,122,.4)', col:'#ff6b7a' },
+        'Late':       { emoji:'⚠️', label:'Late',        bg:'rgba(196,160,80,.12)',  border:'rgba(196,160,80,.4)',  col:'#c4a050' },
+        'Super Late': { emoji:'🔴', label:'Super Late',  bg:'rgba(192,128,128,.12)', border:'rgba(192,128,128,.4)', col:'#c08080' },
         'No Date':    { emoji:'❓', label:'No Date',     bg:'rgba(160,180,200,.06)', border:'rgba(160,180,200,.2)', col:tx3() },
       };
       const INV_CFG = {
-        'Full':        { label:'Full ✓',       col:'#5dde82' },
-        'Partial':     { label:'Partial',      col:'#f5a623' },
-        'Not Arrived': { label:'Not Arrived',  col:'#ff6b7a' },
+        'Full':        { label:'Full ✓',       col:'#8fb898' },
+        'Partial':     { label:'Partial',      col:'#c4a050' },
+        'Not Arrived': { label:'Not Arrived',  col:'#c08080' },
       };
 
       // Active filter state
@@ -1145,10 +1376,10 @@ function render() {
         ${[
           {l:'Total Styles', v:String(summary.total),       c:tx()},
           {l:'Upcoming',     v:String(summary.upcoming),    c:tx2()},
-          {l:'Early / On Time', v:String(summary.early+summary.onTime), c:'#5dde82'},
-          {l:'Late',         v:String(summary.late),        c:'#f5a623'},
-          {l:'Super Late',   v:String(summary.superLate),   c:'#ff6b7a'},
-          {l:'Not Arrived',  v:String(summary.notArrived),  c:'#ff6b7a'},
+          {l:'Early / On Time', v:String(summary.early+summary.onTime), c:'#8fb898'},
+          {l:'Late',         v:String(summary.late),        c:'#c4a050'},
+          {l:'Super Late',   v:String(summary.superLate),   c:'#c08080'},
+          {l:'Not Arrived',  v:String(summary.notArrived),  c:'#c08080'},
         ].map(k=>`<div class="card">
           <span class="lbl">${k.l}</span>
           <div style="font-size:22px;font-weight:700;letter-spacing:-.05em;color:${k.c};font-family:'JetBrains Mono',monospace">${k.v}</div>
@@ -1193,7 +1424,7 @@ function render() {
           const val = s.dates[k];
           const isEmpty = !val;
           const isDelivery = k==='delivery' || k==='newDelivery';
-          const dotCol = isEmpty ? tx4() : (isDelivery ? '#f5a623' : tx3());
+          const dotCol = isEmpty ? tx4() : (isDelivery ? '#c4a050' : tx3());
           return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0">
             <div style="width:8px;height:8px;border-radius:50%;background:${dotCol};flex-shrink:0;${isEmpty?'opacity:.25':''}"></div>
             <div style="font-size:8px;color:${isEmpty?tx4():tx3()};text-align:center;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">${val||'—'}</div>
@@ -1214,7 +1445,7 @@ function render() {
         ].filter(Boolean).map(inv => {
           const rcv = inv.received === null ? 0 : inv.received;
           const pct = s.planned > 0 ? Math.round((rcv / s.planned) * 100) : 0;
-          const col = pct >= 100 ? '#5dde82' : pct > 0 ? '#f5a623' : tx4();
+          const col = pct >= 100 ? '#8fb898' : pct > 0 ? '#c4a050' : tx4();
           const label2 = inv.received === null ? 'Not recorded' : `${rcv}/${s.planned} (${pct}%)`;
           return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
             <span style="font-size:10px;color:${tx3()};width:50px">${inv.label}</span>
@@ -1248,9 +1479,9 @@ function render() {
             <div>
               <div style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Quantities</div>
               ${qtyBar('Planned',   s.planned,    tx2())}
-              ${qtyBar('Production',s.production, '#2BC4A8')}
-              ${qtyBar('Cut',       s.cut,        '#5dde82')}
-              ${s.replenish > 0 ? qtyBar('Replenish', s.replenish, '#A78BFA') : ''}
+              ${qtyBar('Production',s.production, 'var(--acc2)')}
+              ${qtyBar('Cut',       s.cut,        '#8fb898')}
+              ${s.replenish > 0 ? qtyBar('Replenish', s.replenish, 'var(--acc3)') : ''}
             </div>
             <div>
               <div style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Inventory Received</div>
@@ -1279,209 +1510,7 @@ function render() {
   }
 
 
-  // ── PRODUCTS TAB ────────────────────────────────────────────────────────────
-  if (TAB === 'products') {
-    const imgs = D.productImages || [];
-    const mis  = D.productionMIS;
-
-    if (imgs.length === 0) {
-      mc.innerHTML = `<div class="card"><div class="empty"><p>No product images yet</p><small>Add image URLs to the "Product images" sheet and redeploy Code.gs</small></div></div>`;
-    } else {
-      // Build MIS lookup map: "styleName|colour" → mis style object
-      const misMap = {};
-      if (mis && mis.styles) {
-        mis.styles.forEach(s => {
-          const key = (s.styleName + '|' + s.color).toLowerCase().trim();
-          misMap[key] = s;
-        });
-      }
-
-      // Status config
-      const SCFG = {
-        'Early':      {e:'🟢',c:'#5dde82', bg:'rgba(93,222,130,.18)'},
-        'On Time':    {e:'✅',c:'#5dde82', bg:'rgba(93,222,130,.18)'},
-        'Upcoming':   {e:'⏳',c:tx2(),     bg:'rgba(160,180,200,.12)'},
-        'Late':       {e:'⚠️',c:'#f5a623', bg:'rgba(245,166,35,.18)'},
-        'Super Late': {e:'🔴',c:'#ff6b7a', bg:'rgba(255,107,122,.18)'},
-        'No Date':    {e:'❓',c:tx3(),     bg:'rgba(100,120,140,.1)'},
-      };
-      const ICFG = {
-        'Full':        {c:'#5dde82', label:'Full'},
-        'Partial':     {c:'#f5a623', label:'Partial'},
-        'Not Arrived': {c:'#ff6b7a', label:'Not Arrived'},
-      };
-
-      // Unique colour dot colours (fabric-inspired palette)
-      const COL_SWATCH = {
-        'navy':'#1a2e5a','black':'#1a1a1a','yellow':'#f5c842','pink':'#f472b6',
-        'mustard':'#d4a017','steel blue':'#4682b4','off white':'#f5f0e8',
-        'fuschia':'#e91e8c','fuschia':'#e91e8c',
-        'off white + reds':'#e8c4c4','off white + blues':'#c4d4e8',
-      };
-      const swatchColor = c => COL_SWATCH[c.toLowerCase()] || '#888';
-
-      // Search + filter state
-      const q        = (window._prodSearch || '').toLowerCase();
-      const statFilt = window._prodStatFilt || 'All';
-      const invFilt  = window._prodInvFilt  || 'All';
-
-      // Filter products
-      const filtered = imgs.filter(p => {
-        const misKey = (p.name + '|' + p.colour).toLowerCase().trim();
-        const ms = misMap[misKey];
-        if (q && !p.name.toLowerCase().includes(q) && !p.colour.toLowerCase().includes(q)) return false;
-        if (statFilt !== 'All' && ms?.deliveryStatus !== statFilt) return false;
-        if (invFilt  !== 'All' && ms?.inventoryStatus !== invFilt) return false;
-        return true;
-      });
-
-      // ── Search bar ───────────────────────────────────────────────────────────
-      const searchBar = `<div style="position:relative;margin-bottom:12px">
-        <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;opacity:.4">🔍</div>
-        <input id="prod-search" type="text" placeholder="Search by name or colour…"
-          value="${window._prodSearch||''}"
-          oninput="window._prodSearch=this.value;render();"
-          style="width:100%;box-sizing:border-box;background:var(--bg2);border:1px solid var(--bd2);border-radius:12px;
-                 padding:11px 16px 11px 40px;font-size:13px;color:var(--tx);font-family:'Outfit',sans-serif;
-                 outline:none;transition:border-color .2s;"
-          onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--bd2)'">
-      </div>`;
-
-      // ── Filter pills ─────────────────────────────────────────────────────────
-      const mkPill = (label, key, val, active, col) =>
-        `<button onclick="window['${key}']='${val}';render();" style="
-          padding:5px 11px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;
-          font-family:'Outfit',sans-serif;border:1px solid ${active?col||'var(--acc)':'var(--bd2)'};
-          background:${active?'rgba(93,222,130,.12)':'var(--bg3)'};
-          color:${active?col||'var(--upc)':tx2()};transition:all .18s;white-space:nowrap;
-        ">${label}</button>`;
-
-      const delivFilters = `<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
-        <span style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.1em;text-transform:uppercase;width:52px">Status</span>
-        ${['All','Upcoming','Early','On Time','Late','Super Late'].map(f =>
-          mkPill((SCFG[f]?.e||'')+' '+f, '_prodStatFilt', f, statFilt===f, SCFG[f]?.c)
-        ).join('')}
-      </div>`;
-      const invFilters = `<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
-        <span style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.1em;text-transform:uppercase;width:52px">Stock</span>
-        ${['All','Full','Partial','Not Arrived'].map(f =>
-          mkPill(f, '_prodInvFilt', f, invFilt===f, ICFG[f]?.c)
-        ).join('')}
-      </div>`;
-
-      // ── Stats row ────────────────────────────────────────────────────────────
-      const statsRow = `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
-        <span style="font-size:11px;color:${tx3()}">Showing <strong style="color:${tx()}">${filtered.length}</strong> of ${imgs.length} products</span>
-        ${filtered.length !== imgs.length ? `<button onclick="window._prodSearch='';window._prodStatFilt='All';window._prodInvFilt='All';render();" style="padding:3px 10px;border-radius:12px;font-size:10.5px;background:var(--bg3);border:1px solid var(--bd2);color:${tx3()};cursor:pointer;font-family:'Outfit',sans-serif">Clear filters</button>` : ''}
-      </div>`;
-
-      // ── Product grid cards ────────────────────────────────────────────────────
-      const expandedKey = window._prodExpanded;
-
-      const cards = filtered.map(p => {
-        const misKey = (p.name + '|' + p.colour).toLowerCase().trim();
-        const ms     = misMap[misKey];
-        const ds     = ms?.deliveryStatus || 'No Date';
-        const is     = ms?.inventoryStatus || 'Not Arrived';
-        const scfg   = SCFG[ds] || SCFG['No Date'];
-        const icfg   = ICFG[is] || ICFG['Not Arrived'];
-        const cardKey = p.name + '|' + p.colour;
-        const isExp  = expandedKey === cardKey;
-        const sw     = swatchColor(p.colour);
-
-        // Inventory mini bars for expanded view
-        const invSection = ms ? `
-          <div style="border-top:1px solid ${sep()};margin-top:10px;padding-top:10px">
-            <div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap">
-              <span style="font-size:10px;color:${tx3()}">📦 Planned: <strong style="color:${tx()}">${ms.planned}</strong></span>
-              <span style="font-size:10px;color:${tx3()}">✂️ Cut: <strong style="color:${tx()}">${ms.cut}</strong></span>
-              ${ms.replenish ? `<span style="font-size:10px;color:${tx3()}">🔄 Replenish: <strong style="color:#A78BFA">${ms.replenish}</strong></span>` : ''}
-            </div>
-            ${[
-              {l:'Top',    v:ms.topReceived},
-              {l:'Bottom', v:ms.bottomReceived},
-              ms.hasDupatta ? {l:'Dupatta', v:ms.dupatReceived} : null,
-            ].filter(Boolean).map(inv => {
-              const rv  = inv.v === null ? 0 : inv.v;
-              const pct = ms.planned > 0 ? Math.min(Math.round((rv/ms.planned)*100),100) : 0;
-              const bc  = pct>=100?'#5dde82':pct>0?'#f5a623':'#ff6b7a';
-              return `<div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
-                <span style="font-size:10px;color:${tx3()};width:45px">${inv.l}</span>
-                <div style="flex:1;background:${bar()};border-radius:3px;height:4px;overflow:hidden">
-                  <div style="background:${bc};width:${pct}%;height:100%;border-radius:3px;transition:width .5s"></div>
-                </div>
-                <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:${bc};width:70px;text-align:right">${inv.v===null?'—':rv+'/'+ms.planned}</span>
-              </div>`;
-            }).join('')}
-            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-              ${[
-                {l:'Greige',    v:ms.dates.greigeOrdered},
-                {l:'In House',  v:ms.dates.greigeInHouse},
-                {l:'Dye/Print', v:ms.dates.dyePrint},
-                {l:'Cutting',   v:ms.dates.cutting},
-                {l:'Delivery',  v:ms.dates.delivery || ms.dates.newDelivery},
-              ].filter(x=>x.v).map(d =>
-                `<div style="background:${bar()};border-radius:6px;padding:4px 8px;font-size:9px">
-                  <span style="color:${tx3()}">${d.l} </span><span style="color:${tx()};font-weight:600">${d.v}</span>
-                </div>`
-              ).join('')}
-            </div>
-            ${ms.remarks ? `<div style="margin-top:8px;background:rgba(93,222,130,.07);border-left:2px solid var(--acc2);border-radius:6px;padding:7px 9px;font-size:10.5px;color:${tx2()}">${ms.remarks}</div>` : ''}
-            ${ms.daysOverdue > 0 ? `<div style="margin-top:6px;font-size:10px;font-family:'JetBrains Mono',monospace;color:#ff6b7a;font-weight:600">+${ms.daysOverdue}d overdue</div>` :
-              ms.daysOverdue < 0 ? `<div style="margin-top:6px;font-size:10px;font-family:'JetBrains Mono',monospace;color:#5dde82">${Math.abs(ms.daysOverdue)}d to go</div>` : ''}
-          </div>` : `<div style="border-top:1px solid ${sep()};margin-top:10px;padding-top:10px;font-size:10.5px;color:${tx3()}">No production data linked</div>`;
-
-        return `<div onclick="window._prodExpanded=${isExp?'null':`'${cardKey.replace(/'/g,"\\'")}` +'\''}; render();"
-          style="cursor:pointer;background:var(--bg2);border:1px solid ${isExp?'var(--acc)':'var(--bd)'};
-                 border-radius:16px;overflow:hidden;transition:all .25s;
-                 ${isExp?'box-shadow:0 0 24px rgba(93,222,130,.15);':''}
-                 transform:${isExp?'scale(1)':'scale(1)'};
-                 ">
-          <!-- Image -->
-          <div style="position:relative;width:100%;padding-top:120%;overflow:hidden;background:var(--bg3);">
-            <img src="${p.imageUrl}"
-              loading="lazy"
-              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
-              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s ease;"
-              onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
-            <div style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--bg3);font-size:28px">🖼️</div>
-            <!-- Status badges -->
-            <div style="position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-              <span style="font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:10px;
-                           background:${scfg.bg};color:${scfg.c};backdrop-filter:blur(8px);
-                           border:1px solid ${scfg.c}33;white-space:nowrap">${scfg.e} ${ds}</span>
-              <span style="font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:10px;
-                           background:rgba(10,14,18,.7);color:${icfg.c};backdrop-filter:blur(8px);
-                           border:1px solid ${icfg.c}44;white-space:nowrap">${icfg.label}</span>
-            </div>
-            <!-- Expand indicator -->
-            <div style="position:absolute;bottom:8px;right:8px;width:22px;height:22px;border-radius:50%;
-                        background:rgba(10,14,18,.6);display:flex;align-items:center;justify-content:center;
-                        font-size:10px;color:${tx3()};backdrop-filter:blur(4px)">${isExp?'↑':'↓'}</div>
-          </div>
-          <!-- Info -->
-          <div style="padding:10px 12px ${isExp?'0':'10px'}">
-            <div style="font-size:12.5px;font-weight:600;color:${tx()};margin-bottom:3px;line-height:1.3">${p.name}</div>
-            <div style="display:flex;align-items:center;gap:6px">
-              <div style="width:10px;height:10px;border-radius:50%;background:${sw};border:1px solid rgba(255,255,255,.2);flex-shrink:0"></div>
-              <span style="font-size:11px;color:${tx2()}">${p.colour}</span>
-            </div>
-            ${isExp ? invSection : ''}
-          </div>
-        </div>`;
-      }).join('');
-
-      // Responsive grid CSS via inline style (4 cols desktop, 3 tablet, 2 mobile)
-      mc.innerHTML = searchBar + delivFilters + invFilters + statsRow +
-        (filtered.length === 0
-          ? `<div class="card"><div class="empty"><p>No products match</p><small>Try clearing the filters</small></div></div>`
-          : `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;">${cards}</div>`);
-    }
-    $id('footer').textContent = `LIVE · Products: ${(D.productImages||[]).length} styles · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
-    return;
-  }
-
-  // ── STORES TAB ─────────────────────────────────────────────────────────────
+    // ── STORES TAB ─────────────────────────────────────────────────────────────
   if (TAB === 'stores') {
     const sd = D.storeData;
     if (!sd || !sd.stores || sd.stores.length === 0) {
@@ -1495,7 +1524,7 @@ function render() {
       const pct      = (a,b) => b ? Math.round((a-b)/b*100) : 0;
 
       // City colours
-      const CITY_C = { 'Delhi':'#7CB32A','Delhi/NCR':'#5aa322','Mumbai':'#2BC4A8','Bangalore':'#A78BFA','Hyderabad':'#FB923C','Kolkata':'#38BDF8','Chennai':'#F472B6','Jaipur':'#FBBF24','Lucknow':'#34D399','Punjab':'#60A5FA','Ahmedabad':'#F87171','Raipur':'#C084FC' };
+      const CITY_C = { 'Delhi':'#7CB32A','Delhi/NCR':'#5aa322','Mumbai':'var(--acc2)','Bangalore':'var(--acc3)','Hyderabad':'#FB923C','Kolkata':'#38BDF8','Chennai':'#F472B6','Jaipur':'#FBBF24','Lucknow':'#34D399','Punjab':'#60A5FA','Ahmedabad':'#F87171','Raipur':'#C084FC' };
       const cityCol = c => CITY_C[c] || '#888';
 
       // Summary strip
@@ -1505,7 +1534,7 @@ function render() {
           {l:'MTD Target',      v:fmtC(summary.totalMonthlyTarget), c:tx3()},
           {l:'vs Target',       v:(pct(summary.totalMtdRevenue,summary.totalMonthlyTarget)>0?'+':'')+pct(summary.totalMtdRevenue,summary.totalMonthlyTarget)+'%', c:pct(summary.totalMtdRevenue,summary.totalMonthlyTarget)>=0?apos():aneg()},
           {l:'Stores Count',    v:String(summary.storeCount),       c:tx2()},
-          {l:'Best Store',      v:summary.bestStoreName,            c:'#2BC4A8'},
+          {l:'Best Store',      v:summary.bestStoreName,            c:'var(--acc2)'},
           {l:'Above Target',    v:summary.storesAboveTarget+'/'+summary.storeCount, c:apos()},
         ].map(k => `<div class="card">
           <span class="lbl">${k.l}</span>
@@ -1626,7 +1655,7 @@ function render() {
           background:${isActive ? 'var(--up)' : 'var(--bg3)'};
           border-color:${isActive ? 'var(--acc)' : 'var(--bd2)'};
           color:${isActive ? 'var(--upc)' : tx2()};
-          box-shadow:${isActive ? '0 0 12px rgba(93,222,130,.15)' : 'none'};
+          box-shadow:${isActive ? '0 0 12px rgba(127,184,152,.12)' : 'none'};
         ">${p.label}</button>`;
       }).join('')}
       ${SHOPIFY_LOADING ? `<span style="font-size:11px;color:${tx3()};display:flex;align-items:center;gap:6px"><span class="spin"></span>Loading…</span>` : ''}
@@ -1656,10 +1685,10 @@ function render() {
 
       const shopKPIs = [
         {l:'Today Revenue',   v:fmtINR(sh.todayRevenue),  chg:revVsYest,             c:'var(--acc)'},
-        {l:'Today Orders',    v:String(sh.todayOrders),   chg:null,                  c:'#2BC4A8'},
-        {l:'Today AOV',       v:fmtAOV(sh.todayAOV),     chg:null,                  c:'#a78bfa'},
-        {l:pLabel+' Revenue', v:fmtINR(periodRev),       chg:null,                  c:'#fb923c'},
-        {l:pLabel+' Orders',  v:String(periodOrders),    chg:null,                  c:'#38bdf8'},
+        {l:'Today Orders',    v:String(sh.todayOrders),   chg:null,                  c:'var(--acc2)'},
+        {l:'Today AOV',       v:fmtAOV(sh.todayAOV),     chg:null,                  c:'var(--acc3)'},
+        {l:pLabel+' Revenue', v:fmtINR(periodRev),       chg:null,                  c:'#c4a050'},
+        {l:pLabel+' Orders',  v:String(periodOrders),    chg:null,                  c:'var(--acc3)'},
         {l:'Refund Rate',     v:periodRefund+'%',        chg:null,                  c:periodRefund>5?aneg():'var(--acc)'},
       ];
       const shopKPIHtml = periodBar + `<div class="g6" style="margin-bottom:12px">
@@ -1888,7 +1917,7 @@ function insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, 
   const CH_KEYS = ['stores','online','crm','app','intl'];
   const CH_LABS = ['Stores','Online','CRM','App','Intl.'];
   const CH_TGTS = [1988836,673670,458590,150000,83333];
-  const CH_C    = ['#7CB32A','#2BC4A8','#A78BFA','#FB923C','#38BDF8'];
+  const CH_C    = ['#7CB32A','var(--acc2)','var(--acc3)','#FB923C','#38BDF8'];
 
   // ── 1. Overall performance ───────────────────────────
   const totRev  = rows.reduce((s,r)=>s+r.total,0);
