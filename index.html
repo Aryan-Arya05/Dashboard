@@ -388,6 +388,7 @@
         <button class="tab" onclick="setTab('marketing')">Marketing</button>
         <button class="tab" onclick="setTab('compare')">Compare</button>
         <button class="tab" onclick="setTab('stores')">Stores</button>
+        <button class="tab" onclick="setTab('products')">Products</button>
         <button class="tab" onclick="setTab('production')">Production</button>
         <button class="tab" onclick="setTab('shopify')">Shopify</button>
       </div>
@@ -722,7 +723,7 @@ async function load() {
       .then(r => r.json()).then(j => { if(j.storeData){ D.storeData = j.storeData; if(TAB==='stores') render(); } }).catch(()=>{});
     // Fetch production async
     fetch(SCRIPT_URL + '?only=production&_t=' + Date.now())
-      .then(r => r.json()).then(j => { if(j.productionMIS){ D.productionMIS = j.productionMIS; if(TAB==='production') render(); } }).catch(()=>{});
+      .then(r => r.json()).then(j => { if(j.productionMIS){ D.productionMIS = j.productionMIS; if(TAB==='production'||TAB==='products') render(); } }).catch(()=>{});
     // Set active month to latest available
     if (!ACTIVE_MONTH || !(D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH])) {
       ACTIVE_MONTH = D.latestMonth || '2026-04';
@@ -1167,9 +1168,7 @@ function render() {
         return true;
       });
 
-      const DATE_LABELS = ['Greige
-Ordered','Greige
-In House','Dye/Print','Embroidery','Trims','Cutting','Delivery','New Delivery'];
+      const DATE_LABELS = ['Greige Ord','Greige In','Dye/Print','Embroidery','Trims','Cutting','Delivery','New Deliv'];
       const DATE_KEYS   = ['greigeOrdered','greigeInHouse','dyePrint','embroidery','trims','cutting','delivery','newDelivery'];
 
       const styleCards = filtered.map(s => {
@@ -1198,8 +1197,7 @@ In House','Dye/Print','Embroidery','Trims','Cutting','Delivery','New Delivery'];
           return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0">
             <div style="width:8px;height:8px;border-radius:50%;background:${dotCol};flex-shrink:0;${isEmpty?'opacity:.25':''}"></div>
             <div style="font-size:8px;color:${isEmpty?tx4():tx3()};text-align:center;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">${val||'—'}</div>
-            <div style="font-size:7px;color:${tx4()};text-align:center;line-height:1.1">${DATE_LABELS[i].replace('
-','<br>')}</div>
+            <div style="font-size:7px;color:${tx4()};text-align:center;line-height:1.1">${DATE_LABELS[i]}</div>
           </div>`;
         });
         // Timeline connector line
@@ -1277,6 +1275,209 @@ In House','Dye/Print','Embroidery','Trims','Cutting','Delivery','New Delivery'];
         (filtered.length === 0 ? `<div class="card"><div class="empty"><p>No styles match this filter</p></div></div>` : styleCards);
     }
     $id('footer').textContent = `LIVE · Production MIS · ${(D.productionMIS?.summary?.total||0)} styles · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
+    return;
+  }
+
+
+  // ── PRODUCTS TAB ────────────────────────────────────────────────────────────
+  if (TAB === 'products') {
+    const imgs = D.productImages || [];
+    const mis  = D.productionMIS;
+
+    if (imgs.length === 0) {
+      mc.innerHTML = `<div class="card"><div class="empty"><p>No product images yet</p><small>Add image URLs to the "Product images" sheet and redeploy Code.gs</small></div></div>`;
+    } else {
+      // Build MIS lookup map: "styleName|colour" → mis style object
+      const misMap = {};
+      if (mis && mis.styles) {
+        mis.styles.forEach(s => {
+          const key = (s.styleName + '|' + s.color).toLowerCase().trim();
+          misMap[key] = s;
+        });
+      }
+
+      // Status config
+      const SCFG = {
+        'Early':      {e:'🟢',c:'#5dde82', bg:'rgba(93,222,130,.18)'},
+        'On Time':    {e:'✅',c:'#5dde82', bg:'rgba(93,222,130,.18)'},
+        'Upcoming':   {e:'⏳',c:tx2(),     bg:'rgba(160,180,200,.12)'},
+        'Late':       {e:'⚠️',c:'#f5a623', bg:'rgba(245,166,35,.18)'},
+        'Super Late': {e:'🔴',c:'#ff6b7a', bg:'rgba(255,107,122,.18)'},
+        'No Date':    {e:'❓',c:tx3(),     bg:'rgba(100,120,140,.1)'},
+      };
+      const ICFG = {
+        'Full':        {c:'#5dde82', label:'Full'},
+        'Partial':     {c:'#f5a623', label:'Partial'},
+        'Not Arrived': {c:'#ff6b7a', label:'Not Arrived'},
+      };
+
+      // Unique colour dot colours (fabric-inspired palette)
+      const COL_SWATCH = {
+        'navy':'#1a2e5a','black':'#1a1a1a','yellow':'#f5c842','pink':'#f472b6',
+        'mustard':'#d4a017','steel blue':'#4682b4','off white':'#f5f0e8',
+        'fuschia':'#e91e8c','fuschia':'#e91e8c',
+        'off white + reds':'#e8c4c4','off white + blues':'#c4d4e8',
+      };
+      const swatchColor = c => COL_SWATCH[c.toLowerCase()] || '#888';
+
+      // Search + filter state
+      const q        = (window._prodSearch || '').toLowerCase();
+      const statFilt = window._prodStatFilt || 'All';
+      const invFilt  = window._prodInvFilt  || 'All';
+
+      // Filter products
+      const filtered = imgs.filter(p => {
+        const misKey = (p.name + '|' + p.colour).toLowerCase().trim();
+        const ms = misMap[misKey];
+        if (q && !p.name.toLowerCase().includes(q) && !p.colour.toLowerCase().includes(q)) return false;
+        if (statFilt !== 'All' && ms?.deliveryStatus !== statFilt) return false;
+        if (invFilt  !== 'All' && ms?.inventoryStatus !== invFilt) return false;
+        return true;
+      });
+
+      // ── Search bar ───────────────────────────────────────────────────────────
+      const searchBar = `<div style="position:relative;margin-bottom:12px">
+        <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;opacity:.4">🔍</div>
+        <input id="prod-search" type="text" placeholder="Search by name or colour…"
+          value="${window._prodSearch||''}"
+          oninput="window._prodSearch=this.value;render();"
+          style="width:100%;box-sizing:border-box;background:var(--bg2);border:1px solid var(--bd2);border-radius:12px;
+                 padding:11px 16px 11px 40px;font-size:13px;color:var(--tx);font-family:'Outfit',sans-serif;
+                 outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--bd2)'">
+      </div>`;
+
+      // ── Filter pills ─────────────────────────────────────────────────────────
+      const mkPill = (label, key, val, active, col) =>
+        `<button onclick="window['${key}']='${val}';render();" style="
+          padding:5px 11px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;
+          font-family:'Outfit',sans-serif;border:1px solid ${active?col||'var(--acc)':'var(--bd2)'};
+          background:${active?'rgba(93,222,130,.12)':'var(--bg3)'};
+          color:${active?col||'var(--upc)':tx2()};transition:all .18s;white-space:nowrap;
+        ">${label}</button>`;
+
+      const delivFilters = `<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+        <span style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.1em;text-transform:uppercase;width:52px">Status</span>
+        ${['All','Upcoming','Early','On Time','Late','Super Late'].map(f =>
+          mkPill((SCFG[f]?.e||'')+' '+f, '_prodStatFilt', f, statFilt===f, SCFG[f]?.c)
+        ).join('')}
+      </div>`;
+      const invFilters = `<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+        <span style="font-size:9.5px;color:${tx3()};font-weight:600;letter-spacing:.1em;text-transform:uppercase;width:52px">Stock</span>
+        ${['All','Full','Partial','Not Arrived'].map(f =>
+          mkPill(f, '_prodInvFilt', f, invFilt===f, ICFG[f]?.c)
+        ).join('')}
+      </div>`;
+
+      // ── Stats row ────────────────────────────────────────────────────────────
+      const statsRow = `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+        <span style="font-size:11px;color:${tx3()}">Showing <strong style="color:${tx()}">${filtered.length}</strong> of ${imgs.length} products</span>
+        ${filtered.length !== imgs.length ? `<button onclick="window._prodSearch='';window._prodStatFilt='All';window._prodInvFilt='All';render();" style="padding:3px 10px;border-radius:12px;font-size:10.5px;background:var(--bg3);border:1px solid var(--bd2);color:${tx3()};cursor:pointer;font-family:'Outfit',sans-serif">Clear filters</button>` : ''}
+      </div>`;
+
+      // ── Product grid cards ────────────────────────────────────────────────────
+      const expandedKey = window._prodExpanded;
+
+      const cards = filtered.map(p => {
+        const misKey = (p.name + '|' + p.colour).toLowerCase().trim();
+        const ms     = misMap[misKey];
+        const ds     = ms?.deliveryStatus || 'No Date';
+        const is     = ms?.inventoryStatus || 'Not Arrived';
+        const scfg   = SCFG[ds] || SCFG['No Date'];
+        const icfg   = ICFG[is] || ICFG['Not Arrived'];
+        const cardKey = p.name + '|' + p.colour;
+        const isExp  = expandedKey === cardKey;
+        const sw     = swatchColor(p.colour);
+
+        // Inventory mini bars for expanded view
+        const invSection = ms ? `
+          <div style="border-top:1px solid ${sep()};margin-top:10px;padding-top:10px">
+            <div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+              <span style="font-size:10px;color:${tx3()}">📦 Planned: <strong style="color:${tx()}">${ms.planned}</strong></span>
+              <span style="font-size:10px;color:${tx3()}">✂️ Cut: <strong style="color:${tx()}">${ms.cut}</strong></span>
+              ${ms.replenish ? `<span style="font-size:10px;color:${tx3()}">🔄 Replenish: <strong style="color:#A78BFA">${ms.replenish}</strong></span>` : ''}
+            </div>
+            ${[
+              {l:'Top',    v:ms.topReceived},
+              {l:'Bottom', v:ms.bottomReceived},
+              ms.hasDupatta ? {l:'Dupatta', v:ms.dupatReceived} : null,
+            ].filter(Boolean).map(inv => {
+              const rv  = inv.v === null ? 0 : inv.v;
+              const pct = ms.planned > 0 ? Math.min(Math.round((rv/ms.planned)*100),100) : 0;
+              const bc  = pct>=100?'#5dde82':pct>0?'#f5a623':'#ff6b7a';
+              return `<div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+                <span style="font-size:10px;color:${tx3()};width:45px">${inv.l}</span>
+                <div style="flex:1;background:${bar()};border-radius:3px;height:4px;overflow:hidden">
+                  <div style="background:${bc};width:${pct}%;height:100%;border-radius:3px;transition:width .5s"></div>
+                </div>
+                <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:${bc};width:70px;text-align:right">${inv.v===null?'—':rv+'/'+ms.planned}</span>
+              </div>`;
+            }).join('')}
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+              ${[
+                {l:'Greige',    v:ms.dates.greigeOrdered},
+                {l:'In House',  v:ms.dates.greigeInHouse},
+                {l:'Dye/Print', v:ms.dates.dyePrint},
+                {l:'Cutting',   v:ms.dates.cutting},
+                {l:'Delivery',  v:ms.dates.delivery || ms.dates.newDelivery},
+              ].filter(x=>x.v).map(d =>
+                `<div style="background:${bar()};border-radius:6px;padding:4px 8px;font-size:9px">
+                  <span style="color:${tx3()}">${d.l} </span><span style="color:${tx()};font-weight:600">${d.v}</span>
+                </div>`
+              ).join('')}
+            </div>
+            ${ms.remarks ? `<div style="margin-top:8px;background:rgba(93,222,130,.07);border-left:2px solid var(--acc2);border-radius:6px;padding:7px 9px;font-size:10.5px;color:${tx2()}">${ms.remarks}</div>` : ''}
+            ${ms.daysOverdue > 0 ? `<div style="margin-top:6px;font-size:10px;font-family:'JetBrains Mono',monospace;color:#ff6b7a;font-weight:600">+${ms.daysOverdue}d overdue</div>` :
+              ms.daysOverdue < 0 ? `<div style="margin-top:6px;font-size:10px;font-family:'JetBrains Mono',monospace;color:#5dde82">${Math.abs(ms.daysOverdue)}d to go</div>` : ''}
+          </div>` : `<div style="border-top:1px solid ${sep()};margin-top:10px;padding-top:10px;font-size:10.5px;color:${tx3()}">No production data linked</div>`;
+
+        return `<div onclick="window._prodExpanded=${isExp?'null':`'${cardKey.replace(/'/g,"\\'")}` +'\''}; render();"
+          style="cursor:pointer;background:var(--bg2);border:1px solid ${isExp?'var(--acc)':'var(--bd)'};
+                 border-radius:16px;overflow:hidden;transition:all .25s;
+                 ${isExp?'box-shadow:0 0 24px rgba(93,222,130,.15);':''}
+                 transform:${isExp?'scale(1)':'scale(1)'};
+                 ">
+          <!-- Image -->
+          <div style="position:relative;width:100%;padding-top:120%;overflow:hidden;background:var(--bg3);">
+            <img src="${p.imageUrl}"
+              loading="lazy"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s ease;"
+              onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+            <div style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--bg3);font-size:28px">🖼️</div>
+            <!-- Status badges -->
+            <div style="position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+              <span style="font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:10px;
+                           background:${scfg.bg};color:${scfg.c};backdrop-filter:blur(8px);
+                           border:1px solid ${scfg.c}33;white-space:nowrap">${scfg.e} ${ds}</span>
+              <span style="font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:10px;
+                           background:rgba(10,14,18,.7);color:${icfg.c};backdrop-filter:blur(8px);
+                           border:1px solid ${icfg.c}44;white-space:nowrap">${icfg.label}</span>
+            </div>
+            <!-- Expand indicator -->
+            <div style="position:absolute;bottom:8px;right:8px;width:22px;height:22px;border-radius:50%;
+                        background:rgba(10,14,18,.6);display:flex;align-items:center;justify-content:center;
+                        font-size:10px;color:${tx3()};backdrop-filter:blur(4px)">${isExp?'↑':'↓'}</div>
+          </div>
+          <!-- Info -->
+          <div style="padding:10px 12px ${isExp?'0':'10px'}">
+            <div style="font-size:12.5px;font-weight:600;color:${tx()};margin-bottom:3px;line-height:1.3">${p.name}</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:10px;height:10px;border-radius:50%;background:${sw};border:1px solid rgba(255,255,255,.2);flex-shrink:0"></div>
+              <span style="font-size:11px;color:${tx2()}">${p.colour}</span>
+            </div>
+            ${isExp ? invSection : ''}
+          </div>
+        </div>`;
+      }).join('');
+
+      // Responsive grid CSS via inline style (4 cols desktop, 3 tablet, 2 mobile)
+      mc.innerHTML = searchBar + delivFilters + invFilters + statsRow +
+        (filtered.length === 0
+          ? `<div class="card"><div class="empty"><p>No products match</p><small>Try clearing the filters</small></div></div>`
+          : `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;">${cards}</div>`);
+    }
+    $id('footer').textContent = `LIVE · Products: ${(D.productImages||[]).length} styles · ${new Date().toLocaleTimeString('en-IN')} · AUTO-REFRESH 5 MIN`;
     return;
   }
 
