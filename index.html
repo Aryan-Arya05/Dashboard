@@ -737,6 +737,7 @@ function renderProducts() {
   const q       = (window._pSearch  || '').toLowerCase();
   const sFilt   = window._pStatFilt || 'All';
   const iFilt   = window._pInvFilt  || 'All';
+  const cFilt   = window._pCollFilt || 'All';
   const expKey  = window._pExpanded || null;
 
   const filtered = imgs.filter(p => {
@@ -783,7 +784,6 @@ function renderProducts() {
       color:${active ? (col||'var(--acc)') : 'var(--tx3)'};transition:all .18s;white-space:nowrap;
     ">${label}</button>`;
 
-  const cFilt = window._pCollFilt || 'All';
   const filtersHTML = `
     <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px;flex-direction:column">
       <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
@@ -974,12 +974,14 @@ async function load() {
 // ─── Main render ─────────────────────────────────────────────────────────────
 function render() {
   // Hide date strip + KPIs + prog bar on Products tab
-  const isProductsTab = TAB === 'products' || TAB === 'production';
+  // Hide date strip + KPIs on Products and Production tabs
+  const hideUpper = TAB === 'products' || TAB === 'production';
   const _strip = $id('date-strip'), _prog = $id('prog-bar'), _kpis = $id('kpis');
-  if (_strip) _strip.style.display = isProductsTab ? 'none' : '';
-  if (_prog)  _prog.style.display  = isProductsTab ? 'none' : '';
-  if (_kpis)  _kpis.style.display  = isProductsTab ? 'none' : '';
-  if (isProductsTab) { renderProducts(); return; }
+  if (_strip) _strip.style.display = hideUpper ? 'none' : '';
+  if (_prog)  _prog.style.display  = hideUpper ? 'none' : '';
+  if (_kpis)  _kpis.style.display  = hideUpper ? 'none' : '';
+  // Products tab renders via standalone function; Production falls through to its block below
+  if (TAB === 'products') { renderProducts(); return; }
 
   const daily  = (D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH]) || D.aprilDaily || [];
   const mktD   = (D.mktByMonth && D.mktByMonth[ACTIVE_MONTH]) || D.mktDaily || [];
