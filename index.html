@@ -955,7 +955,10 @@ async function load() {
     }
     // Fetch stores async
     fetch(SCRIPT_URL + '?only=stores&_t=' + Date.now())
-      .then(r => r.json()).then(j => { if(j.storeData){ D.storeData = j.storeData; if(TAB==='stores') render(); } }).catch(()=>{});
+      .then(r => r.json()).then(j => {
+        if (j.storeError) console.error('Store error:', j.storeError, 'line:', j.storeLine);
+        if (j.storeData) { D.storeData = j.storeData; if(TAB==='stores') render(); }
+      }).catch(e => console.error('Store fetch failed:', e));
     // Fetch production async
     fetch(SCRIPT_URL + '?only=production&_t=' + Date.now())
       .then(r => r.json()).then(j => { if(j.productionMIS){ D.productionMIS = j.productionMIS; if(TAB==='production'||TAB==='products') render(); } }).catch(()=>{});
