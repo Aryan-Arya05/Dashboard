@@ -956,8 +956,13 @@ async function load() {
     // Fetch stores async
     fetch(SCRIPT_URL + '?only=stores&_t=' + Date.now())
       .then(r => r.json()).then(j => {
-        if (j.storeError) console.error('Store error:', j.storeError, 'line:', j.storeLine);
-        if (j.storeData) { D.storeData = j.storeData; if(TAB==='stores') render(); }
+        if (j.storeError) {
+          console.error('Store error:', j.storeError, 'line:', j.storeLine);
+          D.storeData = {_error: j.storeError + ' (line ' + j.storeLine + ')'}; 
+          if(TAB==='stores') render();
+        } else if (j.storeData) { 
+          D.storeData = j.storeData; if(TAB==='stores') render(); 
+        }
       }).catch(e => console.error('Store fetch failed:', e));
     // Fetch production async
     fetch(SCRIPT_URL + '?only=production&_t=' + Date.now())
@@ -1572,8 +1577,9 @@ function render() {
     // ── STORES TAB ─────────────────────────────────────────────────────────────
   if (TAB === 'stores') {
     const sd = D.storeData;
-    if (!sd || !sd.stores || sd.stores.length === 0) {
-      mc.innerHTML = `<div class="card"><div class="empty"><p>No store data available</p><small>Make sure "Store-wise report" sheet exists and Code.gs is redeployed</small></div></div>`;
+    if (!sd || sd._error || !sd.stores || sd.stores.length === 0) {
+      const errMsg = sd?._error || 'Make sure "Store-wise report" sheet exists and Code.gs is redeployed';
+      mc.innerHTML = `<div class="card"><div class="empty"><p>No store data available</p><small>${errMsg}</small></div></div>`;
     } else {
       const stores   = sd.stores || [];
       const cities   = sd.cityGroups || [];
