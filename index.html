@@ -432,6 +432,9 @@ const MONTH_TARGETS   = {
 };
 // Dynamic targets — updated per active month
 let DTGT=3354429, MTGT=98078435, MGOAL=135000000;
+const MABBR={'2026-04':'Apr','2026-05':'May','2026-06':'Jun','2026-07':'Jul','2026-08':'Aug','2026-09':'Sep','2026-10':'Oct','2026-11':'Nov','2026-12':'Dec'};
+let mAbbr = 'Apr'; // updated by updateMonthAbbr() whenever ACTIVE_MONTH changes
+function updateMonthAbbr() { mAbbr = MABBR[ACTIVE_MONTH] || 'Apr'; }
 let CH_TGTS_DYN = [1988836, 673670, 458590, 150000, 83333]; // updated per month
 const CH_KEYS = ['stores','online','crm','app','intl'];
 const CH_LABS = ['Stores','Online','CRM','App','Intl.'];
@@ -588,6 +591,7 @@ function buildMonthSwitcher() {
 
 function switchMonth(m) {
   ACTIVE_MONTH = m;
+  updateMonthAbbr();
   updateTargets(); // recompute DTGT, MTGT, MGOAL, CH_TGTS from sheet data
   SEL = [];
   $id('clr').style.display = 'none';
@@ -959,6 +963,7 @@ async function load() {
     if (!ACTIVE_MONTH || !(D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH])) {
       ACTIVE_MONTH = D.latestMonth || '2026-04';
     }
+    updateMonthAbbr();
     updateTargets(); // compute DTGT/MTGT/MGOAL/CH_TGTS from real sheet data
     SEL = [];
     $id('clr').style.display = 'none';
@@ -973,9 +978,7 @@ async function load() {
 
 // ─── Main render ─────────────────────────────────────────────────────────────
 function render() {
-  // Dynamic month abbreviation — replaces all hardcoded 'Apr'
-  const MABBR={'2026-04':'Apr','2026-05':'May','2026-06':'Jun','2026-07':'Jul','2026-08':'Aug','2026-09':'Sep','2026-10':'Oct','2026-11':'Nov','2026-12':'Dec'};
-  const mAbbr = MABBR[ACTIVE_MONTH] || 'Apr';
+  updateMonthAbbr(); // sync mAbbr with ACTIVE_MONTH
   // Hide date strip + KPIs + prog bar on Products tab
   // Hide date strip + KPIs on Products and Production tabs
   const hideUpper = TAB === 'products' || TAB === 'production';
