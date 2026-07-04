@@ -566,8 +566,8 @@ function tapDay(d) {
   }
   $id('clr').style.display = SEL.length ? 'block' : 'none';
   $id('sel-lbl').textContent = SEL.length===0 ? 'All days'
-    : SEL.length===1 ? `Apr ${SEL[0]} · ${wk(SEL[0])}`
-    : `${SEL.length} days (Apr ${SEL[0]} – Apr ${SEL[SEL.length-1]})`;
+    : SEL.length===1 ? `${mAbbr} ${SEL[0]} · ${wk(SEL[0])}`
+    : `${SEL.length} days (${mAbbr} ${SEL[0]} – ${mAbbr} ${SEL[SEL.length-1]})`;
   buildStrip(); render();
 }
 
@@ -605,7 +605,7 @@ function buildStrip() {
     if (!tot) cls += ' nd'; else cls += (DTGT>0 ? tot>=DTGT : false) ? ' ab' : ' bl';
     if (isFirst) cls += ' s1'; else if (isSel) cls += ' sn';
     const badge = isSel && SEL.length>1 ? `<span class="badge">${idx+1}</span>` : '';
-    return `<button class="${cls}" onclick="tapDay(${d})" title="Apr ${d} · ${wk(d)}${tot ? ' · '+fmt(tot) : ''}">
+    return `<button class="${cls}" onclick="tapDay(${d})" title="${mAbbr} ${d} · ${wk(d)}${tot ? ' · '+fmt(tot) : ''}">
       ${badge}
       <span class="day-num">${d}</span>
       <span class="day-wk">${wk(d)}</span>
@@ -973,6 +973,9 @@ async function load() {
 
 // ─── Main render ─────────────────────────────────────────────────────────────
 function render() {
+  // Dynamic month abbreviation — replaces all hardcoded 'Apr'
+  const MABBR={'2026-04':'Apr','2026-05':'May','2026-06':'Jun','2026-07':'Jul','2026-08':'Aug','2026-09':'Sep','2026-10':'Oct','2026-11':'Nov','2026-12':'Dec'};
+  const mAbbr = MABBR[ACTIVE_MONTH] || 'Apr';
   // Hide date strip + KPIs + prog bar on Products tab
   // Hide date strip + KPIs on Products and Production tabs
   const hideUpper = TAB === 'products' || TAB === 'production';
@@ -1017,7 +1020,7 @@ function render() {
          {l:'Stores',v:fmt(selRevRows[0].stores||0),c:C.stores},{l:'Online',v:fmt(selRevRows[0].online||0),c:C.online},
          {l:'CRM',v:fmt(selRevRows[0].crm||0),c:C.crm},{l:'App+Intl',v:fmt((selRevRows[0].app||0)+(selRevRows[0].intl||0)),c:C.app}]
       : [{l:'Combined',v:fmt(aRev.totRev),c:C.stores},{l:'Avg/Day',v:fmt(aRev.avgRev),c:acol(aRev.avgRev-DTGT)},
-         {l:'vs Tgt',v:ps(pv(aRev.avgRev,DTGT)),c:acol(aRev.avgRev-DTGT)},{l:'Best',v:'Apr '+aRev.best.day,c:C.online},
+         {l:'vs Tgt',v:ps(pv(aRev.avgRev,DTGT)),c:acol(aRev.avgRev-DTGT)},{l:'Best',v:`${mAbbr} ${aRev.best.day}`,c:C.online},
          {l:'Above',v:`${aRev.aboveTgt}/${SEL.length}d`,c:apos()},{l:'Days',v:String(SEL.length),c:tx2()}])
     .map(r=>`<div class="prog-num"><div class="pl">${r.l}</div><div class="pv" style="color:${r.c}">${r.v}</div></div>`).join('');
   } else {
@@ -1172,7 +1175,7 @@ function render() {
     mc.innerHTML = `
     <div class="g3" style="margin-bottom:12px">
       <div class="card">
-        <span class="lbl">${useSel?(SEL.length>1?SEL.length+' Days Combined':'Apr '+SEL[0]):'Today / Latest'}</span>
+        <span class="lbl">${useSel?(SEL.length>1?SEL.length+' Days Combined':`${mAbbr} ${SEL[0]}`):'Today / Latest'}</span>
         ${[{pl:'Meta',  spend:mShow.metaSpend||0,   rev:mShow.metaRev||0,   roas:mShow.metaRoas||0,   c:C.online},
            {pl:'Google',spend:mShow.googleSpend||0, rev:mShow.googleRev||0, roas:mShow.googleRoas||0, c:C.crm},
            {pl:'Total', spend:mShow.totalSpend||0,  rev:mShow.totalRev||0,  roas:mShow.totalRoas||0,  c:C.stores}].map(m => `
@@ -1273,7 +1276,7 @@ function render() {
           ${rows.map(r => {
             const t = r.total||0;
             return `<tr>
-              <td style="color:${tx2()}">Apr ${r.day}<br><span style="font-size:9px;color:${tx3()}">${wk(+r.day)}</span></td>
+              <td style="color:${tx2()}">${mAbbr} ${r.day}<br><span style="font-size:9px;color:${tx3()}">${wk(+r.day)}</span></td>
               ${CH_KEYS.slice(0,5).map(k=>`<td style="text-align:right;color:${C[k]}">${fmt(r[k]||0)}</td>`).join('')}
               <td style="text-align:right;color:${acol(t-DTGT)};font-weight:700">${fmt(t)}</td>
               <td style="text-align:right">${pill(pv(t,DTGT))}</td>
@@ -1308,7 +1311,7 @@ function render() {
         </tr></thead>
         <tbody>
           ${selMktRows.map(r=>`<tr>
-            <td style="color:${tx2()}">Apr ${r.day} · ${wk(+r.day)}</td>
+            <td style="color:${tx2()}">${mAbbr} ${r.day} · ${wk(+r.day)}</td>
             <td style="text-align:right;color:${C.online}">${fmtK(r.metaSpend||0)}</td>
             <td style="text-align:right">${pill(pv(r.metaRoas||0,4))}</td>
             <td style="text-align:right;color:${C.crm}">${fmtK(r.googleSpend||0)}</td>
@@ -1858,7 +1861,7 @@ function dayDetailHTML(rev, mkt) {
   const mx  = Math.max(...chs.map(c=>Math.max(c.v,c.tgt)));
   return `<div class="g2">
     <div class="card">
-      <span class="lbl" style="margin-bottom:12px;display:block">Apr ${rev.day} · ${wk(+rev.day)} · Channels</span>
+      <span class="lbl" style="margin-bottom:12px;display:block">${mAbbr} ${rev.day} · ${wk(+rev.day)} · Channels</span>
       ${chs.map(c => {
         const vw = Math.min((c.v/mx)*100,100);
         return `<div style="margin-bottom:10px">
@@ -1877,7 +1880,7 @@ function dayDetailHTML(rev, mkt) {
       }).join('')}
     </div>
     <div class="card">
-      <span class="lbl" style="margin-bottom:12px;display:block">Apr ${rev.day} · Marketing</span>
+      <span class="lbl" style="margin-bottom:12px;display:block">${mAbbr} ${rev.day} · Marketing</span>
       ${mkt ? [
         {l:'Meta Spend',    v:fmtK(mkt.metaSpend||0),   c:C.online},
         {l:'Meta Revenue',  v:fmt(mkt.metaRev||0),       c:C.online},
@@ -1890,8 +1893,8 @@ function dayDetailHTML(rev, mkt) {
       ].map(r=>`<div class="srow"><span class="sk">${r.l}</span><span class="sv" style="color:${r.c}">${r.v}</span></div>`).join('')
       : `<div class="empty" style="padding:16px 0"><p style="font-size:12px">No marketing data for this day</p><small>Add dates to "Daily Marketing report"</small></div>`}
       <div style="display:flex;gap:8px;margin-top:12px">
-        ${+rev.day>1  ? `<button class="btn" onclick="tapDay(${+rev.day-1})" style="flex:1;font-size:11px">← Apr ${+rev.day-1}</button>` : ''}
-        ${+rev.day<30 ? `<button class="btn" onclick="tapDay(${+rev.day+1})" style="flex:1;font-size:11px">Apr ${+rev.day+1} →</button>` : ''}
+        ${+rev.day>1  ? `<button class="btn" onclick="tapDay(${+rev.day-1})" style="flex:1;font-size:11px">← ${mAbbr} ${+rev.day-1}</button>` : ''}
+        ${+rev.day<30 ? `<button class="btn" onclick="tapDay(${+rev.day+1})" style="flex:1;font-size:11px">${mAbbr} ${+rev.day+1} →</button>` : ''}
       </div>
     </div>
   </div>`;
@@ -1955,7 +1958,7 @@ function insightsHTML(daily, selRevRows, selMktRows, mktD, aRev, aMkt, ch, mkt, 
 
   const isFiltered = selRevRows.length > 0;
   const label = isFiltered
-    ? (selRevRows.length===1 ? `Apr ${selRevRows[0].day}` : `${selRevRows.length} selected days`)
+    ? (selRevRows.length===1 ? `${mAbbr} ${selRevRows[0].day}` : `${selRevRows.length} selected days`)
     : `${MONTH_LABELS[ACTIVE_MONTH]||ACTIVE_MONTH} MTD`;
 
   const insights = [];
