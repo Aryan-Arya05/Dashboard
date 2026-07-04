@@ -295,14 +295,117 @@
     /* ── Fade in ── */
     
 
-    /* ── Mobile tweaks ── */
+    /* ── Responsive — Tablet (≤900px) ── */
+    @media (max-width: 900px) {
+      .g6 { grid-template-columns: repeat(3, 1fr); }
+      .g3 { grid-template-columns: 1fr 1fr; }
+      .wrap { padding: 14px 14px 40px; }
+      h1 { font-size: 22px; }
+      .kpi-val { font-size: 18px; }
+    }
+
+    /* ── Responsive — Mobile landscape / small tablet (≤680px) ── */
+    @media (max-width: 680px) {
+      .g6 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .g3, .g2 { grid-template-columns: 1fr; gap: 10px; }
+      .wrap { padding: 12px 10px 60px; }
+      h1 { font-size: 20px; }
+
+      /* Tab bar: scroll horizontally, don't wrap */
+      .tab-bar {
+        overflow-x: auto; overflow-y: hidden;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap; padding: 3px; width: 100%;
+        -ms-overflow-style: none;
+      }
+      .tab-bar::-webkit-scrollbar { display: none; }
+      .tab { flex: none; white-space: nowrap; padding: 7px 14px; font-size: 11.5px; }
+
+      /* Header stack on mobile */
+      .header { flex-direction: column; gap: 8px; }
+      .header-right { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+
+      /* Card padding tighter */
+      .card { padding: 12px 14px; }
+      .lbl { font-size: 9px; }
+
+      /* Progress */
+      .prog-nums { gap: 8px; }
+      .prog-num .pv { font-size: 11px; }
+
+      /* Date strip */
+      .day { width: 42px; height: 54px; }
+      .day-num { font-size: 13px; }
+      .strip-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+      /* KPI */
+      .kpi-val { font-size: 16px; }
+    }
+
+    /* ── Responsive — Mobile portrait (≤480px) ── */
     @media (max-width: 480px) {
-      .wrap { padding: 12px 12px 60px; }
-      .header { gap: 8px; }
-      .header-right { width: 100%; }
-      .tab-bar { width: 100%; }
+      .g6 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .g3, .g2 { grid-template-columns: 1fr; gap: 8px; }
+      .wrap { padding: 10px 8px 70px; }
+      h1 { font-size: 18px; letter-spacing: -.02em; }
+      .subtitle { font-size: 10px; }
+
+      /* Tab bar - scrollable, compact */
+      .tab-bar { overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
+      .tab-bar::-webkit-scrollbar { display: none; }
+      .tab { flex: none; padding: 6px 10px; font-size: 10.5px; white-space: nowrap; }
+
+      /* Cards */
+      .card { padding: 10px 12px; border-radius: 8px; }
+      .kpi-val { font-size: 15px; }
+      .lbl { font-size: 8.5px; letter-spacing: .1em; }
+
+      /* Header compact */
+      .header { flex-direction: column; gap: 6px; margin-bottom: 10px; }
+      .header-right { width: 100%; gap: 6px; }
+      .status-text { font-size: 9.5px; }
+
+      /* Strip */
+      .day { width: 38px; height: 50px; border-radius: 9px; }
+      .day-num { font-size: 12px; }
+      .day-wk { font-size: 7.5px; }
+      .mode-btn { padding: 4px 8px; font-size: 9.5px; }
+
+      /* Insights cards */
+      .prog-nums { gap: 6px; }
+      .prog-num .pv { font-size: 10px; }
+      .prog-num .pl { font-size: 8.5px; }
+
+      /* Tables: scroll + tighter */
+      table { font-size: 10.5px; }
+      th, td { padding: 6px 6px; }
+
+      /* Channel bars */
+      .ch-name { width: 55px; font-size: 10px; }
+      .ch-val { width: 48px; font-size: 10px; }
+
+      /* Refresh button */
+      .btn { padding: 6px 10px; font-size: 10.5px; }
+
+      /* Hide month label in theme btn */
       .theme-btn .theme-label { display: none; }
-      .prog-nums { gap: 10px; }
+
+      /* Strip controls wrap */
+      .strip-controls { gap: 4px; flex-wrap: wrap; }
+      .legend span { font-size: 8.5px; }
+
+      /* Footer */
+      .footer { font-size: 8.5px; }
+    }
+
+    /* ── Very small screens (≤360px) ── */
+    @media (max-width: 360px) {
+      .g6 { grid-template-columns: 1fr 1fr; gap: 6px; }
+      .wrap { padding: 8px 6px 70px; }
+      h1 { font-size: 16px; }
+      .tab { padding: 5px 8px; font-size: 10px; }
+      .day { width: 34px; height: 46px; }
+      .day-num { font-size: 11px; }
     }
 
     /* ── Install banner (mobile) ── */
@@ -335,7 +438,7 @@
     <div class="header-right">
       </div>
       </div>
-      <div class="tab-bar">
+      <div class="tab-bar" style="-webkit-overflow-scrolling:touch;">
         <button class="tab on" onclick="setTab('overview')">Overview</button>
         <button class="tab" onclick="setTab('channels')">Channels</button>
         <button class="tab" onclick="setTab('marketing')">Marketing</button>
@@ -1578,126 +1681,185 @@ function render() {
     const sd = D.storeData;
     if (!sd || sd._error || !sd.stores || sd.stores.length === 0) {
       const errMsg = sd?._error || 'Store data loading... refresh in a moment';
-      mc.innerHTML = `<div class="card"><div class="empty"><p style="color:var(--tx2)">No store data</p><small>${errMsg}</small></div></div>`;
+      mc.innerHTML = '<div class="card"><div class="empty"><p style="color:var(--tx2)">No store data</p><small>' + errMsg + '</small></div></div>';
     } else {
       const stores  = sd.stores  || [];
-      const cities  = sd.cityBreakdown || [];
+      const allCities = sd.cityBreakdown || [];
       const today   = sd.todayStores || [];
       const summary = sd.summary || {};
       const last30  = sd.last30 || [];
-      const fmtC  = v => '\u20b9' + ((v||0)/1e7).toFixed(2) + 'Cr';
-      const fmtL  = v => '\u20b9' + ((v||0)/1e5).toFixed(1) + 'L';
-      const fmtPct= v => (v>0?'+':'') + (v||0).toFixed(1) + '%';
-      const grwCol= g => g >= 0 ? 'var(--upc)' : 'var(--dnc)';
-      const grwPill= g => '<span class="' + (g>=0?'up-pill':'dn-pill') + '">' + fmtPct(g) + '</span>';
+
+      // Smart Indian number format
+      const fmtIN = function(v) {
+        v = Math.abs(Math.round(v || 0));
+        if (v >= 1e7) return '\u20b9' + (v/1e7).toFixed(2) + 'Cr';
+        if (v >= 1e5) return '\u20b9' + (v/1e5).toFixed(1) + 'L';
+        if (v >= 1e3) return '\u20b9' + (v/1e3).toFixed(0) + 'K';
+        return '\u20b9' + v;
+      };
+      const fmtPct = function(v) { return (v > 0 ? '+' : '') + (v || 0).toFixed(1) + '%'; };
+      const grwCol = function(g) { return g >= 0 ? 'var(--upc)' : 'var(--dnc)'; };
+      const grwPill = function(g) { return '<span class="' + (g >= 0 ? 'up-pill' : 'dn-pill') + '">' + fmtPct(g) + '</span>'; };
+
+      // City filter state
+      const cityMonthFilter = window._storesCityMonth || sd.currentMonth || '2026-07';
+      // Month column mapping (matches STORE_MONTH_COLS in Code.gs)
+      const CITY_MONTH_COLS = {
+        '2026-04': 'apr', '2026-05': 'may', '2026-06': 'jun', '2026-07': 'jul'
+      };
+      const MONTH_NAMES = {'2026-04':'April','2026-05':'May','2026-06':'June','2026-07':'July'};
+      const availMonths = Object.keys(MONTH_NAMES).filter(function(mk) {
+        // only show months that have data in stores
+        return stores.some(function(s) { return s.monthly && s.monthly[mk] && s.monthly[mk].v2026 > 0; });
+      });
+
+      // Build city data for selected month
+      const cityData = (function() {
+        // Aggregate city revenue for the selected month from store.monthly data
+        var cityMap = {};
+        stores.forEach(function(s) {
+          var mo = s.monthly && s.monthly[cityMonthFilter];
+          if (!mo) return;
+          var ck = (s.city || '').toLowerCase().trim();
+          var city = s.city || '';
+          if (!cityMap[ck]) cityMap[ck] = {city:city, cur:0, prev:0, count:0};
+          cityMap[ck].cur += mo.v2026 || 0;
+          cityMap[ck].prev += mo.v2025 || 0;
+          cityMap[ck].count += 1;
+        });
+        return Object.values(cityMap).map(function(c) {
+          return {city:c.city, cur:c.cur, prev:c.prev, count:c.count,
+            growth: c.prev > 0 ? (c.cur - c.prev) / c.prev : 0};
+        }).sort(function(a,b) { return b.cur - a.cur; });
+      })();
 
       // KPI strip
       const kpis = [
-        {l:'MTD Revenue',    v:fmtC(sd.mtd2026),          c:'var(--acc)'},
-        {l:'Last Year MTD',  v:fmtC(sd.mtd2025),          c:'var(--tx2)'},
-        {l:'YoY Growth',     v:fmtPct(sd.mtdGrowth),      c:grwCol(sd.mtdGrowth)},
-        {l:'Today Total',    v:fmtL(sd.todayTotal2026),    c:'var(--acc2)'},
-        {l:'Best Store',     v:summary.bestStoreName||'--',c:'var(--tx)'},
-        {l:'Growing Stores', v:(summary.storesGrowing||0)+'/'+( summary.totalStores||0), c:'var(--upc)'},
+        {l:'MTD Revenue',    v:fmtIN(sd.mtd2026),          c:'var(--acc)'},
+        {l:'Last Year MTD',  v:fmtIN(sd.mtd2025),          c:'var(--tx2)'},
+        {l:'YoY Growth',     v:fmtPct(sd.mtdGrowth),       c:grwCol(sd.mtdGrowth)},
+        {l:'Today Total',    v:fmtIN(sd.todayTotal2026),    c:'var(--acc2)'},
+        {l:'Best Store',     v:summary.bestStoreName||'--', c:'var(--tx)'},
+        {l:'Growing Stores', v:(summary.storesGrowing||0)+'/'+(summary.totalStores||0), c:'var(--upc)'},
       ];
       const kpiHtml = '<div class="g6" style="margin-bottom:12px">' +
-        kpis.map(k=>'<div class="card"><span class="lbl">'+k.l+'</span>' +
-          '<div style="font-size:'+(k.l==='Best Store'?'13px':'20px')+';font-weight:600;color:'+k.c+';' +
-          'font-family:'+(k.l==='Best Store'?'var(--f-sans)':'var(--f-mono)')+';letter-spacing:-.03em;margin-bottom:4px;' +
-          'overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+k.v+'</div>' +
-          '<div style="font-size:9.5px;color:var(--tx3);font-family:var(--f-mono)">'+(sd.currentMonth||'')+' · '+(sd.mtdDays||0)+'d</div></div>'
-        ).join('') + '</div>';
+        kpis.map(function(k) {
+          return '<div class="card"><span class="lbl">' + k.l + '</span>' +
+            '<div style="font-size:' + (k.l === 'Best Store' ? '13px' : '20px') + ';font-weight:600;color:' + k.c + ';' +
+            'font-family:' + (k.l === 'Best Store' ? 'var(--f-sans)' : 'var(--f-mono)') + ';letter-spacing:-.03em;margin-bottom:4px;' +
+            'overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + k.v + '</div>' +
+            '<div style="font-size:9.5px;color:var(--tx3);font-family:var(--f-mono)">' + (sd.currentMonth||'') + ' · ' + (sd.mtdDays||0) + 'd</div></div>';
+        }).join('') + '</div>';
 
       // Revenue trend
-      const maxT = Math.max.apply(null, last30.map(d=>Math.max(d.total2026,d.total2025)).concat([1]));
-      const trendBars = last30.map(d => {
+      const maxT = Math.max.apply(null, last30.map(function(d){return Math.max(d.total2026,d.total2025);}).concat([1]));
+      const trendBars = last30.map(function(d) {
         const h26 = Math.max((d.total2026/maxT)*80,2);
         const h25 = Math.max((d.total2025/maxT)*80,2);
         const isUp = d.total2026 >= d.total2025;
         return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0">' +
           '<div style="display:flex;align-items:flex-end;gap:1px;height:80px">' +
-          '<div style="width:45%;background:'+(isUp?'var(--acc)':'var(--dnc)')+';height:'+h26+'px;border-radius:2px 2px 0 0;opacity:.9"></div>' +
-          '<div style="width:45%;background:var(--bar);height:'+h25+'px;border-radius:2px 2px 0 0;border:1px solid var(--bd)"></div>' +
-          '</div><div style="font-size:7px;color:var(--tx4)">'+d.day+'</div></div>';
+          '<div style="width:45%;background:' + (isUp?'var(--acc)':'var(--dnc)') + ';height:' + h26 + 'px;border-radius:2px 2px 0 0;opacity:.9" title="2026: ' + fmtIN(d.total2026) + '"></div>' +
+          '<div style="width:45%;background:var(--bar);height:' + h25 + 'px;border-radius:2px 2px 0 0;border:1px solid var(--bd)" title="2025: ' + fmtIN(d.total2025) + '"></div>' +
+          '</div><div style="font-size:7px;color:var(--tx4)">' + d.day + '</div></div>';
       }).join('');
-
       const trendHtml = '<div class="card" style="margin-bottom:12px">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">' +
-        '<span class="lbl" style="margin:0">Daily Revenue — '+sd.mtdDays+' Days</span>' +
+        '<span class="lbl" style="margin:0">Daily Revenue — ' + sd.mtdDays + ' Days</span>' +
         '<div style="display:flex;gap:12px">' +
         '<span style="font-size:10px;color:var(--tx2);display:flex;align-items:center;gap:5px"><span style="width:10px;height:4px;border-radius:2px;background:var(--acc);display:inline-block"></span>2026</span>' +
         '<span style="font-size:10px;color:var(--tx3);display:flex;align-items:center;gap:5px"><span style="width:10px;height:4px;border-radius:2px;background:var(--bar);border:1px solid var(--bd);display:inline-block"></span>2025</span>' +
-        '</div></div><div style="display:flex;align-items:flex-end;gap:2px;height:104px">'+trendBars+'</div></div>';
+        '</div></div><div style="display:flex;align-items:flex-end;gap:2px;height:104px">' + trendBars + '</div></div>';
 
-      // City breakdown
-      const maxCity = Math.max.apply(null, cities.map(c=>c.cur).concat([1]));
+      // City breakdown with month filter
+      const maxCity = Math.max.apply(null, cityData.map(function(c){return c.cur;}).concat([1]));
       const CITY_C = {'delhi':'var(--acc)','delhi/ncr':'var(--acc2)','mumbai':'var(--acc3)',
         'bangalore':'#7a8caa','hyderabad':'var(--warnc)','kolkata':'var(--acc2)',
         'chennai':'#a87d8f','jaipur':'var(--acc)','lucknow':'var(--acc3)',
         'punjab':'#8a9aaa','ahmedabad':'#aa7d8f','raipur':'var(--acc2)','ludhiana':'#8a9aaa'};
+
+      const monthFilterPills = availMonths.map(function(mk) {
+        const isActive = mk === cityMonthFilter;
+        return '<button data-mk="' + mk + '" onclick="window._storesCityMonth=this.dataset.mk;render();" style="' +
+          'padding:4px 11px;border-radius:20px;font-size:11px;font-weight:' + (isActive?'500':'400') + ';cursor:pointer;' +
+          'font-family:var(--f-sans);border:1px solid ' + (isActive?'var(--acc)':'var(--bd)') + ';' +
+          'background:' + (isActive?'var(--bg3)':'transparent') + ';' +
+          'color:' + (isActive?'var(--acc)':'var(--tx3)') + ';transition:all .18s;">' + MONTH_NAMES[mk] + '</button>';
+      }).join('');
+
       const cityHtml = '<div class="card" style="margin-bottom:12px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">' +
         '<span class="lbl" style="margin:0">Revenue by City — MTD</span>' +
-        '<span style="font-size:10px;color:var(--tx3)">vs last year</span></div>' +
-        cities.map(c => {
+        '<div style="display:flex;gap:5px;flex-wrap:wrap">' + monthFilterPills + '</div></div>' +
+        cityData.map(function(c) {
           const w = Math.min((c.cur/maxCity)*100,100);
           const col = CITY_C[c.city.toLowerCase()] || 'var(--tx3)';
           return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">' +
-            '<div style="width:80px;font-size:11.5px;font-weight:400;color:var(--tx2)">'+c.city+'</div>' +
-            '<div style="font-size:9px;color:var(--tx4);width:18px">'+c.count+'s</div>' +
+            '<div style="width:80px;font-size:11.5px;font-weight:400;color:var(--tx2)">' + c.city + '</div>' +
+            '<div style="font-size:9px;color:var(--tx4);width:18px">' + c.count + 's</div>' +
             '<div style="flex:1;background:var(--bar);border-radius:3px;height:5px;overflow:hidden">' +
-            '<div style="background:'+col+';width:'+w+'%;height:100%;border-radius:3px;transition:width .6s"></div></div>' +
-            '<div style="width:65px;font-size:12px;font-family:var(--f-mono);color:'+col+';text-align:right;font-weight:500">'+fmtC(c.cur)+'</div>' +
+            '<div style="background:' + col + ';width:' + w + '%;height:100%;border-radius:3px;transition:width .6s"></div></div>' +
+            '<div style="width:70px;font-size:12px;font-family:var(--f-mono);color:' + col + ';text-align:right;font-weight:500">' + fmtIN(c.cur) + '</div>' +
             grwPill(c.growth*100) + '</div>';
         }).join('') + '</div>';
 
+      // Needs Attention — ALL stores with declining YoY (or all sorted by growth)
+      const decliningStores = stores.filter(function(s) { return s.growth < 0; })
+        .sort(function(a,b) { return a.growth - b.growth; });
+      const attentionList = decliningStores.length > 0 ? decliningStores : stores.slice(-5).reverse();
+      const attentionHtml = attentionList.map(function(s) {
+        const mo = s.monthly && s.monthly[sd.currentMonth];
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--sep)">' +
+          '<div>' +
+          '<div style="font-size:12px;font-weight:500;color:var(--tx)">' + s.name + '</div>' +
+          '<div style="font-size:9.5px;color:var(--tx3)">' + s.city + '</div>' +
+          '</div>' +
+          '<div style="text-align:right">' +
+          '<div style="font-size:13px;font-family:var(--f-mono);color:var(--dnc);font-weight:600">' + fmtPct(s.growth*100) + '</div>' +
+          '<div style="font-size:10px;color:var(--tx2);margin-top:2px">' +
+          '2025: ' + fmtIN(s.prevMTD) + ' → 2026: ' + fmtIN(s.currentMTD) + '</div>' +
+          '</div></div>';
+      }).join('');
+
+      // Today by Store — ALL stores
+      const todayHtml = today.length > 0 ?
+        today.map(function(s) {
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--sep)">' +
+            '<div><div style="font-size:11.5px;font-weight:500;color:var(--tx)">' + s.name + '</div>' +
+            '<div style="font-size:9.5px;color:var(--tx3)">' + s.city + '</div></div>' +
+            '<div style="display:flex;align-items:center;gap:8px">' +
+            '<div style="font-size:11px;font-family:var(--f-mono);color:var(--tx3)">' + fmtIN(s.sales2025) + '</div>' +
+            '<div style="font-size:12px;font-family:var(--f-mono);color:var(--tx);font-weight:500">' + fmtIN(s.sales2026) + '</div>' +
+            grwPill(s.growth*100) + '</div></div>';
+        }).join('') :
+        '<div style="padding:16px;text-align:center;color:var(--tx3);font-size:11px">No data for latest day</div>';
+
       // Store rankings table
-      const storeRows = stores.map((s,i) => {
+      const storeRows = stores.map(function(s,i) {
         const medals = ['\ud83e\udfc7','\ud83e\udfc8','\ud83e\udfc9'];
         const isTop3 = i < 3;
         return '<tr style="border-bottom:1px solid var(--sep)">' +
-          '<td style="padding:7px 8px;color:var(--tx3);font-family:var(--f-mono);font-size:11px">'+(isTop3?medals[i]:i+1)+'</td>' +
-          '<td style="padding:7px 8px"><div style="font-size:12px;font-weight:500;color:var(--tx)">'+s.name+'</div>' +
-          '<div style="font-size:9.5px;color:var(--tx3)">'+s.city+'</div></td>' +
-          '<td style="text-align:right;padding:7px 8px;font-family:var(--f-mono);color:var(--tx3);font-size:11px">'+fmtC(s.prevMTD)+'</td>' +
-          '<td style="text-align:right;padding:7px 8px;font-family:var(--f-mono);color:'+(isTop3?'var(--upc)':'var(--tx)')+';font-weight:'+(isTop3?600:400)+';font-size:12px">'+fmtC(s.currentMTD)+'</td>' +
-          '<td style="text-align:right;padding:7px 8px">'+grwPill(s.growth*100)+'</td>' +
-          '<td style="text-align:right;padding:7px 8px;font-family:var(--f-mono);font-size:11.5px;color:var(--tx2)">'+fmtL(s.ytd)+'</td></tr>';
+          '<td style="padding:7px 8px;color:var(--tx3);font-family:var(--f-mono);font-size:11px">' + (isTop3?medals[i]:i+1) + '</td>' +
+          '<td style="padding:7px 8px"><div style="font-size:12px;font-weight:500;color:var(--tx)">' + s.name + '</div>' +
+          '<div style="font-size:9.5px;color:var(--tx3)">' + s.city + '</div></td>' +
+          '<td style="text-align:right;padding:7px 8px;font-family:var(--f-mono);color:var(--tx3);font-size:11px">' + fmtIN(s.prevMTD) + '</td>' +
+          '<td style="text-align:right;padding:7px 8px;font-family:var(--f-mono);color:' + (isTop3?'var(--upc)':'var(--tx)') + ';font-weight:' + (isTop3?600:400) + ';font-size:12px">' + fmtIN(s.currentMTD) + '</td>' +
+          '<td style="text-align:right;padding:7px 8px">' + grwPill(s.growth*100) + '</td>' +
+          '<td style="text-align:right;padding:7px 8px;font-family:var(--f-mono);font-size:11.5px;color:var(--tx2)">' + fmtIN(s.ytd) + '</td></tr>';
       }).join('');
-
-      // Bottom 5 by YoY growth
-      const bottom5 = stores.slice().sort((a,b)=>a.growth-b.growth).slice(0,5);
-      const bottom5Html = bottom5.map(s =>
-        '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--sep)">' +
-        '<div><div style="font-size:12px;font-weight:500;color:var(--tx)">'+s.name+'</div>' +
-        '<div style="font-size:9.5px;color:var(--tx3)">'+s.city+'</div></div>' +
-        '<div style="text-align:right"><div style="font-size:12px;font-family:var(--f-mono);color:var(--dnc);font-weight:600">'+fmtPct(s.growth*100)+'</div>' +
-        '<div style="font-size:9.5px;color:var(--tx3)">Gap: '+fmtC(s.prevMTD-s.currentMTD)+'</div></div></div>'
-      ).join('');
-
-      // Today's store rankings
-      const todayTop = today.slice(0,8);
-      const todayHtml = todayTop.length > 0 ?
-        todayTop.map(s =>
-          '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--sep)">' +
-          '<div><div style="font-size:11.5px;font-weight:500;color:var(--tx)">'+s.name+'</div>' +
-          '<div style="font-size:9.5px;color:var(--tx3)">'+s.city+'</div></div>' +
-          '<div style="display:flex;align-items:center;gap:8px">' +
-          '<div style="font-size:11px;font-family:var(--f-mono);color:var(--tx3)">'+fmtL(s.sales2025)+'</div>' +
-          '<div style="font-size:12px;font-family:var(--f-mono);color:var(--tx);font-weight:500">'+fmtL(s.sales2026)+'</div>' +
-          grwPill(s.growth*100)+'</div></div>'
-        ).join('')
-        : '<div style="padding:16px;text-align:center;color:var(--tx3);font-size:11px">No data for latest day</div>';
 
       mc.innerHTML = kpiHtml + trendHtml +
         '<div class="g2" style="margin-bottom:12px">' + cityHtml +
         '<div>' +
-        '<div class="card" style="margin-bottom:10px"><span class="lbl" style="display:block;margin-bottom:10px">Needs Attention — Lowest YoY Growth</span>'+bottom5Html+'</div>' +
+        '<div class="card" style="margin-bottom:10px">' +
+        '<span class="lbl" style="display:block;margin-bottom:10px">Needs Attention — YoY Declining Stores (' + attentionList.length + ')</span>' +
+        attentionHtml + '</div>' +
         '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
-        '<span class="lbl" style="margin:0">Today by Store</span>' +
-        '<span style="font-size:9.5px;color:var(--tx3)">2025 → 2026</span></div>'+todayHtml+'</div>' +
+        '<span class="lbl" style="margin:0">Today by Store (' + today.length + ')</span>' +
+        '<span style="font-size:9.5px;color:var(--tx3)">2025 → 2026</span></div>' +
+        todayHtml + '</div>' +
         '</div></div>' +
-        '<div class="card"><span class="lbl" style="display:block;margin-bottom:12px">Store Rankings — MTD vs Last Year</span>' +
+        '<div class="card"><span class="lbl" style="display:block;margin-bottom:12px">Store Rankings — MTD vs Last Year (' + stores.length + ' stores)</span>' +
         '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px;min-width:520px">' +
         '<thead><tr style="border-bottom:1px solid var(--sep)">' +
         '<th style="text-align:left;padding:6px 8px;color:var(--tx3);width:30px">#</th>' +
@@ -1706,7 +1868,7 @@ function render() {
         '<th style="text-align:right;padding:6px 8px;color:var(--acc)">MTD 2026</th>' +
         '<th style="text-align:right;padding:6px 8px;color:var(--tx3)">YoY</th>' +
         '<th style="text-align:right;padding:6px 8px;color:var(--acc2)">YTD</th>' +
-        '</tr></thead><tbody>'+storeRows+'</tbody></table></div></div>';
+        '</tr></thead><tbody>' + storeRows + '</tbody></table></div></div>';
     }
     $id('footer').textContent = 'LIVE · Stores: ' + (D.storeData?.summary?.totalStores||0) + ' stores · ' + (D.storeData?.latestDate||'') + ' · AUTO-REFRESH 5 MIN';
     return;
