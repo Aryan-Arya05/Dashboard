@@ -1228,21 +1228,36 @@ function calRenderMonth(elId, ymd, side) {
     if (startKey>0&&rangeEnd>0&&key>Math.min(startKey,rangeEnd)&&key<Math.max(startKey,rangeEnd)) cls+=' in-range';
     if (key===todayKey) cls+=' today-mark';
     if (y<2020||y>2030) cls+=' disabled';
-    html+='<div class="'+cls+'" onclick="calClickDay('+y+','+m+','+d+')" onmouseenter="calHover('+y+','+m+','+d+')">'+d+'</div>';
+    html+='<div class="'+cls+'" onclick="calClickDay('+y+','+m+','+d+')" data-date="'+y+'-'+m+'-'+d+'">'+d+'</div>';
   }
   // Trailing empty cells to fill the last week row (so grid is always full 7-col rows)
   var lastDOW = new Date(y, m-1, daysInMonth).getDay(); // 0=Sun 6=Sat
   for (var i=lastDOW; i<6; i++) html+='<div class="cal-day empty"></div>';
   html += '</div>';
   el.innerHTML = html;
+  // Add mouseover listener using event delegation (avoids DOM rebuild on hover)
+  el.addEventListener('mouseover', function(e) {
+    var dayEl = e.target.closest ? e.target.closest('[data-date]') : null;
+    if (!dayEl || CAL_PICKING !== 'end' || !CAL_START) return;
+    var parts = dayEl.getAttribute('data-date').split('-');
+    calHoverUpdate(+parts[0], +parts[1], +parts[2]);
+  });
 }
 
-function calHover(y, m, d) {
-  if (CAL_PICKING==='end' && CAL_START) {
-    CAL_HOVER = {year:y,month:m,day:d};
-    calRenderGrids();
-  }
+function calHoverUpdate(y, m, d) {
+  // Update range highlight via CSS classes only — NO DOM rebuild
+  var startKey = CAL_START.year*10000+CAL_START.month*100+CAL_START.day;
+  var hoverKey = y*10000+m*100+d;
+  var lo = Math.min(startKey, hoverKey), hi = Math.max(startKey, hoverKey);
+  document.querySelectorAll('.cal-day[data-date]').forEach(function(el) {
+    var p = el.getAttribute('data-date').split('-');
+    var k = +p[0]*10000 + +p[1]*100 + +p[2];
+    if (k > lo && k < hi) el.classList.add('in-range');
+    else el.classList.remove('in-range');
+  });
 }
+
+function calHover(y, m, d) {} // legacy stub — no longer used
 
 function calClickDay(y, m, d) {
   if (CAL_PICKING==='start') {
