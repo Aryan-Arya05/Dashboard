@@ -175,6 +175,85 @@
       vertical-align: middle; margin-right: 5px;
     }
 
+    /* ── Calendar popup ── */
+    #cal-overlay {
+      position:fixed;inset:0;z-index:999;background:rgba(28,26,22,.25);backdrop-filter:blur(2px);
+      display:none;align-items:flex-start;justify-content:center;padding-top:80px;
+    }
+    #cal-overlay.open { display:flex; }
+    #cal-box {
+      background:var(--bg2);border:1px solid var(--bd);border-radius:12px;
+      box-shadow:0 8px 40px rgba(20,16,10,.15);display:flex;overflow:hidden;
+      max-height:90vh;max-width:720px;width:100%;
+    }
+    #cal-presets {
+      width:160px;flex-shrink:0;border-right:1px solid var(--bd);padding:16px 0;
+    }
+    .cal-preset-btn {
+      display:block;width:100%;text-align:left;padding:9px 18px;font-size:12.5px;
+      font-family:var(--f-sans);font-weight:300;color:var(--tx2);background:none;
+      border:none;cursor:pointer;transition:background .15s,color .15s;
+    }
+    .cal-preset-btn:hover { background:var(--bg3);color:var(--tx); }
+    .cal-preset-btn.active { background:var(--bg3);color:var(--tx);font-weight:500; }
+    #cal-main { flex:1;display:flex;flex-direction:column;min-width:0; }
+    #cal-inputs {
+      display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--bd);
+    }
+    .cal-input {
+      flex:1;padding:8px 12px;border:1px solid var(--bd2);border-radius:7px;
+      font-size:13px;font-family:var(--f-sans);color:var(--tx);background:var(--bg3);
+      font-weight:400;text-align:center;cursor:default;
+    }
+    .cal-input.active { border-color:var(--acc);background:var(--bg2); }
+    #cal-grids {
+      display:flex;gap:0;flex:1;overflow:auto;padding:16px 18px;gap:24px;
+    }
+    .cal-month { flex:1;min-width:220px; }
+    .cal-month-header {
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+    }
+    .cal-nav { background:none;border:none;cursor:pointer;font-size:16px;color:var(--tx2);padding:4px 8px;border-radius:5px;transition:background .15s; }
+    .cal-nav:hover { background:var(--bg3); }
+    .cal-month-name { font-size:13.5px;font-weight:500;color:var(--tx);letter-spacing:-.01em; }
+    .cal-dow-row { display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px; }
+    .cal-dow { font-size:11px;font-weight:500;color:var(--tx3);text-align:center;padding:4px 0;letter-spacing:.04em; }
+    .cal-day-grid { display:grid;grid-template-columns:repeat(7,1fr);gap:2px; }
+    .cal-day {
+      aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+      font-size:12.5px;font-family:var(--f-sans);font-weight:300;color:var(--tx2);
+      border-radius:6px;cursor:pointer;transition:all .15s;user-select:none;position:relative;
+    }
+    .cal-day:hover:not(.disabled):not(.start):not(.end) { background:var(--bg3);color:var(--tx); }
+    .cal-day.in-range { background:var(--bg3);border-radius:0;color:var(--tx); }
+    .cal-day.start, .cal-day.end {
+      background:var(--tx)!important;color:var(--bg2)!important;border-radius:6px!important;font-weight:500;
+    }
+    .cal-day.start { border-radius:6px 0 0 6px!important; }
+    .cal-day.end   { border-radius:0 6px 6px 0!important; }
+    .cal-day.start.end { border-radius:6px!important; }
+    .cal-day.today-mark::after { content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--acc); }
+    .cal-day.disabled { color:var(--tx4);cursor:default; }
+    .cal-day.empty { pointer-events:none; }
+    #cal-footer {
+      display:flex;align-items:center;justify-content:flex-end;gap:8px;
+      padding:12px 18px;border-top:1px solid var(--bd);
+    }
+    @media (max-width:600px) {
+      #cal-box { flex-direction:column;max-height:80vh;overflow:auto; }
+      #cal-presets { width:100%;border-right:none;border-bottom:1px solid var(--bd);padding:10px 0;display:flex;flex-wrap:wrap; }
+      .cal-preset-btn { padding:8px 12px;font-size:11px;width:auto; }
+      #cal-grids { flex-direction:column;gap:16px; }
+    }
+    /* ── Compact Date Preset Buttons ── */
+    .dp-btn {
+      padding: 5px 11px; border-radius: 20px; font-size: 11px; font-weight: 400;
+      cursor: pointer; font-family: var(--f-sans); border: 1px solid var(--bd);
+      background: transparent; color: var(--tx2); transition: all .18s; white-space: nowrap;
+    }
+    .dp-btn:hover { border-color: var(--bd2); color: var(--tx); }
+    .dp-btn.dp-act { background: var(--bg4); border-color: var(--acc); color: var(--acc); font-weight: 500; }
+
     /* ── Date Strip ── */
     .strip-wrap { margin-bottom: 12px; padding: 14px 16px; }
     .strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
@@ -452,29 +531,38 @@
     </div>
   </div>
 
-  <!-- Date strip -->
-  <div class="card strip-wrap" id="date-strip">
-    <div class="strip-header">
-      <div class="strip-title">
-        <span class="lbl" style="margin:0" id="month-lbl">April 2026</span>
-        <div id="month-switcher" style="display:flex;gap:3px;flex-wrap:wrap"></div>
-        <span class="strip-label" id="sel-lbl">All days</span>
+  <!-- Compact Date Bar -->
+  <div id="date-strip" style="margin-bottom:10px;display:none;position:relative">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:9px 14px">
+      <!-- Date range button -->
+      <button id="cal-trigger" onclick="calOpen()" style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:6px;border:1px solid var(--bd2);background:var(--bg3);cursor:pointer;font-family:var(--f-sans);font-size:12.5px;color:var(--tx);font-weight:400;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--acc)'" onmouseout="this.style.borderColor='var(--bd2)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--tx3)"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span id="cal-label" style="white-space:nowrap">All days</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--tx3)"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <!-- Quick preset pills -->
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button onclick="calPreset('today')"     class="dp-btn">Today</button>
+        <button onclick="calPreset('yesterday')" class="dp-btn">Yesterday</button>
+        <button onclick="calPreset('last7')"     class="dp-btn">Last 7 days</button>
+        <button onclick="calPreset('mtd')"       class="dp-btn">This month</button>
+        <button onclick="calPreset('last_month')" class="dp-btn">Last month</button>
       </div>
-      <div class="strip-controls">
-        <div class="mode-bar">
-          <button class="mode-btn act" id="ms" onclick="setMode('single')">Single</button>
-          <button class="mode-btn"     id="mm" onclick="setMode('multi')">Multi</button>
-          <button class="mode-btn"     id="mr" onclick="setMode('range')">Range</button>
-        </div>
-        <div class="legend">
-          <span><span class="leg-dot" style="background:#7CB32A"></span>Above</span>
-          <span><span class="leg-dot" style="background:#8B5CF6"></span>Below</span>
-        </div>
-        <button class="btn" id="clr" onclick="clearSel()" style="display:none;font-size:10px;padding:3px 9px">× Clear</button>
+      <!-- Legend -->
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+        <span style="font-size:10px;color:var(--tx3);display:flex;align-items:center;gap:4px"><span style="width:8px;height:2px;border-radius:1px;background:var(--acc2);display:inline-block"></span>Above</span>
+        <span style="font-size:10px;color:var(--tx3);display:flex;align-items:center;gap:4px"><span style="width:8px;height:2px;border-radius:1px;background:var(--acc3);display:inline-block"></span>Below</span>
       </div>
     </div>
-    <div class="hint" id="hint">Tap a date to view that day's data</div>
-    <div class="strip" id="strip"></div>
+    <!-- Hidden strip + mode (kept for compatibility) -->
+    <div id="hint" style="display:none"></div>
+    <div id="ms" style="display:none"></div>
+    <div id="mm" style="display:none"></div>
+    <div id="mr" style="display:none"></div>
+    <div id="strip" style="display:none"></div>
+    <div id="month-switcher" style="display:none"></div>
+    <div id="sel-lbl" style="display:none"></div>
+    <div id="clr" style="display:none"></div>
   </div>
 
   <!-- Progress bar -->
@@ -654,7 +742,7 @@ function setMode(m) {
     multi:  'Tap multiple dates — all metrics aggregate automatically',
     range:  'Tap start date, then end date to select a range'
   }[m];
-  buildStrip(); render();
+  buildStrip(); updateDateLabel(); render();
 }
 function clearSel() {
   SEL = [];
@@ -1040,6 +1128,235 @@ function buildGrid(filtered, imgs, misMap, SCFG, ICFG, COL_SWATCH, swatchCol, ex
     }).join('') + '</div>';
 }
 
+// ── Calendar date picker ─────────────────────────────────────────────────────
+var CAL_START = null; // {year,month,day}
+var CAL_END   = null;
+var CAL_HOVER = null;
+var CAL_PICKING = 'start'; // 'start' or 'end'
+var CAL_LEFT_MONTH  = null; // {year,month} displayed in left pane
+var CAL_RIGHT_MONTH = null;
+var APPLIED_RANGE = null; // {start:Date, end:Date, label:string} or null
+
+// Format a date for display
+function calFmtDate(y, m, d) {
+  var MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return d + ' ' + MNAMES[m-1] + ' ' + y;
+}
+function calFmtShort(y, m, d) {
+  var MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d + ' ' + MN[m-1] + ' ' + y;
+}
+
+function calOpen() {
+  var now = new Date();
+  // Default: show current and previous month
+  CAL_RIGHT_MONTH = {year:now.getFullYear(), month:now.getMonth()+1};
+  CAL_LEFT_MONTH  = CAL_RIGHT_MONTH.month===1
+    ? {year:CAL_RIGHT_MONTH.year-1, month:12}
+    : {year:CAL_RIGHT_MONTH.year,   month:CAL_RIGHT_MONTH.month-1};
+  if (!CAL_START) { CAL_PICKING='start'; }
+  calRenderGrids();
+  var ov = document.getElementById('cal-overlay');
+  if (ov) ov.classList.add('open');
+}
+function calClose() {
+  var ov = document.getElementById('cal-overlay');
+  if (ov) ov.classList.remove('open');
+}
+
+function calNavMonth(side, dir) {
+  // side: 'left' or 'right', dir: -1 or +1
+  var ref = side==='left' ? CAL_LEFT_MONTH : CAL_RIGHT_MONTH;
+  var nm = ref.month + dir;
+  var ny = ref.year;
+  if (nm < 1) { nm=12; ny--; }
+  if (nm > 12){ nm=1;  ny++; }
+  if (side==='left') {
+    CAL_LEFT_MONTH = {year:ny, month:nm};
+    // Right must be at least one month after left
+    if (ny>CAL_RIGHT_MONTH.year||(ny===CAL_RIGHT_MONTH.year&&nm>=CAL_RIGHT_MONTH.month)) {
+      CAL_RIGHT_MONTH = nm===12?{year:ny+1,month:1}:{year:ny,month:nm+1};
+    }
+  } else {
+    CAL_RIGHT_MONTH = {year:ny, month:nm};
+    if (ny<CAL_LEFT_MONTH.year||(ny===CAL_LEFT_MONTH.year&&nm<=CAL_LEFT_MONTH.month)) {
+      CAL_LEFT_MONTH = nm===1?{year:ny-1,month:12}:{year:ny,month:nm-1};
+    }
+  }
+  calRenderGrids();
+}
+
+function calRenderGrids() {
+  calRenderMonth('cal-left',  CAL_LEFT_MONTH,  'left');
+  calRenderMonth('cal-right', CAL_RIGHT_MONTH, 'right');
+  calRenderInputs();
+}
+
+function calRenderMonth(elId, ymd, side) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  var MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DOW = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  var y=ymd.year, m=ymd.month;
+  var firstDay = new Date(y, m-1, 1).getDay(); // 0=Sun
+  var daysInMonth = new Date(y, m, 0).getDate();
+  var today = new Date();
+  var todayKey = today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
+
+  var html = '<div class="cal-month-header">';
+  html += '<button class="cal-nav" onclick="calNavMonth(\u0027' + side + '\u0027,-1)">&#8592;</button>';
+  html += '<span class="cal-month-name">' + MNAMES[m-1] + ' ' + y + '</span>';
+  html += '<button class="cal-nav" onclick="calNavMonth(\u0027' + side + '\u0027,1)">&#8594;</button>';
+  html += '</div><div class="cal-dow-row">';
+  DOW.forEach(function(d){ html+='<div class="cal-dow">'+d+'</div>'; });
+  html += '</div><div class="cal-day-grid">';
+  // Empty cells before first day
+  for (var i=0;i<firstDay;i++) html+='<div class="cal-day empty"></div>';
+  // Day cells
+  for (var d=1;d<=daysInMonth;d++) {
+    var key = y*10000+m*100+d;
+    var startKey = CAL_START ? CAL_START.year*10000+CAL_START.month*100+CAL_START.day : -1;
+    var endKey   = CAL_END   ? CAL_END.year*10000+CAL_END.month*100+CAL_END.day     : -1;
+    var hoverKey = CAL_HOVER ? CAL_HOVER.year*10000+CAL_HOVER.month*100+CAL_HOVER.day: -1;
+    var rangeEnd = endKey>0 ? endKey : hoverKey;
+
+    var cls = 'cal-day';
+    if (key===startKey) cls+=' start';
+    if (endKey>0&&key===endKey) cls+=' end';
+    if (startKey>0&&rangeEnd>0&&key>Math.min(startKey,rangeEnd)&&key<Math.max(startKey,rangeEnd)) cls+=' in-range';
+    if (key===todayKey) cls+=' today-mark';
+    if (y<2020||y>2030) cls+=' disabled';
+    html+='<div class="'+cls+'" onclick="calClickDay('+y+','+m+','+d+')" onmouseenter="calHover('+y+','+m+','+d+')">'+d+'</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function calHover(y, m, d) {
+  if (CAL_PICKING==='end' && CAL_START) {
+    CAL_HOVER = {year:y,month:m,day:d};
+    calRenderGrids();
+  }
+}
+
+function calClickDay(y, m, d) {
+  if (CAL_PICKING==='start') {
+    CAL_START = {year:y,month:m,day:d};
+    CAL_END   = null;
+    CAL_HOVER = null;
+    CAL_PICKING = 'end';
+  } else {
+    var startKey = CAL_START.year*10000+CAL_START.month*100+CAL_START.day;
+    var clickKey = y*10000+m*100+d;
+    if (clickKey < startKey) {
+      // Swap
+      CAL_END   = CAL_START;
+      CAL_START = {year:y,month:m,day:d};
+    } else {
+      CAL_END = {year:y,month:m,day:d};
+    }
+    CAL_HOVER   = null;
+    CAL_PICKING = 'start';
+  }
+  calRenderGrids();
+}
+
+function calRenderInputs() {
+  var si = document.getElementById('cal-in-start');
+  var ei = document.getElementById('cal-in-end');
+  if (!si||!ei) return;
+  si.textContent = CAL_START ? calFmtDate(CAL_START.year,CAL_START.month,CAL_START.day) : 'Select start date';
+  ei.textContent = CAL_END   ? calFmtDate(CAL_END.year,CAL_END.month,CAL_END.day)     : 'Select end date';
+  si.className = 'cal-input' + (CAL_PICKING==='start'?' active':'');
+  ei.className = 'cal-input' + (CAL_PICKING==='end'?' active':'');
+}
+
+function calApply() {
+  if (!CAL_START) { calClose(); return; }
+  var end = CAL_END || CAL_START;
+  var startDate = new Date(CAL_START.year, CAL_START.month-1, CAL_START.day);
+  var endDate   = new Date(end.year, end.month-1, end.day);
+  var label;
+  if (CAL_START.year===end.year&&CAL_START.month===end.month&&CAL_START.day===end.day) {
+    label = calFmtShort(CAL_START.year,CAL_START.month,CAL_START.day);
+  } else {
+    label = calFmtShort(CAL_START.year,CAL_START.month,CAL_START.day) + ' – ' + calFmtShort(end.year,end.month,end.day);
+  }
+  APPLIED_RANGE = {start:startDate, end:endDate, label:label,
+    startY:CAL_START.year, startM:CAL_START.month, startD:CAL_START.day,
+    endY:end.year, endM:end.month, endD:end.day};
+
+  // Update cal-label button
+  var lbl = document.getElementById('cal-label');
+  if (lbl) lbl.textContent = label;
+  // Update ACTIVE_MONTH to end month
+  var newMK = end.year + '-' + (end.month<10?'0'+end.month:''+end.month);
+  if (D.dailyByMonth && D.dailyByMonth[newMK]) {
+    ACTIVE_MONTH = newMK;
+    updateMonthAbbr();
+    updateTargets();
+  }
+  // Build SEL: days in ACTIVE_MONTH within range
+  SEL = [];
+  var daily = (D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH]) || [];
+  daily.forEach(function(row) {
+    var d = +row.day;
+    var dayDate = new Date(APPLIED_RANGE.startY<APPLIED_RANGE.endY||APPLIED_RANGE.startM!==APPLIED_RANGE.endM ? end.year : CAL_START.year, ACTIVE_MONTH.slice(5)-1, d);
+    if (dayDate>=startDate && dayDate<=endDate) SEL.push(d);
+  });
+  calClose();
+  buildStrip();
+  render();
+}
+
+// Quick preset handler (works from both the trigger bar and the sidebar)
+function calPreset(preset) {
+  var now = new Date();
+  var y=now.getFullYear(), m=now.getMonth()+1, d=now.getDate();
+  var startD, endD;
+
+  // Mark active preset btn
+  document.querySelectorAll('.cal-preset-btn').forEach(function(b){b.classList.remove('active');});
+
+  if (preset==='today') {
+    CAL_START={year:y,month:m,day:d}; CAL_END=null;
+  } else if (preset==='yesterday') {
+    var yest=new Date(y,m-1,d-1);
+    CAL_START={year:yest.getFullYear(),month:yest.getMonth()+1,day:yest.getDate()}; CAL_END=null;
+  } else if (preset==='last7') {
+    var s=new Date(y,m-1,d-6);
+    CAL_START={year:s.getFullYear(),month:s.getMonth()+1,day:s.getDate()};
+    CAL_END  ={year:y,month:m,day:d};
+  } else if (preset==='last30') {
+    var s=new Date(y,m-1,d-29);
+    CAL_START={year:s.getFullYear(),month:s.getMonth()+1,day:s.getDate()};
+    CAL_END  ={year:y,month:m,day:d};
+  } else if (preset==='mtd') {
+    CAL_START={year:y,month:m,day:1};
+    CAL_END  ={year:y,month:m,day:d};
+  } else if (preset==='last_month') {
+    var pm=m===1?12:m-1, py=m===1?y-1:y;
+    var lastDay=new Date(py,pm,0).getDate();
+    CAL_START={year:py,month:pm,day:1};
+    CAL_END  ={year:py,month:pm,day:lastDay};
+  } else if (preset==='custom') {
+    // Just open with empty selection
+    CAL_START=null; CAL_END=null; CAL_PICKING='start';
+    var ov=document.getElementById('cal-overlay');
+    if (ov) { ov.classList.add('open'); calRenderGrids(); }
+    return;
+  }
+  // Apply immediately for quick presets
+  CAL_PICKING='start';
+  calApply();
+}
+
+// Legacy compatibility stubs
+function datePreset(p){ calPreset(p==='all'?'mtd':p); }
+function toggleCustomPicker(){ calOpen(); }
+function updateDateLabel(){}
+
+
 async function load() {
   setStatus('loading', 'FETCHING LIVE DATA…');
   try {
@@ -1090,13 +1407,14 @@ async function load() {
 function render() {
   updateMonthAbbr(); // sync mAbbr with ACTIVE_MONTH
   // Hide date strip + KPIs + prog bar on Products tab
-  // Hide date strip + KPIs on Products and Production tabs
-  const hideUpper = TAB === 'products' || TAB === 'production';
+  // Only show date strip + prog bar + KPIs on data analysis tabs
+  const TABS_WITH_DATE = ['overview','channels','marketing','compare'];
+  const showDate = TABS_WITH_DATE.indexOf(TAB) >= 0;
   const _strip = $id('date-strip'), _prog = $id('prog-bar'), _kpis = $id('kpis');
-  if (_strip) _strip.style.display = hideUpper ? 'none' : '';
-  if (_prog)  _prog.style.display  = hideUpper ? 'none' : '';
-  if (_kpis)  _kpis.style.display  = hideUpper ? 'none' : '';
-  // Products tab renders via standalone function; Production falls through to its block below
+  if (_strip) _strip.style.display = showDate ? '' : 'none';
+  if (_prog)  _prog.style.display  = showDate ? '' : 'none';
+  if (_kpis)  _kpis.style.display  = showDate ? '' : 'none';
+  // Products/Production/Stores/Shopify have their own standalone renders
   if (TAB === 'products') { renderProducts(); return; }
 
   const daily  = (D.dailyByMonth && D.dailyByMonth[ACTIVE_MONTH]) || D.aprilDaily || [];
