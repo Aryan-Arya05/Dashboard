@@ -177,73 +177,81 @@
 
     /* ── Calendar popup ── */
     #cal-overlay {
-      position:fixed;inset:0;z-index:999;background:rgba(28,26,22,.25);backdrop-filter:blur(2px);
-      display:none;align-items:flex-start;justify-content:center;padding-top:80px;
+      position:fixed;inset:0;z-index:9999;background:rgba(28,26,22,.4);
+      display:none;align-items:center;justify-content:center;padding:16px;
     }
-    #cal-overlay.open { display:flex; }
     #cal-box {
-      background:var(--bg2);border:1px solid var(--bd);border-radius:12px;
-      box-shadow:0 8px 40px rgba(20,16,10,.15);display:flex;overflow:hidden;
-      max-height:90vh;max-width:720px;width:100%;
+      background:var(--bg2);border:1px solid var(--bd);border-radius:14px;
+      box-shadow:0 12px 48px rgba(20,16,10,.2);
+      display:flex;width:100%;max-width:680px;max-height:92vh;overflow:hidden;
     }
     #cal-presets {
-      width:160px;flex-shrink:0;border-right:1px solid var(--bd);padding:16px 0;
+      width:150px;flex-shrink:0;border-right:1px solid var(--bd);
+      padding:14px 0;overflow-y:auto;
     }
     .cal-preset-btn {
-      display:block;width:100%;text-align:left;padding:9px 18px;font-size:12.5px;
+      display:block;width:100%;text-align:left;padding:9px 16px;font-size:12px;
       font-family:var(--f-sans);font-weight:300;color:var(--tx2);background:none;
       border:none;cursor:pointer;transition:background .15s,color .15s;
     }
     .cal-preset-btn:hover { background:var(--bg3);color:var(--tx); }
     .cal-preset-btn.active { background:var(--bg3);color:var(--tx);font-weight:500; }
-    #cal-main { flex:1;display:flex;flex-direction:column;min-width:0; }
+    #cal-main { flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden; }
     #cal-inputs {
-      display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--bd);
+      display:flex;align-items:center;gap:10px;padding:14px 16px;
+      border-bottom:1px solid var(--bd);flex-shrink:0;
     }
     .cal-input {
-      flex:1;padding:8px 12px;border:1px solid var(--bd2);border-radius:7px;
+      flex:1;padding:8px 10px;border:1px solid var(--bd2);border-radius:7px;
       font-size:13px;font-family:var(--f-sans);color:var(--tx);background:var(--bg3);
       font-weight:400;text-align:center;cursor:default;
     }
     .cal-input.active { border-color:var(--acc);background:var(--bg2); }
     #cal-grids {
-      display:flex;flex:1;overflow:auto;padding:16px 20px;gap:28px;
+      display:flex;flex:1;overflow-y:auto;padding:14px 16px;gap:24px;
     }
-    .cal-month { flex:none;width:268px; }
-    .cal-month-header {
-      display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
-    }
-    .cal-nav { background:none;border:none;cursor:pointer;font-size:16px;color:var(--tx2);padding:4px 8px;border-radius:5px;transition:background .15s; }
+    .cal-month { flex:none;width:260px; }
+    .cal-month-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }
+    .cal-nav { background:none;border:none;cursor:pointer;font-size:16px;color:var(--tx2);
+      padding:4px 8px;border-radius:5px;transition:background .15s; }
     .cal-nav:hover { background:var(--bg3); }
-    .cal-month-name { font-size:13.5px;font-weight:500;color:var(--tx);letter-spacing:-.01em; }
-    .cal-dow-row { display:grid;grid-template-columns:repeat(7,36px);gap:2px;margin-bottom:4px; }
-    .cal-dow { font-size:11px;font-weight:500;color:var(--tx3);text-align:center;padding:4px 0;letter-spacing:.04em; }
-    .cal-day-grid { display:grid;grid-template-columns:repeat(7,36px);gap:2px; }
+    .cal-month-name { font-size:13px;font-weight:500;color:var(--tx); }
+    .cal-dow-row { display:grid;grid-template-columns:repeat(7,34px);gap:1px;margin-bottom:3px; }
+    .cal-dow { font-size:10.5px;font-weight:500;color:var(--tx3);text-align:center;padding:3px 0; }
+    .cal-day-grid { display:grid;grid-template-columns:repeat(7,34px);gap:1px; }
     .cal-day {
-      width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-      font-size:13px;font-family:var(--f-sans);font-weight:300;color:var(--tx2);
-      border-radius:6px;cursor:pointer;transition:all .15s;user-select:none;position:relative;
+      width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+      font-size:12.5px;font-family:var(--f-sans);font-weight:300;color:var(--tx2);
+      border-radius:6px;cursor:pointer;transition:background .12s,color .12s;user-select:none;position:relative;
     }
     .cal-day:hover:not(.disabled):not(.start):not(.end) { background:var(--bg3);color:var(--tx); }
-    .cal-day.in-range { background:var(--bg3);border-radius:0;color:var(--tx); }
-    .cal-day.start, .cal-day.end {
-      background:var(--tx)!important;color:var(--bg2)!important;border-radius:6px!important;font-weight:500;
+    .cal-day.in-range { background:var(--bg4);border-radius:0;color:var(--tx); }
+    .cal-day.start,.cal-day.end {
+      background:var(--tx)!important;color:var(--bg2)!important;font-weight:500;border-radius:6px!important;
     }
-    .cal-day.start { border-radius:6px 0 0 6px!important; }
-    .cal-day.end   { border-radius:0 6px 6px 0!important; }
-    .cal-day.start.end { border-radius:6px!important; }
-    .cal-day.today-mark::after { content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--acc); }
-    .cal-day.disabled { color:var(--tx4);cursor:default; }
+    .cal-day.today-mark::after {
+      content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
+      width:3px;height:3px;border-radius:50%;background:var(--acc);
+    }
+    .cal-day.disabled { color:var(--tx4);cursor:default;pointer-events:none; }
     .cal-day.empty { pointer-events:none; }
     #cal-footer {
       display:flex;align-items:center;justify-content:flex-end;gap:8px;
-      padding:12px 18px;border-top:1px solid var(--bd);
+      padding:12px 16px;border-top:1px solid var(--bd);flex-shrink:0;background:var(--bg2);
     }
-    @media (max-width:600px) {
-      #cal-box { flex-direction:column;max-height:80vh;overflow:auto; }
-      #cal-presets { width:100%;border-right:none;border-bottom:1px solid var(--bd);padding:10px 0;display:flex;flex-wrap:wrap; }
-      .cal-preset-btn { padding:8px 12px;font-size:11px;width:auto; }
-      #cal-grids { flex-direction:column;gap:16px; }
+    /* Mobile: bottom sheet, single month */
+    @media (max-width:640px) {
+      #cal-overlay { padding:0;align-items:flex-end; }
+      #cal-box { flex-direction:column;border-radius:16px 16px 0 0;max-height:90vh;width:100%;max-width:100%; }
+      #cal-presets { width:100%;border-right:none;border-bottom:1px solid var(--bd);
+        padding:8px 6px;display:flex;flex-wrap:wrap;flex-direction:row;overflow:visible;flex-shrink:0; }
+      .cal-preset-btn { padding:6px 10px;font-size:11px;width:auto; }
+      #cal-grids { flex-direction:column;gap:0;padding:12px 14px;overflow-y:auto;flex:1; }
+      #cal-right { display:none; }
+      .cal-month { width:100%; }
+      .cal-dow-row,.cal-day-grid { grid-template-columns:repeat(7,1fr); }
+      .cal-day { width:100%;height:42px;font-size:14px; }
+      .cal-dow { font-size:11px; }
     }
     /* ── Compact Date Preset Buttons ── */
     .dp-btn {
@@ -2652,7 +2660,7 @@ maybeShowInstallBanner();
   <div id="cal-overlay" style="position:fixed;inset:0;z-index:9999;background:rgba(28,26,22,.3);display:none;align-items:flex-start;justify-content:center;padding-top:70px;padding:70px 16px 16px;" onclick="if(event.target===this)calClose()">
     <div id="cal-box" style="background:var(--bg2);border:1px solid var(--bd);border-radius:12px;box-shadow:0 8px 40px rgba(20,16,10,.18);display:flex;overflow:hidden;max-height:calc(100vh - 100px);max-width:760px;width:100%;">
       <!-- Presets sidebar -->
-      <div id="cal-presets" style="width:150px;flex-shrink:0;border-right:1px solid var(--bd);padding:12px 0;overflow-y:auto;">
+      <div id="cal-presets">
         <button class="cal-preset-btn" onclick="calPreset('today')">Today</button>
         <button class="cal-preset-btn" onclick="calPreset('yesterday')">Yesterday</button>
         <button class="cal-preset-btn" onclick="calPreset('last7')">Last 7 days</button>
