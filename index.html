@@ -2244,21 +2244,7 @@ function render() {
       mc.innerHTML = kpiHtml + trendHtml +
         '<div class="g2" style="margin-bottom:12px">' + cityHtml +
         '<div>' + attentionHtml +
-        '<div class="card">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
-        '<span class="lbl" style="margin:0">Today by Store</span>' +
-        '<span style="font-size:9.5px;color:var(--tx3)">2025 → 2026</span></div>' +
-        (todayStores.map(function(s) {
-          const g = s.growth;
-          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--sep)">' +
-            '<div><div style="font-size:11.5px;font-weight:500;color:var(--tx)">' + s.name + '</div>' +
-            '<div style="font-size:9.5px;color:var(--tx3)">' + s.city + '</div></div>' +
-            '<div style="display:flex;align-items:center;gap:8px">' +
-            '<div style="font-size:11px;font-family:var(--f-mono);color:var(--tx3)">' + (s.sales2025!==null?fmtIN(s.sales2025):'—') + '</div>' +
-            '<div style="font-size:12px;font-family:var(--f-mono);color:var(--tx);font-weight:500">' + fmtIN(s.sales2026) + '</div>' +
-            (g!==null ? grwPill(g*100) : '<span style="font-size:10px;color:var(--tx4)">New</span>') + '</div></div>';
-        }).join('') || '<div style="padding:12px 0;color:var(--tx3);font-size:11px;text-align:center">No data</div>') +
-        '</div></div></div>' +
+        '</div></div>' +
         dayCompHtml + rankingsHtml;
     }
     $id('footer').textContent = 'LIVE · Stores: ' + (D.storeData?.summary?.totalStores||0) + ' stores · ' + (D.storeData?.latestDate||'') + ' · AUTO-REFRESH 5 MIN';
