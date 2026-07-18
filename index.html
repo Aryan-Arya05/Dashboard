@@ -1172,6 +1172,13 @@ function calClose() {
   var ov = document.getElementById('cal-overlay');
   if (ov) { ov.style.display = 'none'; }
   document.body.style.overflow = '';
+  if (CAL_MODE === 'stores') {
+    CAL_MODE = 'main';
+    if (MAIN_CAL_BAK) {
+      CAL_START = MAIN_CAL_BAK.s; CAL_END = MAIN_CAL_BAK.e; CAL_PICKING = MAIN_CAL_BAK.p || 'start';
+      MAIN_CAL_BAK = null;
+    }
+  }
 }
 
 function calNavMonth(side, dir) {
@@ -1236,7 +1243,9 @@ function calRenderMonth(elId, ymd, side) {
     if (startKey>0&&rangeEnd>0&&key>Math.min(startKey,rangeEnd)&&key<Math.max(startKey,rangeEnd)) cls+=' in-range';
     if (key===todayKey) cls+=' today-mark';
     if (y<2020||y>2030) cls+=' disabled';
-    html+='<div class="'+cls+'" onclick="calClickDay('+y+','+m+','+d+')" data-date="'+y+'-'+m+'-'+d+'">'+d+'</div>';
+    if (CAL_MODE==='stores' && !storeAvailSet()[key]) cls+=' disabled';
+    var clickable = cls.indexOf('disabled')<0;
+    html+='<div class="'+cls+'"'+(clickable?' onclick="calClickDay('+y+','+m+','+d+')"':'')+' data-date="'+y+'-'+m+'-'+d+'">'+d+'</div>';
   }
   // Trailing empty cells to fill the last week row (so grid is always full 7-col rows)
   var lastDOW = new Date(y, m-1, daysInMonth).getDay(); // 0=Sun 6=Sat
@@ -1300,6 +1309,7 @@ function calRenderInputs() {
 }
 
 function calApply() {
+  if (CAL_MODE === 'stores') { return storeCalApply(); }
   if (!CAL_START) { calClose(); return; }
   var end = CAL_END || CAL_START;
   var startDate = new Date(CAL_START.year, CAL_START.month-1, CAL_START.day);
@@ -1339,6 +1349,7 @@ function calApply() {
 
 // Quick preset handler (works from both the trigger bar and the sidebar)
 function calPreset(preset) {
+  if (CAL_MODE === 'stores') { return storeCalPreset(preset); }
   var now = new Date();
   var y=now.getFullYear(), m=now.getMonth()+1, d=now.getDate();
   var startD, endD;
@@ -1384,6 +1395,102 @@ function calPreset(preset) {
 function datePreset(p){ calPreset(p==='all'?'mtd':p); }
 function toggleCustomPicker(){ calOpen(); }
 function updateDateLabel(){}
+
+// ─── Stores tab: compact date-range picker (reuses #cal-overlay) ─────────────
+var CAL_MODE = 'main';          // 'main' | 'stores'
+var STORE_CMP = null;           // {start:'YYYY-MM-DD', end:'YYYY-MM-DD'} or null (= latest day)
+var STORE_CMP_PRESET = null;    // which quick preset is active ('today','last7',...) or null for custom
+var MAIN_CAL_BAK = null;        // stashes main-tab CAL_START/CAL_END while stores picker is open
+var _storeAvailCache = null;
+
+function storeAvailDates() {
+  return (D.storeData && D.storeData.availStoreDates) || [];
+}
+function storeAvailSet() {
+  var av = storeAvailDates();
+  if (_storeAvailCache && _storeAvailCache._n === av.length) return _storeAvailCache;
+  var s = {_n: av.length};
+  av.forEach(function(d){ var p=d.split('-'); s[(+p[0])*10000+(+p[1])*100+(+p[2])] = true; });
+  _storeAvailCache = s;
+  return s;
+}
+function _sdToObj(s){ var p=s.split('-'); return {year:+p[0], month:+p[1], day:+p[2]}; }
+function _sdPad(n){ return n<10 ? '0'+n : ''+n; }
+function _sdKey(o){ return o.year + '-' + _sdPad(o.month) + '-' + _sdPad(o.day); }
+
+function storeCalOpen() {
+  var av = storeAvailDates();
+  if (!av.length) return;
+  MAIN_CAL_BAK = {s: CAL_START, e: CAL_END, p: CAL_PICKING};
+  CAL_MODE = 'stores';
+  var cmp = STORE_CMP || {start: av[av.length-1], end: av[av.length-1]};
+  CAL_START = _sdToObj(cmp.start);
+  CAL_END   = (cmp.end !== cmp.start) ? _sdToObj(cmp.end) : null;
+  CAL_PICKING = 'start';
+  var anchor = _sdToObj(cmp.end);
+  CAL_RIGHT_MONTH = {year: anchor.year, month: anchor.month};
+  CAL_LEFT_MONTH  = anchor.month === 1
+    ? {year: anchor.year-1, month: 12}
+    : {year: anchor.year,   month: anchor.month-1};
+  calRenderGrids();
+  var ov = document.getElementById('cal-overlay');
+  if (ov) ov.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function storeCalApply() {
+  if (!CAL_START) { calClose(); return; }
+  var e = CAL_END || CAL_START;
+  var s = CAL_START;
+  var sk = _sdKey(s), ek = _sdKey(e);
+  if (ek < sk) { var t = sk; sk = ek; ek = t; }
+  STORE_CMP = {start: sk, end: ek};
+  STORE_CMP_PRESET = null; // custom selection
+  calClose();
+  render();
+}
+
+function storeCalPreset(preset) {
+  var av = storeAvailDates();
+  if (!av.length) return;
+  var L = av[av.length-1];               // latest date with data
+  var Lo = _sdToObj(L);
+  var first = av[0];
+  var startS, endS;
+
+  function clampLo(s){ return s < first ? first : s; }
+  function shiftDays(dateStr, n){
+    var o = _sdToObj(dateStr);
+    var dt = new Date(o.year, o.month-1, o.day + n);
+    return dt.getFullYear() + '-' + _sdPad(dt.getMonth()+1) + '-' + _sdPad(dt.getDate());
+  }
+
+  if (preset === 'today') {
+    startS = endS = L;
+  } else if (preset === 'yesterday') {
+    startS = endS = (av.length >= 2 ? av[av.length-2] : L);
+  } else if (preset === 'last7') {
+    endS = L; startS = clampLo(shiftDays(L, -6));
+  } else if (preset === 'last30') {
+    endS = L; startS = clampLo(shiftDays(L, -29));
+  } else if (preset === 'mtd') {
+    endS = L; startS = clampLo(L.slice(0,7) + '-01');
+  } else if (preset === 'last_month') {
+    var pm = Lo.month === 1 ? 12 : Lo.month - 1;
+    var py = Lo.month === 1 ? Lo.year - 1 : Lo.year;
+    var lastDay = new Date(py, pm, 0).getDate();
+    startS = clampLo(py + '-' + _sdPad(pm) + '-01');
+    endS   = py + '-' + _sdPad(pm) + '-' + _sdPad(lastDay);
+    if (endS > L) endS = L;
+    if (endS < startS) { startS = endS; } // no data in that month — collapses to nearest
+  } else {
+    return;
+  }
+  STORE_CMP = {start: startS, end: endS};
+  STORE_CMP_PRESET = preset;
+  if (CAL_MODE === 'stores') { calClose(); }
+  render();
+}
 
 
 async function load() {
@@ -2158,26 +2265,65 @@ function render() {
             '<div style="font-size:10px;color:var(--tx2)">' + fmtIN(s.prevMTD) + ' → ' + fmtIN(s.currentMTD) + '</div></div></div>';
         }).join('')) + '</div>';
 
-      // ── 5. Date-picker for daily comparison ─────────────────────────────────────
+      // ── 5. Date-range picker for daily comparison ───────────────────────────────
       const availDates  = sd.availStoreDates || [];
       const dailyMap    = sd.dailyStoreMap   || {};
-      // Default to most recent available date
-      const selectedDay = window._storeCompDate || (availDates.length ? availDates[availDates.length-1] : '');
-      const dayData = dailyMap[selectedDay] || [];
-      const dayDate = selectedDay;
-
-      // Date pills — show ALL available dates (compact: "17 Jul", "30 Jul" etc.)
       const DMONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const dayPills = '<div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">' +
-        availDates.map(function(d) {
-          const active = d === selectedDay;
-          const p = d.split('-');
-          const label = p[2] + ' ' + DMONTHS[+p[1]-1];
-          return '<button data-sd="' + d + '" onclick="window._storeCompDate=this.dataset.sd;render();" style="' +
-            'padding:4px 10px;border-radius:16px;font-size:11px;font-weight:' + (active?'500':'400') + ';cursor:pointer;' +
-            'font-family:var(--f-sans);border:1px solid ' + (active?'var(--tx)':'var(--bd)') + ';' +
-            'background:' + (active?'var(--tx)':'transparent') + ';color:' + (active?'var(--bg2)':'var(--tx2)') + ';transition:all .18s;white-space:nowrap;">' + label + '</button>';
-        }).join('') + '</div>';
+
+      // Resolve selected dates: STORE_CMP range, else most recent available day
+      const cmpRange = (typeof STORE_CMP !== 'undefined' && STORE_CMP) ? STORE_CMP : null;
+      const selDates = cmpRange
+        ? availDates.filter(function(d){ return d >= cmpRange.start && d <= cmpRange.end; })
+        : (availDates.length ? [availDates[availDates.length-1]] : []);
+      const isSingleDay = selDates.length <= 1;
+
+      // Aggregate stores across the selected dates (2026 vs same dates 2025)
+      const _agg = {}, _order = [];
+      selDates.forEach(function(ds) {
+        (dailyMap[ds] || []).forEach(function(s) {
+          var k = s.name + '|' + (s.city||'');
+          if (!_agg[k]) { _agg[k] = {name:s.name, city:s.city, c26:0, c25:0, hasPrev:false}; _order.push(k); }
+          _agg[k].c26 += s.sales2026 || 0;
+          if (s.sales2025 !== null && s.sales2025 !== undefined) { _agg[k].c25 += s.sales2025 || 0; _agg[k].hasPrev = true; }
+        });
+      });
+      const dayData = _order.map(function(k) {
+        var a = _agg[k];
+        return { name:a.name, city:a.city, sales2026:a.c26,
+          sales2025: a.hasPrev ? a.c25 : null,
+          growth: (a.hasPrev && a.c25 > 0) ? (a.c26 - a.c25) / a.c25 : null };
+      }).sort(function(x,y){ return y.sales2026 - x.sales2026; });
+
+      // Labels
+      const fmtDM = function(d){ var p=d.split('-'); return (+p[2]) + ' ' + DMONTHS[+p[1]-1]; };
+      const selStart = selDates[0] || '', selEnd = selDates[selDates.length-1] || '';
+      var trigLabel, dayLabel, prevYearLabel, prevHdr, curHdr;
+      if (!selDates.length) {
+        trigLabel = 'Select date'; dayLabel = '—'; prevYearLabel = '—'; prevHdr = 'LY'; curHdr = 'CY';
+      } else if (isSingleDay) {
+        trigLabel = fmtDateLabel(selStart);
+        dayLabel = fmtDateLabel(selStart);
+        prevYearLabel = fmtDateLabel(selStart.replace(/^20(\d\d)/, function(m,y){ return '20'+(+y-1); }));
+        prevHdr = prevYearLabel; curHdr = dayLabel;
+      } else {
+        var cy = selEnd.slice(0,4), py = String(+cy - 1);
+        trigLabel = fmtDM(selStart) + ' – ' + fmtDM(selEnd) + ' ' + cy;
+        dayLabel = trigLabel + ' (' + selDates.length + 'd)';
+        prevYearLabel = 'same dates ' + py;
+        prevHdr = py; curHdr = cy;
+      }
+
+      // Compact trigger + quick preset chips (matches the main date bar)
+      const activePreset = (typeof STORE_CMP_PRESET !== 'undefined' && STORE_CMP_PRESET) ? STORE_CMP_PRESET : (cmpRange ? null : 'today');
+      const dayPills = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
+        '<button onclick="storeCalOpen()" style="display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:6px;border:1px solid var(--bd2);background:var(--bg3);cursor:pointer;font-family:var(--f-sans);font-size:12px;color:var(--tx);font-weight:400;transition:border-color .2s" onmouseover="this.style.borderColor=\'var(--acc)\'" onmouseout="this.style.borderColor=\'var(--bd2)\'">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--tx3)"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' +
+        '<span style="white-space:nowrap">' + trigLabel + '</span>' +
+        '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--tx3)"><path d="M6 9l6 6 6-6"/></svg></button>' +
+        '<div style="display:flex;gap:4px;flex-wrap:wrap">' +
+        [['today','Today'],['yesterday','Yesterday'],['last7','Last 7 days'],['mtd','This month'],['last_month','Last month']].map(function(p) {
+          return '<button onclick="storeCalPreset(\'' + p[0] + '\')" class="dp-btn' + (activePreset===p[0]?' dp-act':'') + '">' + p[1] + '</button>';
+        }).join('') + '</div></div>';
 
       const dayStoreRows = dayData.map(function(s) {
         const g = s.growth;
@@ -2194,10 +2340,6 @@ function render() {
           '<td style="text-align:right;padding:7px 8px">' + (g!==null ? grwPill(g*100) : '<span style="font-size:10px;color:var(--tx4)">New</span>') + '</td></tr>';
       }).join('');
 
-      // Format: "17 Jul 2026 vs 17 Jul 2025"
-      const dayLabel = dayDate ? fmtDateLabel(dayDate) : '';
-      const prevYear = dayDate ? dayDate.replace(/^20(\d\d)/, function(m,y){ return '20'+(+y-1); }) : '';
-      const prevYearLabel = prevYear ? fmtDateLabel(prevYear) : '';
       const dayCompHtml = '<div class="card" style="margin-bottom:12px">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">' +
         '<div>' +
@@ -2207,8 +2349,8 @@ function render() {
         '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:480px">' +
         '<thead><tr style="border-bottom:1px solid var(--sep)">' +
         '<th style="text-align:left;padding:6px 8px;font-size:9.5px;color:var(--tx3);font-weight:500;text-transform:uppercase;letter-spacing:.07em">Store</th>' +
-        '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--tx3);font-weight:500">' + prevYearLabel + '</th>' +
-        '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--acc);font-weight:500">' + dayLabel + '</th>' +
+        '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--tx3);font-weight:500">' + prevHdr + '</th>' +
+        '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--acc);font-weight:500">' + curHdr + '</th>' +
         '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--tx3);font-weight:500">Diff</th>' +
         '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--tx3);font-weight:500">Growth</th>' +
         '</tr></thead><tbody>' +
