@@ -1243,7 +1243,6 @@ function calRenderMonth(elId, ymd, side) {
     if (startKey>0&&rangeEnd>0&&key>Math.min(startKey,rangeEnd)&&key<Math.max(startKey,rangeEnd)) cls+=' in-range';
     if (key===todayKey) cls+=' today-mark';
     if (y<2020||y>2030) cls+=' disabled';
-    if (CAL_MODE==='stores' && !storeAvailSet()[key]) cls+=' disabled';
     var clickable = cls.indexOf('disabled')<0;
     html+='<div class="'+cls+'"'+(clickable?' onclick="calClickDay('+y+','+m+','+d+')"':'')+' data-date="'+y+'-'+m+'-'+d+'">'+d+'</div>';
   }
@@ -1451,38 +1450,28 @@ function storeCalApply() {
 }
 
 function storeCalPreset(preset) {
-  var av = storeAvailDates();
-  if (!av.length) return;
-  var L = av[av.length-1];               // latest date with data
-  var Lo = _sdToObj(L);
-  var first = av[0];
+  var now = new Date();
+  function dkey(dt){ return dt.getFullYear() + '-' + _sdPad(dt.getMonth()+1) + '-' + _sdPad(dt.getDate()); }
+  function shift(n){ return dkey(new Date(now.getFullYear(), now.getMonth(), now.getDate() + n)); }
   var startS, endS;
 
-  function clampLo(s){ return s < first ? first : s; }
-  function shiftDays(dateStr, n){
-    var o = _sdToObj(dateStr);
-    var dt = new Date(o.year, o.month-1, o.day + n);
-    return dt.getFullYear() + '-' + _sdPad(dt.getMonth()+1) + '-' + _sdPad(dt.getDate());
-  }
-
   if (preset === 'today') {
-    startS = endS = L;
+    startS = endS = dkey(now);
   } else if (preset === 'yesterday') {
-    startS = endS = (av.length >= 2 ? av[av.length-2] : L);
+    startS = endS = shift(-1);
   } else if (preset === 'last7') {
-    endS = L; startS = clampLo(shiftDays(L, -6));
+    endS = dkey(now); startS = shift(-6);
   } else if (preset === 'last30') {
-    endS = L; startS = clampLo(shiftDays(L, -29));
+    endS = dkey(now); startS = shift(-29);
   } else if (preset === 'mtd') {
-    endS = L; startS = clampLo(L.slice(0,7) + '-01');
+    endS = dkey(now);
+    startS = now.getFullYear() + '-' + _sdPad(now.getMonth()+1) + '-01';
   } else if (preset === 'last_month') {
-    var pm = Lo.month === 1 ? 12 : Lo.month - 1;
-    var py = Lo.month === 1 ? Lo.year - 1 : Lo.year;
+    var pm = now.getMonth() === 0 ? 12 : now.getMonth();          // prev month (1-12)
+    var py = now.getMonth() === 0 ? now.getFullYear()-1 : now.getFullYear();
     var lastDay = new Date(py, pm, 0).getDate();
-    startS = clampLo(py + '-' + _sdPad(pm) + '-01');
+    startS = py + '-' + _sdPad(pm) + '-01';
     endS   = py + '-' + _sdPad(pm) + '-' + _sdPad(lastDay);
-    if (endS > L) endS = L;
-    if (endS < startS) { startS = endS; } // no data in that month — collapses to nearest
   } else {
     return;
   }
@@ -2270,12 +2259,13 @@ function render() {
       const dailyMap    = sd.dailyStoreMap   || {};
       const DMONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-      // Resolve selected dates: STORE_CMP range, else most recent available day
+      // Resolve requested range: STORE_CMP, else most recent available day
       const cmpRange = (typeof STORE_CMP !== 'undefined' && STORE_CMP) ? STORE_CMP : null;
-      const selDates = cmpRange
-        ? availDates.filter(function(d){ return d >= cmpRange.start && d <= cmpRange.end; })
-        : (availDates.length ? [availDates[availDates.length-1]] : []);
-      const isSingleDay = selDates.length <= 1;
+      const reqStart = cmpRange ? cmpRange.start : (availDates.length ? availDates[availDates.length-1] : '');
+      const reqEnd   = cmpRange ? cmpRange.end   : reqStart;
+      // Dates that actually have data inside the requested range (for aggregation)
+      const selDates = availDates.filter(function(d){ return reqStart && d >= reqStart && d <= reqEnd; });
+      const isSingleDay = reqStart === reqEnd;
 
       // Aggregate stores across the selected dates (2026 vs same dates 2025)
       const _agg = {}, _order = [];
@@ -2294,27 +2284,26 @@ function render() {
           growth: (a.hasPrev && a.c25 > 0) ? (a.c26 - a.c25) / a.c25 : null };
       }).sort(function(x,y){ return y.sales2026 - x.sales2026; });
 
-      // Labels
+      // Labels — always reflect the requested dates, even if no data yet
       const fmtDM = function(d){ var p=d.split('-'); return (+p[2]) + ' ' + DMONTHS[+p[1]-1]; };
-      const selStart = selDates[0] || '', selEnd = selDates[selDates.length-1] || '';
       var trigLabel, dayLabel, prevYearLabel, prevHdr, curHdr;
-      if (!selDates.length) {
+      if (!reqStart) {
         trigLabel = 'Select date'; dayLabel = '—'; prevYearLabel = '—'; prevHdr = 'LY'; curHdr = 'CY';
       } else if (isSingleDay) {
-        trigLabel = fmtDateLabel(selStart);
-        dayLabel = fmtDateLabel(selStart);
-        prevYearLabel = fmtDateLabel(selStart.replace(/^20(\d\d)/, function(m,y){ return '20'+(+y-1); }));
+        trigLabel = fmtDateLabel(reqStart);
+        dayLabel = fmtDateLabel(reqStart);
+        prevYearLabel = fmtDateLabel(reqStart.replace(/^20(\d\d)/, function(m,y){ return '20'+(+y-1); }));
         prevHdr = prevYearLabel; curHdr = dayLabel;
       } else {
-        var cy = selEnd.slice(0,4), py = String(+cy - 1);
-        trigLabel = fmtDM(selStart) + ' – ' + fmtDM(selEnd) + ' ' + cy;
-        dayLabel = trigLabel + ' (' + selDates.length + 'd)';
+        var cy = reqEnd.slice(0,4), py = String(+cy - 1);
+        trigLabel = fmtDM(reqStart) + ' – ' + fmtDM(reqEnd) + ' ' + cy;
+        dayLabel = trigLabel + (selDates.length ? ' (' + selDates.length + 'd)' : '');
         prevYearLabel = 'same dates ' + py;
         prevHdr = py; curHdr = cy;
       }
 
       // Compact trigger + quick preset chips (matches the main date bar)
-      const activePreset = (typeof STORE_CMP_PRESET !== 'undefined' && STORE_CMP_PRESET) ? STORE_CMP_PRESET : (cmpRange ? null : 'today');
+      const activePreset = (typeof STORE_CMP_PRESET !== 'undefined' && STORE_CMP_PRESET) ? STORE_CMP_PRESET : null;
       const dayPills = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
         '<button onclick="storeCalOpen()" style="display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:6px;border:1px solid var(--bd2);background:var(--bg3);cursor:pointer;font-family:var(--f-sans);font-size:12px;color:var(--tx);font-weight:400;transition:border-color .2s" onmouseover="this.style.borderColor=\'var(--acc)\'" onmouseout="this.style.borderColor=\'var(--bd2)\'">' +
         '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--tx3)"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' +
@@ -2354,7 +2343,7 @@ function render() {
         '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--tx3);font-weight:500">Diff</th>' +
         '<th style="text-align:right;padding:6px 8px;font-size:9.5px;color:var(--tx3);font-weight:500">Growth</th>' +
         '</tr></thead><tbody>' +
-        (dayStoreRows || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--tx3);font-size:11px">No data</td></tr>') +
+        (dayStoreRows || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--tx3);font-size:11px">No data yet for ' + dayLabel + ' — the sheet updates with the previous day\'s sales</td></tr>') +
         '</tbody></table></div></div>';
 
       // ── 6. Store Rankings ──────────────────────────────────────────────────────
